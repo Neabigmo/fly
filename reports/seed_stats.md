@@ -1,15 +1,17 @@
 # Real vs shuffled, at the level of trained models
 
-Generated 2026-09-16 14:54 by `scripts/20_seed_stats.py`.
+Generated 2026-09-16 15:14 by `scripts/20_seed_stats.py`.
 The unit of observation is one trained network, not one test image:
 runs are paired by model seed and each shuffled seed is an independent
 random graph.  Intervals are Student t on n-1 degrees of freedom.
 
-Runs considered: 35.
+Runs considered: 36.
 
 ## replication: core + 20k, 60 epochs
 
 3 paired seeds: [0, 1, 2]
+
+Control strength: each seed's own shuffled graph retains 0.0219-0.0221 of the real edges (mean 0.0220), so the randomisation is comparable across seeds and the pairing is not confounded by varying control strength.
 
 | cond | real | shuffled | delta | 95% CI | d_z | Hedges g | t p | Wilcoxon p | image CI |
 |---|---|---|---|---|---|---|---|---|---|

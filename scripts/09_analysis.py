@@ -89,7 +89,13 @@ def _section_seed_stats(lines: list) -> None:
          "Wilcoxon p", "图像级 CI（对照）"], rows))
     A("")
     A("最后一列是**错误口径**的对照：把它当独立观测会让区间窄一个数量级。"
-      "完整表与逐 seed Δ 见 `reports/seed_stats.md`。")
+      "完整表与逐 seed Δ 见 `reports/seed_stats.md`，配对图见 `figures/fig10_paired_seeds.png`。")
+    so = blk.get("shuffle_overlap")
+    if so:
+        A("")
+        A(f"对照强度：每个 seed 用自己的随机图，各自保留真实边的 "
+          f"{min(so['per_seed']):.4f}–{max(so['per_seed']):.4f}（均值 {so['mean']:.4f}，"
+          f"极差 {so['spread']:.4f}），所以配对比较没有被「随机化程度不一」污染。")
     A("")
 
 
@@ -756,6 +762,7 @@ def main() -> int:
     # figures produced by other scripts (temporal decoding, QC)
     extra_figs = [
         ("逐时刻解码（Stage 5 诊断）", paths.FIGURES / "fig5_temporal_decoding_real.png"),
+        ("种子级配对图（每个 seed 一条连线）", paths.FIGURES / "fig10_paired_seeds.png"),
         ("视网膜映射", paths.FIGURES / "figS1_retina_map.png"),
         ("随机化对照的混合曲线", paths.FIGURES / "figS2_shuffle_mixing.png"),
         ("校准与信号传播审计", paths.FIGURES / "figS3_calibration.png"),

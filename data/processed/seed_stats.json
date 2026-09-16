@@ -1,5 +1,5 @@
 {
-  "n_runs": 35,
+  "n_runs": 36,
   "blocks": {
     "replication": {
       "criteria": {
@@ -14,6 +14,7 @@
         "max_steps": 0
       },
       "real_runs": [
+        "7_rep_real_s3",
         "s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46",
         "s2_count_M1_core_real_N20000_m1_sh0_cc44762d6a",
         "s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab"
@@ -155,6 +156,15 @@
           "image_level_ci95": 0.019022030398742052,
           "n_test_images": 5000
         }
+      },
+      "shuffle_overlap": {
+        "per_seed": [
+          0.021994,
+          0.021919,
+          0.022073
+        ],
+        "mean": 0.021995333333333335,
+        "spread": 0.0001539999999999979
       }
     },
     "fxu": {}

@@ -55,6 +55,7 @@ def load_runs() -> list[dict]:
         acc = {k: s.get(f"test_acc_{k}") for k in CONDITIONS}
         if any(v is None for v in acc.values()):
             continue
+        stats = s.get("shuffle_stats") or {}
         out.append(
             {
                 "run_id": d.name,
@@ -70,6 +71,14 @@ def load_runs() -> list[dict]:
                 "signed": bool(c["model_cfg"].get("signed_synapses", False)),
                 "steps": c["time"]["steps"],
                 "standardize": bool(c["model_cfg"].get("readout_standardize", False)),
+                # How strongly this control graph was randomised.  Every seed has its
+                # own shuffled graph, so the paired comparison is only clean if the
+                # randomisation strength is the same across seeds; report it rather
+                # than assume it.
+                "shuffle_overlap": stats.get("final_edge_overlap"),
+                "shuffle_swap_rate": stats.get("swap_rate"),
+                "shuffle_degrees_ok": stats.get("degrees_preserved"),
+                "shuffle_weights_ok": stats.get("weights_preserved"),
                 "per_mode": s.get("per_mode", {}),
                 **{f"acc_{k}": v for k, v in acc.items()},
             }
@@ -140,6 +149,23 @@ def compare(real_runs: list[dict], shuf_runs: list[dict], log, label: str) -> di
     out = {"label": label, "n_seeds": len(seeds), "seeds": seeds, "conditions": {}}
     log.info("-" * 92)
     log.info("%s | %d paired seeds %s", label, len(seeds), seeds)
+    # Control strength: each seed has its own shuffled graph, so the pairing is only
+    # clean if they were randomised to the same degree.
+    ov = [by_seed_s[s].get("shuffle_overlap") for s in seeds]
+    ov = [v for v in ov if v is not None]
+    if ov:
+        out["shuffle_overlap"] = {
+            "per_seed": ov,
+            "mean": float(np.mean(ov)),
+            "spread": float(max(ov) - min(ov)),
+        }
+        log.info("  control graphs retain %.4f-%.4f of the real edges "
+                 "(mean %.4f, spread %.4f)",
+                 min(ov), max(ov), np.mean(ov), max(ov) - min(ov))
+        for s in seeds:
+            rec = by_seed_s[s]
+            if not (rec.get("shuffle_degrees_ok") and rec.get("shuffle_weights_ok")):
+                log.warning("  seed %d: shuffle did not preserve degrees/weights", s)
     for cond in CONDITIONS:
         key = f"acc_{cond}"
         r = np.array([by_seed_r[s][key] for s in seeds], dtype=float)
@@ -254,6 +280,19 @@ def main() -> int:
     out.write_text(json.dumps(report, indent=2), encoding="utf-8")
     log.info("wrote %s", out)
 
+    # the paired figure: only meaningful once there is a replication block
+    rep = report.get("blocks", {}).get("replication") or {}
+    if rep.get("conditions"):
+        from flynum.analysis.figures import plot_paired_seeds
+
+        fig = paths.FIGURES / "fig10_paired_seeds.png"
+        plot_paired_seeds(
+            rep["conditions"], fig,
+            label=(f"core + 20k, {rep['n_seeds']} paired seeds "
+                   f"(one independent shuffled graph per seed)"),
+        )
+        log.info("wrote %s", fig)
+
     md = paths.REPORTS / "seed_stats.md"
     md.parent.mkdir(parents=True, exist_ok=True)
     md.write_text(_markdown(report), encoding="utf-8")
@@ -294,6 +333,17 @@ def _block_md(name: str, blk: dict) -> list[str]:
         "",
         f"{blk['n_seeds']} paired seeds: {blk['seeds']}",
         "",
+    ]
+    so = blk.get("shuffle_overlap")
+    if so:
+        out += [
+            f"Control strength: each seed's own shuffled graph retains "
+            f"{min(so['per_seed']):.4f}-{max(so['per_seed']):.4f} of the real edges "
+            f"(mean {so['mean']:.4f}), so the randomisation is comparable across "
+            f"seeds and the pairing is not confounded by varying control strength.",
+            "",
+        ]
+    out += [
         "| cond | real | shuffled | delta | 95% CI | d_z | Hedges g | t p | Wilcoxon p | image CI |",
         "|---|---|---|---|---|---|---|---|---|---|",
     ]

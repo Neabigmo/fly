@@ -468,6 +468,79 @@ def plot_gain_distribution(
 
 
 # --------------------------------------------------------------------------- #
+def plot_paired_seeds(
+    conditions: dict[str, dict],
+    out: Path,
+    *,
+    label: str = "",
+):
+    """The paired design, one panel per test condition.
+
+    Each panel has two columns -- real connectome, shuffled control -- with one line
+    per model seed, so the reader sees the individual paired differences rather than
+    two bars that could hide an inconsistent effect.  The rightmost annotation gives
+    the mean paired delta with its 95% CI, which is the quantity the study claims.
+
+    ``conditions`` maps condition -> the seed_stats schema: ``real_per_seed``,
+    ``shuffled_per_seed``, ``delta_mean``, ``delta_ci95``, ``cohen_dz``.
+    """
+    _style()
+    keys = [k for k in ("A", "B", "C", "D") if k in conditions]
+    if not keys:
+        keys = list(conditions)
+
+    def _arm(c: dict, name: str) -> np.ndarray:
+        """Accept the report's schema and the shorter spelling alike."""
+        for k in (f"{name}_per_seed", name):
+            if k in c:
+                return np.asarray(c[k], dtype=float)
+        raise KeyError(f"neither {name}_per_seed nor {name} in the condition record")
+
+    fig, axes = plt.subplots(1, len(keys), figsize=(2.5 * len(keys) + 0.6, 3.8),
+                             sharey=True)
+    if len(keys) == 1:
+        axes = [axes]
+    rng = np.random.default_rng(0)
+    for ax, cond in zip(axes, keys):
+        c = conditions[cond]
+        r = _arm(c, "real")
+        q = _arm(c, "shuffled")
+        n = min(len(r), len(q))
+        for i in range(n):
+            ax.plot([0, 1], [r[i], q[i]], "-", color=C_NEUTRAL, lw=0.8, alpha=0.55,
+                    zorder=1)
+        jitter = rng.uniform(-0.045, 0.045, n)
+        ax.scatter(np.zeros(n) + jitter, r[:n], s=22, color=C_REAL, zorder=3,
+                   label="real" if cond == keys[0] else None)
+        ax.scatter(np.ones(n) + jitter, q[:n], s=22, color=C_SHUFFLED, zorder=3,
+                   label="shuffled" if cond == keys[0] else None)
+        for x, v, col in ((0, r[:n], C_REAL), (1, q[:n], C_SHUFFLED)):
+            m = float(v.mean())
+            se = float(v.std(ddof=1) / np.sqrt(n)) if n > 1 else 0.0
+            ax.plot([x - 0.22, x + 0.22], [m, m], color=col, lw=2.4, zorder=4)
+            if n > 1:
+                ax.errorbar([x], [m], yerr=[1.96 * se], color=col, capsize=3, lw=1.4,
+                            zorder=4)
+        d, ci = c.get("delta_mean"), c.get("delta_ci95")
+        title = cond
+        if d is not None and ci is not None:
+            title = f"{cond}\nΔ {d:+.4f} ± {ci:.4f}"
+        if c.get("cohen_dz") is not None and np.isfinite(c["cohen_dz"]):
+            title += f"\nd_z {c['cohen_dz']:.1f}"
+        ax.set_title(title, fontsize=9)
+        ax.set_xticks([0, 1])
+        ax.set_xticklabels(["real", "shuffled"], fontsize=8)
+        ax.set_xlim(-0.45, 1.45)
+        ax.grid(alpha=0.15, axis="y")
+    axes[0].set_ylabel("count accuracy")
+    axes[0].legend(fontsize=8, loc="lower left")
+    if label:
+        fig.suptitle(label, fontsize=10.5)
+        fig.subplots_adjust(top=0.78, wspace=0.12)
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
 def plot_condition_bars(
     agg: dict[str, dict[str, dict]],
     out: Path,
