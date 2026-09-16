@@ -1,0 +1,30 @@
+23:36:21 | INFO    | flynum.run.diagnose    | run diagnose started -> I:\2026.9.14\9.15果蝇识字\runs\diagnose
+23:36:21 | INFO    | flynum.run.diagnose    | ------------------------------------------------------------------------------
+23:36:21 | INFO    | flynum.run.diagnose    | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+23:36:23 | INFO    | flynum.run.diagnose    | circuit core loaded from cache: 33480 neurons / 1170024 edges
+23:36:32 | INFO    | flynum.run.diagnose    | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+23:36:32 | INFO    | flynum.run.diagnose    | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+23:36:40 | INFO    | flynum.run.diagnose    | readout: visual_projection (VPN) -> 9200 neurons
+23:36:49 | INFO    | flynum.run.diagnose    | ------------------------------------------------------------------------------
+23:36:49 | INFO    | flynum.run.diagnose    | act    wscale  steps |  h_mean   h_p50   h_p99   h_max |   f_p99   probe  probeZ
+23:37:21 | INFO    | flynum.run.diagnose    | relu     0.60      8 |   0.171   0.298   1.951   4.557 |    0.77  0.5175  0.5392
+23:38:03 | INFO    | flynum.run.diagnose    | relu     0.60     12 |   0.323   0.681   5.108  15.953 |    2.35  0.5317  0.5650
+23:38:44 | INFO    | flynum.run.diagnose    | relu     0.60     16 |   0.656   1.419  12.959  48.941 |    6.77  0.5425  0.5800
+23:39:25 | INFO    | flynum.run.diagnose    | relu     1.00      8 |   0.337   0.747   5.668  16.908 |    2.36  0.5333  0.5483
+23:40:06 | INFO    | flynum.run.diagnose    | relu     1.00     12 |   1.476   3.312  33.127 129.198 |   16.12  0.5367  0.5867
+23:40:47 | INFO    | flynum.run.diagnose    | relu     1.00     16 |   7.816  16.297 194.176 915.210 |  111.47  0.5242  0.5842
+23:41:29 | INFO    | flynum.run.diagnose    | relu     1.50      8 |   0.919   2.192  19.646  66.736 |    7.88  0.5450  0.5767
+23:42:10 | INFO    | flynum.run.diagnose    | relu     1.50     12 |  10.809  23.243 269.719 1199.717 |  135.72  0.5208  0.5908
+23:42:51 | INFO    | flynum.run.diagnose    | relu     1.50     16 | 146.470 272.672 3644.487 20358.137 | 2305.79  0.5200  0.5750
+23:43:16 | INFO    | flynum.run.diagnose    | tanh     0.60      8 |   0.148   0.249   0.719   0.766 |    0.51  0.5108  0.5492
+23:43:43 | INFO    | flynum.run.diagnose    | tanh     0.60     12 |   0.207   0.414   0.884   0.904 |    0.77  0.5292  0.5508
+23:44:12 | INFO    | flynum.run.diagnose    | tanh     0.60     16 |   0.249   0.551   0.953   0.961 |    0.90  0.5358  0.5575
+23:44:39 | INFO    | flynum.run.diagnose    | tanh     1.00      8 |   0.200   0.416   0.766   0.786 |    0.65  0.5242  0.5467
+23:45:10 | INFO    | flynum.run.diagnose    | tanh     1.00     12 |   0.291   0.669   0.904   0.912 |    0.86  0.5333  0.5708
+23:45:39 | INFO    | flynum.run.diagnose    | tanh     1.00     16 |   0.352   0.814   0.961   0.964 |    0.94  0.5400  0.5958
+23:46:05 | INFO    | flynum.run.diagnose    | tanh     1.50      8 |   0.258   0.569   0.781   0.792 |    0.71  0.5275  0.5700
+23:46:34 | INFO    | flynum.run.diagnose    | tanh     1.50     12 |   0.377   0.805   0.910   0.915 |    0.88  0.5408  0.6050
+23:47:01 | INFO    | flynum.run.diagnose    | tanh     1.50     16 |   0.454   0.915   0.963   0.965 |    0.95  0.5350  0.6183
+23:47:01 | INFO    | flynum.run.diagnose    | ------------------------------------------------------------------------------
+23:47:01 | INFO    | flynum.run.diagnose    | best frozen-probe setting: act=tanh w_scale=1.50 steps=16 -> 0.6183 (standardised) / 0.5350 (raw)
+23:47:01 | INFO    | flynum.run.diagnose    | run diagnose finished: ok (641.7s)

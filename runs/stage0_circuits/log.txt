@@ -1,0 +1,47 @@
+22:58:04 | INFO    | flynum.run.stage0_circuits | run stage0_circuits started -> I:\2026.9.14\9.15果蝇识字\runs\stage0_circuits
+22:58:04 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+22:58:04 | INFO    | flynum.run.stage0_circuits | BUILD CIRCUITS + RETINAL MAP
+22:58:04 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+22:58:04 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+22:58:04 | INFO    | flynum.run.stage0_circuits | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+22:58:10 | INFO    | flynum.run.stage0_circuits | subgraph core : 33480 neurons (33484 selected, 4 isolated pruned) | 1170024 edges | E/N=35.0 | synapses=5796097
+22:58:10 | INFO    | flynum.run.stage0_circuits |   retention: 26.4% of outgoing, 32.2% of incoming synaptic weight
+22:58:19 | INFO    | flynum.run.stage0_circuits | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=0.0073 | density=2.368 (ideal 1.155)
+22:58:19 | INFO    | flynum.run.stage0_circuits | retina map: 1769/1771 columns driven (99.9%) | 7961 input neurons
+22:58:27 | INFO    | flynum.run.stage0_circuits | readout: visual_projection (VPN) -> 9200 neurons
+22:59:00 | INFO    | flynum.run.stage0_circuits | run stage0_circuits started -> I:\2026.9.14\9.15果蝇识字\runs\stage0_circuits
+22:59:00 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+22:59:00 | INFO    | flynum.run.stage0_circuits | BUILD CIRCUITS + RETINAL MAP
+22:59:00 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+22:59:00 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+22:59:00 | INFO    | flynum.run.stage0_circuits | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+22:59:02 | INFO    | flynum.run.stage0_circuits | circuit core loaded from cache: 33480 neurons / 1170024 edges
+22:59:11 | INFO    | flynum.run.stage0_circuits | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+22:59:11 | INFO    | flynum.run.stage0_circuits | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+22:59:19 | INFO    | flynum.run.stage0_circuits | readout: visual_projection (VPN) -> 9200 neurons
+22:59:19 | INFO    | flynum.run.stage0_circuits |   map check: input-columns=1769  image-driven=1356/1771 (76.6%) | max activation=1.000 | input neurons=7961
+22:59:28 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+22:59:28 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+22:59:28 | INFO    | flynum.run.stage0_circuits | preparing: circuit=full graph=real retina=isotropic/lamina/both readout=vpn
+23:00:08 | INFO    | flynum.run.stage0_circuits | run stage0_circuits started -> I:\2026.9.14\9.15果蝇识字\runs\stage0_circuits
+23:00:08 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+23:00:08 | INFO    | flynum.run.stage0_circuits | BUILD CIRCUITS + RETINAL MAP
+23:00:08 | INFO    | flynum.run.stage0_circuits | ==============================================================================
+23:00:08 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+23:00:08 | INFO    | flynum.run.stage0_circuits | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+23:00:11 | INFO    | flynum.run.stage0_circuits | circuit core loaded from cache: 33480 neurons / 1170024 edges
+23:00:20 | INFO    | flynum.run.stage0_circuits | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+23:00:20 | INFO    | flynum.run.stage0_circuits | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+23:00:28 | INFO    | flynum.run.stage0_circuits | readout: visual_projection (VPN) -> 9200 neurons
+23:00:28 | INFO    | flynum.run.stage0_circuits |   map check: input-columns=1769  image-driven=1356/1771 (76.6%) | max activation=1.000 | input neurons=7961
+23:00:36 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+23:00:36 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+23:00:36 | INFO    | flynum.run.stage0_circuits | preparing: circuit=full graph=real retina=isotropic/lamina/both readout=vpn
+23:00:43 | INFO    | flynum.run.stage0_circuits | subgraph full : 99163 neurons (99170 selected, 7 isolated pruned) | 12392758 edges | E/N=125.0 | synapses=48956544
+23:00:43 | INFO    | flynum.run.stage0_circuits |   retention: 91.3% of outgoing, 95.8% of incoming synaptic weight
+23:00:52 | INFO    | flynum.run.stage0_circuits | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+23:00:52 | INFO    | flynum.run.stage0_circuits | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7963 input neurons
+23:00:59 | INFO    | flynum.run.stage0_circuits | readout: visual_projection (VPN) -> 9200 neurons
+23:01:00 | INFO    | flynum.run.stage0_circuits |   map check: input-columns=1769  image-driven=1356/1771 (76.6%) | max activation=1.000 | input neurons=7963
+23:01:10 | INFO    | flynum.run.stage0_circuits | ------------------------------------------------------------------------------
+23:01:10 | INFO    | flynum.run.stage0_circuits | run stage0_circuits finished: ok (66.3s)

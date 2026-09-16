@@ -1,0 +1,66 @@
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | run stage0_calibration_core started -> I:\2026.9.14\9.15果蝇识字\runs\stage0_calibration_core
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | ==============================================================================
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | CALIBRATION + SIGNAL PROPAGATION AUDIT  (circuit=core)
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | ==============================================================================
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:45:46 | INFO    | flynum.run.stage0_calibration_core | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+09:45:49 | INFO    | flynum.run.stage0_calibration_core | circuit core loaded from cache: 33480 neurons / 1170024 edges
+09:45:49 | INFO    | flynum.run.stage0_calibration_core | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+09:45:49 | INFO    | flynum.run.stage0_calibration_core | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+09:45:49 | INFO    | flynum.run.stage0_calibration_core | readout: visual_projection (VPN) -> 9200 neurons
+09:45:50 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:45:50 | INFO    | flynum.run.stage0_calibration_core | w_scale    act(t=1)  act(t=T)    dead%    sat% act(t=32) max(t=32)   growth stable
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.02         0.0230    0.0970     0.0%    0.0%    0.1174      1.11     1.10 yes
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.05         0.0230    0.0987     0.0%    0.0%    0.1214      1.12     1.11 yes
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.10         0.0230    0.1019     0.0%    0.0%    0.1303      1.15     1.14 yes
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.20         0.0230    0.1097     0.0%    0.0%    0.1672      3.51     1.32 yes
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.40         0.0230    0.1326     0.0%    0.1%    0.8877     89.16     5.16 NO
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.60         0.0230    0.1709     0.0%    0.4%   19.9120   3044.56    72.58 NO
+09:45:51 | INFO    | flynum.run.stage0_calibration_core | 0.80         0.0230    0.2341     0.0%    2.2%  488.9772  85366.33   973.46 NO
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | 1.00         0.0230    0.3364     0.0%    6.4% 9739.4082 1824743.25  9782.27 NO
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | 1.50         0.0230    0.9183     0.0%   21.6% 6665478.5000 1363381760.00 1166657.50 NO
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | 2.00         0.0230    2.4858     0.0%   45.3% 1538127488.0000 327701790720.00 55017508.00 NO
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | chosen w_scale = 0.20  (activity 0.1097, dead 0.0%, VPN 0.1130, growth over 32 steps 1.32, max 3.51)  [largest w_scale that is both inside the healthy activity band and still bounded after 32 steps]
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | signal propagation by superclass (mean activity per step)
+09:45:52 | INFO    | flynum.run.stage0_calibration_core |   ol_intrinsic         n= 23717 | 0.024 0.044 0.061 0.074 0.085 0.094 0.102 0.108
+09:45:52 | INFO    | flynum.run.stage0_calibration_core |   visual_projection    n=  9200 | 0.020 0.038 0.054 0.068 0.081 0.092 0.103 0.113
+09:45:52 | INFO    | flynum.run.stage0_calibration_core |   visual_centrifugal   n=   563 | 0.020 0.039 0.057 0.074 0.090 0.106 0.120 0.134
+09:45:52 | INFO    | flynum.run.stage0_calibration_core |   input_cells          n=  7961 | 0.033 0.059 0.081 0.098 0.112 0.124 0.133 0.141
+09:45:52 | INFO    | flynum.run.stage0_calibration_core |   VPN activity at t=1 0.0200 -> t=T 0.1130  | signal reaches readout: True
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | wrote I:\2026.9.14\9.15果蝇识字\data\processed\calibration_core.json
+09:45:52 | INFO    | flynum.run.stage0_calibration_core | run stage0_calibration_core finished: ok (9.0s)
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | run stage0_calibration_core started -> I:\2026.9.14\9.15果蝇识字\runs\stage0_calibration_core
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | ==============================================================================
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | CALIBRATION + SIGNAL PROPAGATION AUDIT  (circuit=core)
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | ==============================================================================
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:46:33 | INFO    | flynum.run.stage0_calibration_core | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+09:46:35 | INFO    | flynum.run.stage0_calibration_core | circuit core loaded from cache: 33480 neurons / 1170024 edges
+09:46:35 | INFO    | flynum.run.stage0_calibration_core | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+09:46:35 | INFO    | flynum.run.stage0_calibration_core | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+09:46:35 | INFO    | flynum.run.stage0_calibration_core | readout: visual_projection (VPN) -> 9200 neurons
+09:46:36 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:46:36 | INFO    | flynum.run.stage0_calibration_core | w_scale    act(t=1)  act(t=T)    dead%    sat% act(t=32) max(t=32)   growth stable
+09:46:37 | INFO    | flynum.run.stage0_calibration_core | 0.02         0.0230    0.0970     0.0%    0.0%    0.1174      1.11     1.10 yes
+09:46:37 | INFO    | flynum.run.stage0_calibration_core | 0.05         0.0230    0.0987     0.0%    0.0%    0.1214      1.12     1.11 yes
+09:46:37 | INFO    | flynum.run.stage0_calibration_core | 0.10         0.0230    0.1019     0.0%    0.0%    0.1303      1.15     1.14 yes
+09:46:37 | INFO    | flynum.run.stage0_calibration_core | 0.20         0.0230    0.1097     0.0%    0.0%    0.1672      3.51     1.32 yes
+09:46:37 | INFO    | flynum.run.stage0_calibration_core | 0.40         0.0230    0.1326     0.0%    0.1%    0.8877     89.16     5.16 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | 0.60         0.0230    0.1709     0.0%    0.4%   19.9120   3044.56    72.58 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | 0.80         0.0230    0.2341     0.0%    2.2%  488.9772  85366.33   973.46 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | 1.00         0.0230    0.3364     0.0%    6.4% 9739.4082 1824743.25  9782.27 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | 1.50         0.0230    0.9183     0.0%   21.6% 6665479.0000 1363381760.00 1166657.62 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | 2.00         0.0230    2.4858     0.0%   45.3% 1538127488.0000 327701823488.00 55017508.00 NO
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | chosen w_scale = 1.00  (activity 0.3364, dead 0.0%, VPN 0.6948, growth over 32 steps 9782.27, max 1824743.25)  [largest w_scale inside the healthy activity band (activity criterion at the task horizon t=8; note this value is only marginally stable)]
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | ------------------------------------------------------------------------------
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | signal propagation by superclass (mean activity per step)
+09:46:38 | INFO    | flynum.run.stage0_calibration_core |   ol_intrinsic         n= 23717 | 0.024 0.046 0.066 0.085 0.105 0.126 0.150 0.179
+09:46:38 | INFO    | flynum.run.stage0_calibration_core |   visual_projection    n=  9200 | 0.020 0.045 0.078 0.125 0.194 0.298 0.455 0.695
+09:46:38 | INFO    | flynum.run.stage0_calibration_core |   visual_centrifugal   n=   563 | 0.020 0.051 0.099 0.173 0.287 0.460 0.723 1.121
+09:46:38 | INFO    | flynum.run.stage0_calibration_core |   input_cells          n=  7961 | 0.033 0.061 0.084 0.105 0.122 0.138 0.152 0.165
+09:46:38 | INFO    | flynum.run.stage0_calibration_core |   VPN activity at t=1 0.0200 -> t=T 0.6948  | signal reaches readout: True
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | wrote I:\2026.9.14\9.15果蝇识字\data\processed\calibration_core.json
+09:46:38 | INFO    | flynum.run.stage0_calibration_core | run stage0_calibration_core finished: ok (9.2s)

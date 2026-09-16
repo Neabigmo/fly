@@ -1,0 +1,64 @@
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | run s4_add_M1_core_real_N8400_m0_sh0_e960e06409 started -> I:\2026.9.14\9.15果蝇识字\runs\s4_add_M1_core_real_N8400_m0_sh0_e960e06409
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | ==============================================================================
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | ADDITION RUN | model=M1 graph=real circuit=core | a,b in [1,4] | holdout ((2, 3), (3, 2))
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | ==============================================================================
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | ------------------------------------------------------------------------------
+07:18:56 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | readout: visual_projection (VPN) -> 9200 neurons
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | addition data loaded from cache (8400 train pairs items)
+07:18:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | addition data: 8400 train items (14 pairs), 1200 holdout items, 7 classes
+07:18:59 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | model: 1267911 trainable parameters | steps A=5 gap=4 B=5 | readout=visual_projection (VPN)
+07:19:20 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   0 | loss 2.8567 | val 0.0000 | 18.5s
+07:19:39 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   1 | loss 1.6206 | val 0.0000 | 18.2s
+07:19:57 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   2 | loss 1.5839 | val 0.0000 | 18.1s
+07:20:15 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   3 | loss 1.5627 | val 0.0000 | 18.1s
+07:20:33 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   4 | loss 1.5501 | val 0.0000 | 18.0s
+07:20:51 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   5 | loss 1.5397 | val 0.0155 | 18.0s
+07:21:09 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   6 | loss 1.5270 | val 0.0929 | 18.0s
+07:21:27 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   7 | loss 1.5185 | val 0.0095 | 18.1s
+07:21:45 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   8 | loss 1.5117 | val 0.0952 | 18.1s
+07:22:03 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch   9 | loss 1.5125 | val 0.1286 | 18.2s
+07:22:22 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  10 | loss 1.5004 | val 0.0381 | 18.2s
+07:22:40 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  11 | loss 1.4931 | val 0.0107 | 18.2s
+07:22:58 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  12 | loss 1.4821 | val 0.1262 | 18.2s
+07:23:16 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  13 | loss 1.4719 | val 0.0476 | 18.2s
+07:23:34 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  14 | loss 1.4621 | val 0.1786 | 18.2s
+07:23:53 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  15 | loss 1.4508 | val 0.0393 | 18.3s
+07:24:11 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  16 | loss 1.4439 | val 0.1202 | 18.1s
+07:24:29 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  17 | loss 1.4383 | val 0.0893 | 18.2s
+07:24:47 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  18 | loss 1.4302 | val 0.0571 | 18.1s
+07:25:05 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  19 | loss 1.4226 | val 0.1214 | 18.1s
+07:25:23 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  20 | loss 1.4134 | val 0.0655 | 18.2s
+07:25:42 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  21 | loss 1.4058 | val 0.0536 | 18.2s
+07:26:00 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  22 | loss 1.4007 | val 0.1107 | 18.2s
+07:26:18 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  23 | loss 1.3879 | val 0.0821 | 18.3s
+07:26:36 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  24 | loss 1.3820 | val 0.0429 | 18.2s
+07:26:55 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  25 | loss 1.3783 | val 0.1345 | 18.2s
+07:27:13 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  26 | loss 1.3751 | val 0.1810 | 18.3s
+07:27:31 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  27 | loss 1.3628 | val 0.1583 | 18.3s
+07:27:49 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  28 | loss 1.3589 | val 0.1298 | 18.2s
+07:28:08 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  29 | loss 1.3540 | val 0.0464 | 18.3s
+07:28:26 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  30 | loss 1.3442 | val 0.0726 | 18.2s
+07:28:44 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  31 | loss 1.3382 | val 0.1131 | 18.2s
+07:29:02 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  32 | loss 1.3315 | val 0.0714 | 18.2s
+07:29:20 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  33 | loss 1.3263 | val 0.1345 | 18.1s
+07:29:38 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  34 | loss 1.3246 | val 0.1048 | 18.1s
+07:29:57 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  35 | loss 1.3181 | val 0.1548 | 18.3s
+07:30:15 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  36 | loss 1.3143 | val 0.1179 | 18.3s
+07:30:33 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  37 | loss 1.3095 | val 0.1548 | 18.2s
+07:30:52 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  38 | loss 1.3062 | val 0.1274 | 18.2s
+07:31:10 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  39 | loss 1.3070 | val 0.1286 | 18.3s
+07:31:28 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  40 | loss 1.2984 | val 0.0833 | 18.2s
+07:31:46 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   epoch  41 | loss 1.2989 | val 0.1488 | 18.2s
+07:31:46 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   early stop at epoch 41 (best 26)
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | ------------------------------------------------------------------------------
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | train acc 0.3940 | held-out-pair acc 0.0117 (n=1200, chance 0.143) | seen-pairs-on-train 0.1008
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | addition matrix (accuracy per a+b):
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   a=1 | nan nan nan nan
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   a=2 | nan nan 0.00 nan
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   a=3 | nan 0.02 nan nan
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 |   a=4 | nan nan nan nan
+07:31:48 | INFO    | flynum.run.s4_add_M1_core_real_N8400_m0_sh0_e960e06409 | run s4_add_M1_core_real_N8400_m0_sh0_e960e06409 finished: ok (775.1s)

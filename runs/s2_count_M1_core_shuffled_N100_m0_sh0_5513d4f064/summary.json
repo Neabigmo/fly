@@ -1,0 +1,20 @@
+{
+  "run_id": "s2_count_M1_core_shuffled_N100_m0_sh0_5513d4f064",
+  "status": "ok",
+  "wall_seconds": 42.5,
+  "finished_at": "2026-09-16T00:17:55+00:00",
+  "stage": "2",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "n_train": 100,
+  "model_seed": 0,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.4696,
+  "test_acc_a": 0.4694,
+  "test_acc_b": 0.1706,
+  "test_acc_c": 0.1232,
+  "n_params": 1249509,
+  "epochs_run": 53
+}

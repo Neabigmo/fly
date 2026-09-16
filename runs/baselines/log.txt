@@ -1,0 +1,43 @@
+23:50:38 | INFO    | flynum.run.baselines   | run baselines started -> I:\2026.9.14\9.15果蝇识字\runs\baselines
+23:50:38 | INFO    | flynum.run.baselines   | ==============================================================================
+23:50:38 | INFO    | flynum.run.baselines   | BASELINES (non-connectome references)
+23:50:38 | INFO    | flynum.run.baselines   | ==============================================================================
+23:50:38 | INFO    | flynum.run.baselines   | generating count stimuli: pool=20000 ...
+23:52:13 | INFO    | flynum.run.baselines   | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+23:52:13 | INFO    | flynum.run.baselines   | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+23:52:13 | INFO    | flynum.run.baselines   | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+23:52:13 | INFO    | flynum.run.baselines   | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+23:55:10 | INFO    | flynum.run.baselines   | run baselines started -> I:\2026.9.14\9.15果蝇识字\runs\baselines
+23:55:10 | INFO    | flynum.run.baselines   | ==============================================================================
+23:55:10 | INFO    | flynum.run.baselines   | BASELINES (non-connectome references)
+23:55:10 | INFO    | flynum.run.baselines   | ==============================================================================
+23:55:10 | INFO    | flynum.run.baselines   | count stimuli loaded from cache (20000 pool images)
+23:55:15 | INFO    | flynum.run.baselines   | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+23:55:15 | INFO    | flynum.run.baselines   | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+23:55:15 | INFO    | flynum.run.baselines   | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+23:55:15 | INFO    | flynum.run.baselines   | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+23:55:15 | INFO    | flynum.run.baselines   | ------------------------------------------------------------------------------
+23:55:15 | INFO    | flynum.run.baselines   | baseline: area
+23:55:15 | INFO    | flynum.run.baselines   |   A -> acc 0.5570 | macro-F1 0.5541
+23:55:15 | INFO    | flynum.run.baselines   |   B -> acc 0.2000 | macro-F1 0.0667
+23:55:15 | INFO    | flynum.run.baselines   |   C -> acc 0.2000 | macro-F1 0.0667
+23:55:15 | INFO    | flynum.run.baselines   |   D -> acc 0.2000 | macro-F1 0.0667
+23:55:15 | INFO    | flynum.run.baselines   | ------------------------------------------------------------------------------
+23:55:15 | INFO    | flynum.run.baselines   | baseline: pixels
+23:55:18 | INFO    | flynum.run.baselines   |   A -> acc 0.5058 | macro-F1 0.5036
+23:55:18 | INFO    | flynum.run.baselines   |   B -> acc 0.1996 | macro-F1 0.1389
+23:55:18 | INFO    | flynum.run.baselines   |   C -> acc 0.2304 | macro-F1 0.1347
+23:55:18 | INFO    | flynum.run.baselines   |   D -> acc 0.2140 | macro-F1 0.1488
+23:55:18 | INFO    | flynum.run.baselines   | ------------------------------------------------------------------------------
+23:55:18 | INFO    | flynum.run.baselines   | baseline: cnn
+23:55:33 | INFO    | flynum.run.baselines   |   A -> acc 0.9998 | macro-F1 0.9998
+23:55:33 | INFO    | flynum.run.baselines   |   B -> acc 0.9764 | macro-F1 0.9763
+23:55:33 | INFO    | flynum.run.baselines   |   C -> acc 0.9994 | macro-F1 0.9994
+23:55:33 | INFO    | flynum.run.baselines   |   D -> acc 0.9976 | macro-F1 0.9976
+23:55:33 | INFO    | flynum.run.baselines   | ------------------------------------------------------------------------------
+23:55:33 | INFO    | flynum.run.baselines   | summary (accuracy by condition):
+23:55:33 | INFO    | flynum.run.baselines   | model           A        B        C        D
+23:55:33 | INFO    | flynum.run.baselines   | area       0.5570   0.2000   0.2000   0.2000
+23:55:33 | INFO    | flynum.run.baselines   | pixels     0.5058   0.1996   0.2304   0.2140
+23:55:33 | INFO    | flynum.run.baselines   | cnn        0.9998   0.9764   0.9994   0.9976
+23:55:33 | INFO    | flynum.run.baselines   | run baselines finished: ok (27.3s)

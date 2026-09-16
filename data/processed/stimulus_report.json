@@ -1,0 +1,253 @@
+{
+  "stimulus_config": {
+    "image_size": 32,
+    "n_min": 1,
+    "n_max": 5,
+    "radius_min": 1.3,
+    "radius_max": 3.4,
+    "margin": 1.0,
+    "min_gap": 1.5,
+    "noise_sigma": 0.02,
+    "supersample": 4,
+    "area_target": 32.2,
+    "ring_radius": 9.5,
+    "a_min": 1,
+    "a_max": 4,
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ]
+  },
+  "conditions": {
+    "A": {
+      "mode": "A",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 26.22,
+        "1": 45.46,
+        "2": 62.81,
+        "3": 81.28,
+        "4": 98.9
+      },
+      "ink_centroid_accuracy": 0.5584,
+      "spread_centroid_accuracy": 0.5032,
+      "ink_std_overall": 29.873,
+      "blob_ok_fraction": 1.0,
+      "mean_attempts": 1.0,
+      "ink_cv": 0.47466161847114563,
+      "spread_cv": 0.5518062710762024
+    },
+    "B": {
+      "mode": "B",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.83,
+        "2": 39.84,
+        "3": 39.8,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4828,
+      "ink_std_overall": 0.427,
+      "blob_ok_fraction": 1.0,
+      "mean_attempts": 1.0,
+      "ink_cv": 0.010729936882853508,
+      "spread_cv": 0.5659154653549194
+    },
+    "C": {
+      "mode": "C",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.85,
+        "2": 39.83,
+        "3": 39.79,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2166,
+      "spread_centroid_accuracy": 0.4324,
+      "ink_std_overall": 0.431,
+      "blob_ok_fraction": 1.0,
+      "mean_attempts": 1.0,
+      "ink_cv": 0.010815734975039959,
+      "spread_cv": 0.500076174736023
+    },
+    "D": {
+      "mode": "D",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.92,
+        "1": 39.84,
+        "2": 39.8,
+        "3": 39.81,
+        "4": 39.83
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4606,
+      "ink_std_overall": 0.462,
+      "blob_ok_fraction": 1.0,
+      "mean_attempts": 1.0,
+      "ink_cv": 0.011605293489992619,
+      "spread_cv": 0.5696383714675903
+    }
+  },
+  "learning_curve_subsets": {
+    "100": {
+      "n": 100,
+      "per_class": [
+        20,
+        20,
+        20,
+        20,
+        20
+      ]
+    },
+    "500": {
+      "n": 500,
+      "per_class": [
+        100,
+        100,
+        100,
+        100,
+        100
+      ]
+    },
+    "1000": {
+      "n": 1000,
+      "per_class": [
+        200,
+        200,
+        200,
+        200,
+        200
+      ]
+    },
+    "5000": {
+      "n": 5000,
+      "per_class": [
+        1000,
+        1000,
+        1000,
+        1000,
+        1000
+      ]
+    },
+    "20000": {
+      "n": 20000,
+      "per_class": [
+        4000,
+        4000,
+        4000,
+        4000,
+        4000
+      ]
+    }
+  },
+  "condition_C_spread_mean": 9.434677124023438,
+  "condition_C_spread_cv": 0.0014008911093696952,
+  "radius_ranges": {
+    "B": {
+      "min": 1.4290132522583008,
+      "max": 3.2014963626861572
+    },
+    "C": {
+      "min": 1.428937554359436,
+      "max": 3.2014963626861572
+    },
+    "D": {
+      "min": 1.4287842512130737,
+      "max": 3.2014963626861572
+    }
+  },
+  "subsets_nested": true,
+  "addition": {
+    "train_pairs": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ]
+    ],
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "train_sums": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "unseen_sums": [
+      5
+    ],
+    "n_classes": 7
+  }
+}

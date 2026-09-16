@@ -1,0 +1,311 @@
+{
+  "circuit": "core",
+  "graph": "real",
+  "n_neurons": 33480,
+  "n_edges": 1170024,
+  "n_classes": 7,
+  "label_offset": 2,
+  "readout_population": "vpn",
+  "readout_name": "visual_projection (VPN)",
+  "n_readout_neurons": 9200,
+  "n_input_neurons": 7961,
+  "n_columns_with_input": 1769,
+  "n_driven_columns": 1356,
+  "n_columns": 1771,
+  "hex_bounds": [
+    4.5,
+    53.5,
+    0.8660253882408142,
+    33.77499008178711
+  ],
+  "hex_density": 1.192811653697844,
+  "circuit_qc": {
+    "circuit": "core",
+    "neurons": 33480,
+    "edges": 1170024,
+    "edges_per_neuron": 34.95,
+    "isolated_removed": 4,
+    "self_loops": 0,
+    "synapses": 5796097.0,
+    "in_degree_median": 16.0,
+    "in_degree_mean": 34.94695340501792,
+    "in_degree_max": 1833,
+    "out_degree_median": 20.0,
+    "out_degree_max": 3801,
+    "weight_mean_log1p": 1.298768401145935,
+    "retained_out_weight_fraction": 0.2637,
+    "retained_in_weight_fraction": 0.3218
+  },
+  "shuffle_stats": {
+    "graph": "real"
+  },
+  "run_id": "s4_add_M1_core_real_N8400_m0_sh0_e960e06409",
+  "stage": "4",
+  "task": "add",
+  "model": "M1",
+  "n_params": 1267911,
+  "holdout_pairs": [
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "addition_train_accuracy": 0.39404761904761904,
+  "addition_test_accuracy": 0.011666666666666667,
+  "unseen_pair_accuracy": 0.011666666666666667,
+  "unseen_ci": [
+    0.006666666666666667,
+    0.018333333333333333
+  ],
+  "seen_pair_accuracy_on_train": 0.10083333333333333,
+  "unseen": {
+    "n_unseen": 1200,
+    "n_seen": 0,
+    "accuracy_seen": NaN,
+    "accuracy_unseen": 0.011666666666666667,
+    "macro_f1_unseen": 0.0032948929159802307,
+    "generalisation_drop": NaN
+  },
+  "matrix_test": {
+    "1+1": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 2
+    },
+    "1+2": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 3
+    },
+    "1+3": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 4
+    },
+    "1+4": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 5
+    },
+    "2+1": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 3
+    },
+    "2+2": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 4
+    },
+    "2+3": {
+      "n": 600,
+      "accuracy": 0.0033333333333333335,
+      "target_sum": 5
+    },
+    "2+4": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 6
+    },
+    "3+1": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 4
+    },
+    "3+2": {
+      "n": 600,
+      "accuracy": 0.02,
+      "target_sum": 5
+    },
+    "3+3": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 6
+    },
+    "3+4": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 7
+    },
+    "4+1": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 5
+    },
+    "4+2": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 6
+    },
+    "4+3": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 7
+    },
+    "4+4": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 8
+    }
+  },
+  "matrix_train": {
+    "1+1": {
+      "n": 600,
+      "accuracy": 0.0,
+      "target_sum": 2
+    },
+    "1+2": {
+      "n": 600,
+      "accuracy": 0.6433333333333333,
+      "target_sum": 3
+    },
+    "1+3": {
+      "n": 600,
+      "accuracy": 0.53,
+      "target_sum": 4
+    },
+    "1+4": {
+      "n": 600,
+      "accuracy": 0.015,
+      "target_sum": 5
+    },
+    "2+1": {
+      "n": 600,
+      "accuracy": 0.435,
+      "target_sum": 3
+    },
+    "2+2": {
+      "n": 600,
+      "accuracy": 0.5033333333333333,
+      "target_sum": 4
+    },
+    "2+3": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 5
+    },
+    "2+4": {
+      "n": 600,
+      "accuracy": 0.6166666666666667,
+      "target_sum": 6
+    },
+    "3+1": {
+      "n": 600,
+      "accuracy": 0.41333333333333333,
+      "target_sum": 4
+    },
+    "3+2": {
+      "n": 0,
+      "accuracy": NaN,
+      "target_sum": 5
+    },
+    "3+3": {
+      "n": 600,
+      "accuracy": 0.71,
+      "target_sum": 6
+    },
+    "3+4": {
+      "n": 600,
+      "accuracy": 0.25333333333333335,
+      "target_sum": 7
+    },
+    "4+1": {
+      "n": 600,
+      "accuracy": 0.18666666666666668,
+      "target_sum": 5
+    },
+    "4+2": {
+      "n": 600,
+      "accuracy": 0.6966666666666667,
+      "target_sum": 6
+    },
+    "4+3": {
+      "n": 600,
+      "accuracy": 0.3466666666666667,
+      "target_sum": 7
+    },
+    "4+4": {
+      "n": 600,
+      "accuracy": 0.16666666666666666,
+      "target_sum": 8
+    }
+  },
+  "confusion_test": [
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      106,
+      380,
+      14,
+      658,
+      39,
+      3
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  ],
+  "train_info": {
+    "best_val_acc": 0.18095238095238095,
+    "best_epoch": 26,
+    "epochs_run": 42,
+    "wall_seconds": 764.3,
+    "protocol": "BPTT on per-edge gains + readout"
+  },
+  "wall_seconds_total": 775.0,
+  "train_seconds": 769.1
+}

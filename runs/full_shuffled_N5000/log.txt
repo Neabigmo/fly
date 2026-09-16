@@ -1,0 +1,66 @@
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | run full_shuffled_N5000 started -> I:\2026.9.14\9.15果蝇识字\runs\full_shuffled_N5000
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | ==============================================================================
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | COUNT RUN | model=M1 graph=shuffled circuit=full N=5000 model_seed=0 shuffle_seed=0
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | ==============================================================================
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | ------------------------------------------------------------------------------
+11:31:04 | INFO    | flynum.run.full_shuffled_N5000 | preparing: circuit=full graph=shuffled retina=isotropic/lamina/both readout=vpn
+11:31:07 | INFO    | flynum.run.full_shuffled_N5000 | circuit full loaded from cache: 99163 neurons / 12392758 edges
+12:01:16 | INFO    | flynum.run.full_shuffled_N5000 | shuffle(seed=0): 241766457 swaps / 248000000 attempts (97.5% accepted) | edge overlap with real graph 18.17%
+12:01:23 | INFO    | flynum.run.full_shuffled_N5000 |   shuffle verified: overlap with real graph 18.17%, degrees and weights preserved
+12:01:35 | INFO    | flynum.run.full_shuffled_N5000 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+12:01:35 | INFO    | flynum.run.full_shuffled_N5000 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7963 input neurons
+12:01:35 | INFO    | flynum.run.full_shuffled_N5000 | readout: visual_projection (VPN) -> 9200 neurons
+12:01:37 | INFO    | flynum.run.full_shuffled_N5000 | count stimuli loaded from cache (20000 pool images)
+12:01:43 | INFO    | flynum.run.full_shuffled_N5000 | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+12:01:43 | INFO    | flynum.run.full_shuffled_N5000 | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+12:01:43 | INFO    | flynum.run.full_shuffled_N5000 | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+12:01:43 | INFO    | flynum.run.full_shuffled_N5000 | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+12:01:45 | INFO    | flynum.run.full_shuffled_N5000 | model: 12537926 trainable parameters | readout=visual_projection (VPN) (9200 neurons) | alpha=0.20 steps=8
+12:01:45 | INFO    | flynum.run.full_shuffled_N5000 | training set: 5000 images (class counts [1000, 1000, 1000, 1000, 1000])
+12:01:45 | INFO    | flynum.run.full_shuffled_N5000 | readout standardisation disabled
+12:03:39 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   0 | loss 1.6763 | train 0.2112 | val 0.2000 | 110.3s
+12:05:45 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   1 | loss 1.5969 | train 0.2530 | val 0.2368 | 110.2s
+12:08:04 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   2 | loss 1.5609 | train 0.3112 | val 0.2400 | 110.4s
+12:09:56 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   3 | loss 1.4873 | train 0.3676 | val 0.3740 | 110.6s
+12:12:02 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   4 | loss 1.4054 | train 0.4022 | val 0.4308 | 110.8s
+12:14:07 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   5 | loss 1.3289 | train 0.4358 | val 0.4224 | 110.7s
+12:16:12 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   6 | loss 1.2832 | train 0.4392 | val 0.4412 | 110.9s
+12:18:18 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   7 | loss 1.2407 | train 0.4620 | val 0.4552 | 110.7s
+12:20:24 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   8 | loss 1.2193 | train 0.4612 | val 0.4544 | 110.6s
+12:22:29 | INFO    | flynum.run.full_shuffled_N5000 |   epoch   9 | loss 1.1892 | train 0.4758 | val 0.4404 | 110.7s
+12:24:26 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  10 | loss 1.1813 | train 0.4670 | val 0.4052 | 110.9s
+12:26:31 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  11 | loss 1.1580 | train 0.4792 | val 0.4632 | 110.6s
+12:28:37 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  12 | loss 1.1463 | train 0.4872 | val 0.4468 | 110.7s
+12:30:29 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  13 | loss 1.1392 | train 0.4922 | val 0.4240 | 111.0s
+12:32:34 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  14 | loss 1.1398 | train 0.4798 | val 0.4732 | 110.6s
+12:34:40 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  15 | loss 1.1206 | train 0.4958 | val 0.4520 | 110.7s
+12:36:45 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  16 | loss 1.1118 | train 0.5012 | val 0.4788 | 110.6s
+12:38:51 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  17 | loss 1.1087 | train 0.4924 | val 0.4820 | 110.6s
+12:40:43 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  18 | loss 1.1103 | train 0.4918 | val 0.4712 | 110.8s
+12:42:48 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  19 | loss 1.0944 | train 0.5026 | val 0.4696 | 110.5s
+12:44:48 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  20 | loss 1.0965 | train 0.4928 | val 0.4392 | 110.7s
+12:46:53 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  21 | loss 1.0920 | train 0.4952 | val 0.4496 | 110.4s
+12:48:58 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  22 | loss 1.0848 | train 0.5064 | val 0.4756 | 110.6s
+12:51:03 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  23 | loss 1.0832 | train 0.5028 | val 0.4800 | 110.5s
+12:53:08 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  24 | loss 1.0768 | train 0.5156 | val 0.4728 | 110.3s
+12:55:14 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  25 | loss 1.0754 | train 0.5036 | val 0.4736 | 110.5s
+12:57:19 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  26 | loss 1.0732 | train 0.5068 | val 0.4792 | 110.6s
+12:59:24 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  27 | loss 1.0699 | train 0.5064 | val 0.4716 | 110.5s
+13:01:30 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  28 | loss 1.0703 | train 0.5090 | val 0.4740 | 110.5s
+13:03:35 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  29 | loss 1.0666 | train 0.5036 | val 0.4852 | 110.4s
+13:05:40 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  30 | loss 1.0641 | train 0.5088 | val 0.4704 | 110.5s
+13:07:40 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  31 | loss 1.0629 | train 0.5136 | val 0.4756 | 110.8s
+13:09:45 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  32 | loss 1.0613 | train 0.5130 | val 0.4804 | 110.6s
+13:11:51 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  33 | loss 1.0598 | train 0.5106 | val 0.4744 | 110.8s
+13:13:57 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  34 | loss 1.0591 | train 0.5144 | val 0.4812 | 111.1s
+13:15:55 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  35 | loss 1.0573 | train 0.5116 | val 0.4716 | 111.6s
+13:17:47 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  36 | loss 1.0568 | train 0.5108 | val 0.4736 | 111.3s
+13:19:52 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  37 | loss 1.0567 | train 0.5136 | val 0.4752 | 110.8s
+13:21:58 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  38 | loss 1.0563 | train 0.5120 | val 0.4740 | 110.7s
+13:24:03 | INFO    | flynum.run.full_shuffled_N5000 |   epoch  39 | loss 1.0560 | train 0.5150 | val 0.4732 | 110.7s
+13:24:18 | INFO    | flynum.run.full_shuffled_N5000 | ------------------------------------------------------------------------------
+13:24:22 | INFO    | flynum.run.full_shuffled_N5000 |   test A: acc 0.4906 (chance 0.20) | macro-F1 0.4833 | per-class 0.82 0.40 0.39 0.31 0.54
+13:24:26 | INFO    | flynum.run.full_shuffled_N5000 |   test B: acc 0.1792 (chance 0.20) | macro-F1 0.1076 | per-class 0.30 0.57 0.02 0.00 0.00
+13:24:29 | INFO    | flynum.run.full_shuffled_N5000 |   test C: acc 0.1718 (chance 0.20) | macro-F1 0.1245 | per-class 0.47 0.39 0.00 0.00 0.00
+13:24:33 | INFO    | flynum.run.full_shuffled_N5000 |   test D: acc 0.1786 (chance 0.20) | macro-F1 0.1035 | per-class 0.44 0.46 0.00 0.00 0.00
+13:24:33 | INFO    | flynum.run.full_shuffled_N5000 | run full_shuffled_N5000 finished: ok (6809.9s)

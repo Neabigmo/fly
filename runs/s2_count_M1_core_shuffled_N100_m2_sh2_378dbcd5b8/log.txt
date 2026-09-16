@@ -1,0 +1,83 @@
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | run s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 started -> I:\2026.9.14\9.15果蝇识字\runs\s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | ==============================================================================
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | COUNT RUN | model=M1 graph=shuffled circuit=core N=100 model_seed=2 shuffle_seed=2
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | ==============================================================================
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | ------------------------------------------------------------------------------
+01:39:18 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | preparing: circuit=core graph=shuffled retina=isotropic/lamina/both readout=vpn
+01:39:20 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+01:39:20 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   shuffle verified: overlap with real graph 2.21%, degrees and weights preserved
+01:39:20 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | shuffled graph loaded from cache (seed=2, overlap=2.21%)
+01:39:21 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+01:39:21 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+01:39:21 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | readout: visual_projection (VPN) -> 9200 neurons
+01:39:21 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | count stimuli loaded from cache (20000 pool images)
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | model: 1249509 trainable parameters | readout=visual_projection (VPN) (9200 neurons) | alpha=0.20 steps=8
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | training set: 100 images (class counts [20, 20, 20, 20, 20])
+01:39:26 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | readout standardisation disabled
+01:39:27 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   0 | loss 5.9507 | train 0.1500 | val 0.2000 | 0.8s
+01:39:28 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   1 | loss 15.2739 | train 0.2000 | val 0.2000 | 0.5s
+01:39:28 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   2 | loss 10.3288 | train 0.2000 | val 0.2000 | 0.5s
+01:39:29 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   3 | loss 10.7169 | train 0.2000 | val 0.2000 | 0.5s
+01:39:29 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   4 | loss 6.0972 | train 0.2400 | val 0.2000 | 0.5s
+01:39:29 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   5 | loss 5.7018 | train 0.2100 | val 0.2000 | 0.5s
+01:39:30 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   6 | loss 4.6782 | train 0.2200 | val 0.2000 | 0.5s
+01:39:30 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   7 | loss 3.4862 | train 0.2000 | val 0.2012 | 0.5s
+01:39:31 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   8 | loss 2.6593 | train 0.2100 | val 0.2000 | 0.5s
+01:39:32 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch   9 | loss 2.6937 | train 0.2000 | val 0.2000 | 0.5s
+01:39:32 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  10 | loss 3.1209 | train 0.2000 | val 0.2000 | 0.5s
+01:39:33 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  11 | loss 2.0331 | train 0.2000 | val 0.2000 | 0.5s
+01:39:33 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  12 | loss 2.3047 | train 0.2000 | val 0.2000 | 0.5s
+01:39:33 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  13 | loss 2.2462 | train 0.2300 | val 0.2000 | 0.5s
+01:39:34 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  14 | loss 1.7711 | train 0.2000 | val 0.2000 | 0.5s
+01:39:34 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  15 | loss 2.0768 | train 0.2000 | val 0.2000 | 0.5s
+01:39:35 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  16 | loss 1.7020 | train 0.2500 | val 0.2000 | 0.5s
+01:39:35 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  17 | loss 1.8039 | train 0.1900 | val 0.2000 | 0.5s
+01:39:36 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  18 | loss 1.7909 | train 0.2000 | val 0.2128 | 0.5s
+01:39:36 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  19 | loss 1.6065 | train 0.2700 | val 0.2000 | 0.5s
+01:39:37 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  20 | loss 1.6266 | train 0.2000 | val 0.2000 | 0.5s
+01:39:37 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  21 | loss 1.5619 | train 0.1900 | val 0.2404 | 0.5s
+01:39:38 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  22 | loss 1.5352 | train 0.2400 | val 0.3952 | 0.5s
+01:39:39 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  23 | loss 1.5054 | train 0.5000 | val 0.4160 | 0.5s
+01:39:39 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  24 | loss 1.4744 | train 0.4100 | val 0.3804 | 0.5s
+01:39:40 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  25 | loss 1.4316 | train 0.4400 | val 0.4016 | 0.5s
+01:39:40 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  26 | loss 1.4007 | train 0.5000 | val 0.3808 | 0.5s
+01:39:41 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  27 | loss 1.3725 | train 0.4600 | val 0.3628 | 0.5s
+01:39:41 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  28 | loss 1.3374 | train 0.4400 | val 0.4536 | 0.5s
+01:39:42 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  29 | loss 1.3073 | train 0.5400 | val 0.4528 | 0.5s
+01:39:42 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  30 | loss 1.2818 | train 0.4900 | val 0.4528 | 0.5s
+01:39:43 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  31 | loss 1.2529 | train 0.4600 | val 0.4436 | 0.5s
+01:39:43 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  32 | loss 1.2247 | train 0.5500 | val 0.4388 | 0.5s
+01:39:44 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  33 | loss 1.2011 | train 0.6300 | val 0.4360 | 0.5s
+01:39:44 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  34 | loss 1.1888 | train 0.5700 | val 0.4364 | 0.5s
+01:39:45 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  35 | loss 1.1685 | train 0.6000 | val 0.4364 | 0.5s
+01:39:45 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  36 | loss 1.1514 | train 0.5900 | val 0.4324 | 0.5s
+01:39:45 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  37 | loss 1.1356 | train 0.5400 | val 0.4476 | 0.5s
+01:39:46 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  38 | loss 1.1247 | train 0.6100 | val 0.4560 | 0.5s
+01:39:47 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  39 | loss 1.1140 | train 0.6200 | val 0.4576 | 0.5s
+01:39:47 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  40 | loss 1.1029 | train 0.6500 | val 0.4664 | 0.5s
+01:39:48 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  41 | loss 1.0947 | train 0.6500 | val 0.4548 | 0.5s
+01:39:48 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  42 | loss 1.0887 | train 0.6800 | val 0.4584 | 0.5s
+01:39:49 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  43 | loss 1.0799 | train 0.6400 | val 0.4560 | 0.5s
+01:39:49 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  44 | loss 1.0746 | train 0.6200 | val 0.4532 | 0.5s
+01:39:50 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  45 | loss 1.0704 | train 0.6100 | val 0.4528 | 0.5s
+01:39:50 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  46 | loss 1.0668 | train 0.6100 | val 0.4496 | 0.5s
+01:39:51 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  47 | loss 1.0620 | train 0.6200 | val 0.4484 | 0.5s
+01:39:51 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  48 | loss 1.0586 | train 0.6500 | val 0.4484 | 0.5s
+01:39:52 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  49 | loss 1.0564 | train 0.6900 | val 0.4536 | 0.5s
+01:39:52 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  50 | loss 1.0557 | train 0.7100 | val 0.4624 | 0.5s
+01:39:53 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  51 | loss 1.0527 | train 0.7100 | val 0.4620 | 0.5s
+01:39:53 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  52 | loss 1.0511 | train 0.7000 | val 0.4620 | 0.5s
+01:39:53 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  53 | loss 1.0496 | train 0.7000 | val 0.4560 | 0.5s
+01:39:54 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  54 | loss 1.0485 | train 0.6900 | val 0.4536 | 0.5s
+01:39:54 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   epoch  55 | loss 1.0477 | train 0.6900 | val 0.4552 | 0.5s
+01:39:55 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   early stop at epoch 55 (best 40, val 0.4664)
+01:39:55 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | ------------------------------------------------------------------------------
+01:39:55 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   test A: acc 0.4742 (chance 0.20) | macro-F1 0.4590 | per-class 0.77 0.36 0.18 0.42 0.64
+01:39:56 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   test B: acc 0.1682 (chance 0.20) | macro-F1 0.0945 | per-class 0.21 0.62 0.01 0.00 0.00
+01:39:56 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   test C: acc 0.1914 (chance 0.20) | macro-F1 0.0693 | per-class 0.01 0.95 0.00 0.00 0.00
+01:39:57 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 |   test D: acc 0.1512 (chance 0.20) | macro-F1 0.0950 | per-class 0.23 0.49 0.04 0.00 0.00
+01:39:57 | INFO    | flynum.run.s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 | run s2_count_M1_core_shuffled_N100_m2_sh2_378dbcd5b8 finished: ok (39.4s)

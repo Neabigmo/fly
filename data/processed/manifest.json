@@ -1,0 +1,166 @@
+{
+  "entries": {
+    "edges": {
+      "meta": {
+        "source_file": "connectome-weights-male-cns-v1.0-minconf-0.5.feather",
+        "source_size_bytes": 1051241946,
+        "total_rows": 151856684,
+        "annotated_edges": 26028386,
+        "annotated_synapses": 125365933,
+        "usable_edges": 26028274,
+        "usable_synapses": 125365432,
+        "self_loops_removed": 112,
+        "self_loop_synapses_removed": 504,
+        "aggregated_pre_post": true,
+        "fraction_usable": 0.1714,
+        "weight_min": 1.0,
+        "weight_max": 2591.0,
+        "weight_mean": 4.81650972366333,
+        "weight_median": 2.0,
+        "n_batches": 2318
+      },
+      "path": "data\\processed\\edges.npz",
+      "size_bytes": 314033154,
+      "digest": "e9597cc6ef15aabd"
+    },
+    "annotations_qc": {
+      "meta": {
+        "n_bodies": 211577,
+        "superclass_counts": {
+          "ol_intrinsic": 89403,
+          "__unassigned__": 44877,
+          "cb_intrinsic": 32164,
+          "vnc_intrinsic": 13161,
+          "visual_projection": 9201,
+          "vnc_sensory": 6370,
+          "ol_sensory": 6098,
+          "cb_sensory": 4868,
+          "ascending_neuron": 1846,
+          "descending_neuron": 1314,
+          "vnc_motor": 708,
+          "visual_centrifugal": 563,
+          "sensory_ascending": 537,
+          "cb_motor": 107,
+          "vnc_efferent": 94,
+          "cb_endocrine": 72,
+          "ENS": 50,
+          "vnc_tbc": 38,
+          "vnc_sensory_tbc": 36,
+          "vnc_endocrine": 22,
+          "cb_sensory_tbc": 14,
+          "sensory_descending": 12,
+          "efferent_ascending": 8,
+          "efferent_descending": 4,
+          "cb_efferent": 4,
+          "visual_projection_tbc": 2,
+          "sensory_ascending_tbc": 2,
+          "descending_neuron_tbc": 2
+        },
+        "hex_neurons": 23720,
+        "hex_types": {
+          "L5": 1773,
+          "C3": 1770,
+          "L2": 1767,
+          "L1": 1767,
+          "Tm1": 1767,
+          "T1": 1764,
+          "Mi1": 1762,
+          "Mi9": 1760,
+          "Tm2": 1758,
+          "Mi4": 1758,
+          "Tm9": 1743,
+          "Tm20": 1732,
+          "L3": 892,
+          "C2": 874,
+          "Tm4": 833
+        },
+        "hex_columns": 892,
+        "lc11_neurons": 143,
+        "hex_columns_L": 879,
+        "hex_types_L": 12,
+        "hex_columns_R": 892,
+        "hex_types_R": 15
+      },
+      "path": "data\\processed\\annotations_qc.json",
+      "size_bytes": 1282,
+      "digest": "15b3c94c13040d68"
+    },
+    "circuit_core": {
+      "meta": {
+        "circuit": "core",
+        "graph": "real",
+        "n_neurons": 33480,
+        "n_edges": 1170024,
+        "n_classes": 5,
+        "label_offset": 1,
+        "readout_population": "vpn",
+        "readout_name": "visual_projection (VPN)",
+        "n_readout_neurons": 9200,
+        "n_input_neurons": 7961,
+        "n_columns_with_input": 1769,
+        "n_driven_columns": 1356,
+        "n_columns": 1771,
+        "hex_bounds": [
+          4.5,
+          53.5,
+          0.8660253882408142,
+          33.77499008178711
+        ],
+        "hex_density": 1.192811653697844
+      },
+      "path": "data\\processed\\circuits\\core.npz",
+      "size_bytes": 14309120,
+      "digest": "9f8a17d3948dd55c"
+    },
+    "circuit_full": {
+      "meta": {
+        "circuit": "full",
+        "graph": "real",
+        "n_neurons": 99163,
+        "n_edges": 12392758,
+        "n_classes": 5,
+        "label_offset": 1,
+        "readout_population": "vpn",
+        "readout_name": "visual_projection (VPN)",
+        "n_readout_neurons": 9200,
+        "n_input_neurons": 7963,
+        "n_columns_with_input": 1769,
+        "n_driven_columns": 1356,
+        "n_columns": 1771,
+        "hex_bounds": [
+          4.5,
+          53.5,
+          0.8660253882408142,
+          33.77499008178711
+        ],
+        "hex_density": 1.192811653697844
+      },
+      "path": "data\\processed\\circuits\\full.npz",
+      "size_bytes": 149507392,
+      "digest": "66f69a20a0dd064e"
+    },
+    "stimulus_report": {
+      "meta": {
+        "conditions": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      },
+      "path": "data\\processed\\stimulus_report.json",
+      "size_bytes": 4361,
+      "digest": "d3e20ba6ef419c1f"
+    },
+    "calibration": {
+      "meta": {
+        "chosen_w_scale": 1.0,
+        "reaches": true
+      },
+      "path": "data\\processed\\calibration_core.json",
+      "size_bytes": 8665,
+      "digest": "4b102dbff756bb3a"
+    }
+  },
+  "updated": "2026-09-16T01:46:38+00:00"
+}

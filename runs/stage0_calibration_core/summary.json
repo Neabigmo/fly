@@ -1,0 +1,8 @@
+{
+  "run_id": "stage0_calibration_core",
+  "status": "ok",
+  "wall_seconds": 9.15,
+  "finished_at": "2026-09-16T01:46:38+00:00",
+  "w_scale": 1.0,
+  "reaches_readout": true
+}

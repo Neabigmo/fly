@@ -1,0 +1,14 @@
+{
+  "run_id": "s4_add_M1_core_real_N8400_m2_sh0_542f33cdef",
+  "status": "ok",
+  "wall_seconds": 370.7,
+  "finished_at": "2026-09-15T23:44:10+00:00",
+  "stage": "4",
+  "task": "add",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 2,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.2357142857142857
+}

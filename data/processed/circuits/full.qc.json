@@ -1,0 +1,17 @@
+{
+  "circuit": "full",
+  "neurons": 99163,
+  "edges": 12392758,
+  "edges_per_neuron": 124.97,
+  "isolated_removed": 7,
+  "self_loops": 0,
+  "synapses": 48956544.0,
+  "in_degree_median": 78.0,
+  "in_degree_mean": 124.97360910823593,
+  "in_degree_max": 11485,
+  "out_degree_median": 91.0,
+  "out_degree_max": 11197,
+  "weight_mean_log1p": 1.2862226963043213,
+  "retained_out_weight_fraction": 0.9127,
+  "retained_in_weight_fraction": 0.9579
+}

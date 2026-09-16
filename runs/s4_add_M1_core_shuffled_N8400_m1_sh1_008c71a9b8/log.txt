@@ -1,0 +1,44 @@
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | run s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 started -> I:\2026.9.14\9.15果蝇识字\runs\s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | ==============================================================================
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | ADDITION RUN | model=M1 graph=shuffled circuit=core | a,b in [1,4] | holdout ((2, 3), (3, 2))
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | ==============================================================================
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | ------------------------------------------------------------------------------
+07:57:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | preparing: circuit=core graph=shuffled retina=isotropic/lamina/both readout=vpn
+07:57:47 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   shuffle verified: overlap with real graph 2.19%, degrees and weights preserved
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | shuffled graph loaded from cache (seed=1, overlap=2.19%)
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | readout: visual_projection (VPN) -> 9200 neurons
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | addition data loaded from cache (8400 train pairs items)
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | addition data: 8400 train items (14 pairs), 1200 holdout items, 7 classes
+07:57:48 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | model: 1267911 trainable parameters | steps A=5 gap=4 B=5 | readout=visual_projection (VPN)
+07:58:07 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   0 | loss 2.6747 | val 0.0000 | 18.7s
+07:58:25 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   1 | loss 1.5719 | val 0.0000 | 18.5s
+07:58:44 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   2 | loss 1.5509 | val 0.0000 | 18.6s
+07:59:03 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   3 | loss 1.5371 | val 0.1024 | 18.6s
+07:59:21 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   4 | loss 1.5094 | val 0.2119 | 18.5s
+07:59:40 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   5 | loss 1.4998 | val 0.1345 | 18.5s
+07:59:58 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   6 | loss 1.4848 | val 0.0000 | 18.7s
+08:00:17 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   7 | loss 1.4749 | val 0.0952 | 18.6s
+08:00:36 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   8 | loss 1.4577 | val 0.1417 | 18.7s
+08:00:54 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch   9 | loss 1.4512 | val 0.1083 | 18.6s
+08:01:13 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  10 | loss 1.4389 | val 0.1810 | 18.6s
+08:01:32 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  11 | loss 1.4337 | val 0.1774 | 18.6s
+08:01:50 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  12 | loss 1.4317 | val 0.1012 | 18.9s
+08:02:09 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  13 | loss 1.4152 | val 0.0512 | 18.4s
+08:02:27 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  14 | loss 1.4121 | val 0.1548 | 18.3s
+08:02:45 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  15 | loss 1.3971 | val 0.1488 | 18.3s
+08:03:04 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  16 | loss 1.3920 | val 0.1893 | 18.4s
+08:03:22 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  17 | loss 1.3848 | val 0.1619 | 18.3s
+08:03:41 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  18 | loss 1.3837 | val 0.1393 | 18.4s
+08:03:59 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   epoch  19 | loss 1.3738 | val 0.1345 | 18.4s
+08:03:59 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   early stop at epoch 19 (best 4)
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | ------------------------------------------------------------------------------
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | train acc 0.3301 | held-out-pair acc 0.0017 (n=1200, chance 0.143) | seen-pairs-on-train 0.0025
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | addition matrix (accuracy per a+b):
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   a=1 | nan nan nan nan
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   a=2 | nan nan 0.00 nan
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   a=3 | nan 0.00 nan nan
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 |   a=4 | nan nan nan nan
+08:04:01 | INFO    | flynum.run.s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 | run s4_add_M1_core_shuffled_N8400_m1_sh1_008c71a9b8 finished: ok (376.8s)

@@ -1,0 +1,12 @@
+{
+  "run_id": "stage0_build_connectome",
+  "status": "ok",
+  "wall_seconds": 65.19,
+  "finished_at": "2026-09-15T14:50:37+00:00",
+  "stage": "0c",
+  "total_rows": 151856684,
+  "usable_edges": 26028274,
+  "usable_synapses": 125365432,
+  "hex_neurons": 23720,
+  "hex_columns": 892
+}

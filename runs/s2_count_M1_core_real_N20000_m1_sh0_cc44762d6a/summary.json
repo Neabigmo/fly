@@ -1,0 +1,20 @@
+{
+  "run_id": "s2_count_M1_core_real_N20000_m1_sh0_cc44762d6a",
+  "status": "ok",
+  "wall_seconds": 1712.0,
+  "finished_at": "2026-09-15T20:00:31+00:00",
+  "stage": "2",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 1,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.7588,
+  "test_acc_a": 0.7616,
+  "test_acc_b": 0.5776,
+  "test_acc_c": 0.8404,
+  "n_params": 1249509,
+  "epochs_run": 60
+}

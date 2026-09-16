@@ -1,0 +1,14 @@
+{
+  "run_id": "s4_add_M1_core_shuffled_N8400_m0_sh0_ab1a0fc000",
+  "status": "ok",
+  "wall_seconds": 809.1,
+  "finished_at": "2026-09-15T23:57:44+00:00",
+  "stage": "4",
+  "task": "add",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "model_seed": 0,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.20357142857142857
+}

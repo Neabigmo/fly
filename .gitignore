@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# Large data artefacts: regenerated from the public MaleCNS release by
+#   python scripts/01_download.py && python scripts/02_build_connectome.py
+#   python scripts/03_build_circuits.py
+# Raw download is 1.03 GB; edges.npz is 300 MB; circuits are ~467 MB.
+# ---------------------------------------------------------------------------
+data/raw/
+data/processed/edges.npz
+data/processed/edges_qc.json
+data/processed/circuits/*.npz
+data/processed/stimuli/
+
+# ---------------------------------------------------------------------------
+# Per-run checkpoints and caches.  Run *metadata* (config, env, metrics.jsonl,
+# log.txt, summary.json, full_summary.json, predictions.npz) IS committed --
+# it is the record behind every figure -- but checkpoints and caches are not.
+# ---------------------------------------------------------------------------
+runs/**/ckpt/
+runs/**/figures/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+desktop.ini

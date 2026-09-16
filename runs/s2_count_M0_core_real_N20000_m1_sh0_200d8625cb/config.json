@@ -1,0 +1,82 @@
+{
+  "stage": "2",
+  "task": "count",
+  "model": "M0",
+  "run_name": "",
+  "data": {
+    "circuit": "core",
+    "graph": "real",
+    "shuffle_rounds_per_edge": 20.0,
+    "min_weight": 1
+  },
+  "retina": {
+    "map_mode": "isotropic",
+    "input_types": "lamina",
+    "input_eye": "both",
+    "image_size": 32
+  },
+  "stimulus": {
+    "image_size": 32,
+    "n_min": 1,
+    "n_max": 5,
+    "radius_min": 1.3,
+    "radius_max": 3.4,
+    "margin": 1.0,
+    "min_gap": 1.5,
+    "noise_sigma": 0.02,
+    "supersample": 4,
+    "area_target": 32.2,
+    "ring_radius": 9.5,
+    "a_min": 1,
+    "a_max": 4,
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "add_reps_per_pair": 600
+  },
+  "model_cfg": {
+    "alpha": 0.2,
+    "nonlinearity": "relu",
+    "w_scale": 1.0,
+    "learn_gains": true,
+    "lambda_gain": 0.001,
+    "readout": "vpn",
+    "readout_window": 2,
+    "readout_standardize": false,
+    "readout_stats_samples": 2000
+  },
+  "time": {
+    "steps": 8,
+    "steps_a": 5,
+    "steps_gap": 4,
+    "steps_b": 5
+  },
+  "train": {
+    "n_train": 20000,
+    "n_val": 2500,
+    "n_test": 5000,
+    "batch_size": 64,
+    "max_epochs": 60,
+    "patience": 15,
+    "lr_gain": 0.003,
+    "lr_readout": 0.003,
+    "wd_readout": 0.0001,
+    "grad_clip": 1.0,
+    "cosine": true
+  },
+  "seeds": {
+    "data_seed": 1234,
+    "split_seed": 1235,
+    "model_seed": 1,
+    "shuffle_seed": 0
+  },
+  "_run_id": "s2_count_M0_core_real_N20000_m1_sh0_200d8625cb",
+  "_attempt": 1
+}

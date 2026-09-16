@@ -1,0 +1,28 @@
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | run s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 started -> I:\2026.9.14\9.15果蝇识字\runs\s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | ==============================================================================
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | COUNT RUN | model=M0 graph=real circuit=core N=20000 model_seed=0 shuffle_seed=0
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | ==============================================================================
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | ------------------------------------------------------------------------------
+07:04:49 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+07:04:52 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+07:04:52 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+07:04:52 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+07:04:52 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | readout: visual_projection (VPN) -> 9200 neurons
+07:04:52 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | count stimuli loaded from cache (20000 pool images)
+07:04:57 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+07:04:57 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+07:04:57 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+07:04:57 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+07:04:58 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | model: 79485 trainable parameters | readout=visual_projection (VPN) (9200 neurons) | alpha=0.20 steps=8
+07:04:58 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | training set: 20000 images (class counts [4000, 4000, 4000, 4000, 4000])
+07:04:58 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | readout standardisation disabled
+07:04:58 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | M0 frozen-fly protocol: caching features (single forward pass)
+07:05:03 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   feature matrix (20000, 9200) (736.0 MB)
+07:05:05 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   probe input: 9200 features, standardised (0 constant, mean std=0.00391)
+07:09:32 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   probe: best val 0.5232 in 264.0s
+07:09:32 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | ------------------------------------------------------------------------------
+07:09:34 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   test A: acc 0.5244 (chance 0.20) | macro-F1 0.5195 | per-class 0.74 0.56 0.34 0.32 0.67
+07:09:35 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   test B: acc 0.1934 (chance 0.20) | macro-F1 0.0899 | per-class 0.08 0.88 0.01 0.00 0.00
+07:09:36 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   test C: acc 0.1988 (chance 0.20) | macro-F1 0.0685 | per-class 0.00 0.99 0.00 0.00 0.00
+07:09:37 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 |   test D: acc 0.1900 (chance 0.20) | macro-F1 0.0960 | per-class 0.17 0.78 0.00 0.00 0.00
+07:09:37 | INFO    | flynum.run.s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 | run s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3 finished: ok (288.8s)
