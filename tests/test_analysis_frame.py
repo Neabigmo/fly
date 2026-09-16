@@ -81,3 +81,24 @@ def test_blocks_are_distinguishable(fake_runs):
     assert epoch["optimizer_steps"] == 4740
     # a config value that never existed before this round must survive too
     assert int(fxu["batch_size"]) == 64
+
+
+def test_fields_added_later_still_default_to_the_legacy_behaviour():
+    """Mixed-generation pools must stay one condition.
+
+    The 10-seed replication mixes runs written before the signed-synapse and
+    fixed-step fields existed with runs written after.  Those runs are only
+    comparable because every field added later defaults to exactly what the old
+    code did: no signs, no step cap, no staged evaluation, global normalisation.
+    If a default ever moves, the older half of the pool silently becomes a
+    different experiment, so pin it here.
+    """
+    from flynum.config import ModelConfig, TrainConfig
+
+    mc, tc = ModelConfig(), TrainConfig()
+    assert mc.signed_synapses is False
+    assert mc.unknown_nt_sign == 1
+    assert mc.weight_normalization == "global"
+    assert mc.readout_standardize is True  # the CLI still turns it off explicitly
+    assert tc.max_steps == 0
+    assert tc.eval_every == 0
