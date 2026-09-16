@@ -1,0 +1,20 @@
+{
+  "run_id": "7_rep_real_s7",
+  "status": "ok",
+  "wall_seconds": 1780.8,
+  "finished_at": "2026-09-16T11:05:53+00:00",
+  "stage": "7",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 7,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.7812,
+  "test_acc_a": 0.7812,
+  "test_acc_b": 0.6436,
+  "test_acc_c": 0.9698,
+  "n_params": 1249509,
+  "epochs_run": 60
+}

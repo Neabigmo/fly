@@ -73,14 +73,30 @@ def _blocks() -> dict[str, dict]:
                     "--workers", "1", "--seeds", "3"],
             "est_min": 95,
         },
-        # ---- 2. the confound the user identified ----------------------------- #
-        "fxu": {
-            "why": "equal optimiser-update control for the sample-efficiency knee",
+        # ---- 2. validate the step-budget path before reading its verdict ------ #
+        # At N=20000 the epoch-budget runs already spent exactly 18,780 updates, so
+        # this must reproduce 0.7684/0.7616/0.7768.  It is 1.5 h of insurance that the
+        # max_steps code path agrees with the epoch path, spent BEFORE the decisive
+        # numbers are read rather than after.
+        "fxu_control": {
+            "why": "step-budget machinery control: N=20000 must reproduce the "
+                   "epoch-budget result (same 18,780 updates)",
             "cmd": ["scripts/15_run_parallel.py", "--grid", "fixed_updates",
-                    "--workers", "1"],
-            "est_min": 470,
+                    "--workers", "1", "--n-grid", "20000"],
+            "est_min": 90,
         },
-        # ---- 3. Fly-v2: signed synapses ------------------------------------- #
+        # ---- 3. the decisive confound test ----------------------------------- #
+        # Six runs.  The pre-registered rule turns on Delta(N=5000) at equal updates,
+        # so this block alone answers the question -- and every run costs the same
+        # ~28 min regardless of N, so narrowing to the decisive condition is what
+        # buys time.
+        "fxu_decide": {
+            "why": "DECISIVE: N=5000 at the full 18,780 updates, real vs shuffled",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "fixed_updates",
+                    "--workers", "1", "--n-grid", "5000"],
+            "est_min": 190,
+        },
+        # ---- 4. Fly-v2: signed synapses ------------------------------------- #
         "signed": {
             "why": "signed synapses bound h(t); counting under them, plus a "
                    "scale-matched unsigned control",
@@ -88,7 +104,14 @@ def _blocks() -> dict[str, dict]:
                     "--workers", "1", "--seeds", "3", "--w-scale", "0.5"],
             "est_min": 270,
         },
-        # ---- 4. curriculum addition: the 2x2 transfer table ------------------ #
+        # ---- 5. bracket the knee, only if the decisive block was ambiguous --- #
+        "fxu_bracket": {
+            "why": "N=10000 at equal updates: brackets the knee between 5000 and 20000",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "fixed_updates",
+                    "--workers", "1", "--n-grid", "10000"],
+            "est_min": 190,
+        },
+        # ---- 6. curriculum addition: the 2x2 transfer table ------------------ #
         "curr_real_pre": {
             "why": "real + count-pretrained, held-out pair 2+3/3+2",
             "cmd": ["scripts/16_run_curriculum.py", "--graph", "real",

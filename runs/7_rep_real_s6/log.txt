@@ -1,0 +1,84 @@
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | run 7_rep_real_s6 started -> I:\2026.9.14\9.15果蝇识字\runs\7_rep_real_s6
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | ==============================================================================
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | COUNT RUN | model=M1 graph=real circuit=core N=20000 model_seed=6 shuffle_seed=0
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | ==============================================================================
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | ------------------------------------------------------------------------------
+17:35:16 | INFO    | flynum.run.7_rep_real_s6 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+17:35:18 | INFO    | flynum.run.7_rep_real_s6 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+17:35:18 | INFO    | flynum.run.7_rep_real_s6 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+17:35:18 | INFO    | flynum.run.7_rep_real_s6 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+17:35:19 | INFO    | flynum.run.7_rep_real_s6 | readout: visual_projection (VPN) -> 9200 neurons
+17:35:19 | INFO    | flynum.run.7_rep_real_s6 | count stimuli loaded from cache (20000 pool images)
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | model: 1249509 trainable parameters | readout=visual_projection (VPN) (9200 neurons) | alpha=0.20 steps=8
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | training set: 20000 images (class counts [4000, 4000, 4000, 4000, 4000])
+17:35:25 | INFO    | flynum.run.7_rep_real_s6 | readout standardisation disabled
+17:35:54 | INFO    | flynum.run.7_rep_real_s6 |   epoch   0 | loss 1.8274 | train 0.4142 | val 0.4768 | 29.2s
+17:36:24 | INFO    | flynum.run.7_rep_real_s6 |   epoch   1 | loss 1.0862 | train 0.4861 | val 0.4956 | 29.0s
+17:36:53 | INFO    | flynum.run.7_rep_real_s6 |   epoch   2 | loss 1.0610 | train 0.4982 | val 0.5024 | 29.2s
+17:37:22 | INFO    | flynum.run.7_rep_real_s6 |   epoch   3 | loss 1.0489 | train 0.5044 | val 0.5008 | 29.4s
+17:37:52 | INFO    | flynum.run.7_rep_real_s6 |   epoch   4 | loss 1.0365 | train 0.5120 | val 0.5080 | 29.4s
+17:38:21 | INFO    | flynum.run.7_rep_real_s6 |   epoch   5 | loss 1.0346 | train 0.5099 | val 0.4956 | 29.6s
+17:38:51 | INFO    | flynum.run.7_rep_real_s6 |   epoch   6 | loss 1.0210 | train 0.5222 | val 0.5036 | 29.5s
+17:39:20 | INFO    | flynum.run.7_rep_real_s6 |   epoch   7 | loss 1.0141 | train 0.5198 | val 0.5272 | 29.4s
+17:39:50 | INFO    | flynum.run.7_rep_real_s6 |   epoch   8 | loss 0.9979 | train 0.5303 | val 0.5296 | 29.4s
+17:40:19 | INFO    | flynum.run.7_rep_real_s6 |   epoch   9 | loss 0.9814 | train 0.5360 | val 0.5564 | 29.4s
+17:40:49 | INFO    | flynum.run.7_rep_real_s6 |   epoch  10 | loss 0.9603 | train 0.5522 | val 0.5584 | 29.4s
+17:41:18 | INFO    | flynum.run.7_rep_real_s6 |   epoch  11 | loss 0.9306 | train 0.5693 | val 0.5792 | 29.4s
+17:41:48 | INFO    | flynum.run.7_rep_real_s6 |   epoch  12 | loss 0.9083 | train 0.5845 | val 0.5892 | 29.5s
+17:42:17 | INFO    | flynum.run.7_rep_real_s6 |   epoch  13 | loss 0.8729 | train 0.6078 | val 0.6192 | 29.3s
+17:42:47 | INFO    | flynum.run.7_rep_real_s6 |   epoch  14 | loss 0.8468 | train 0.6239 | val 0.5980 | 29.2s
+17:43:16 | INFO    | flynum.run.7_rep_real_s6 |   epoch  15 | loss 0.8142 | train 0.6420 | val 0.6320 | 29.6s
+17:43:46 | INFO    | flynum.run.7_rep_real_s6 |   epoch  16 | loss 0.7953 | train 0.6509 | val 0.6552 | 29.3s
+17:44:15 | INFO    | flynum.run.7_rep_real_s6 |   epoch  17 | loss 0.7730 | train 0.6649 | val 0.6388 | 29.3s
+17:44:44 | INFO    | flynum.run.7_rep_real_s6 |   epoch  18 | loss 0.7448 | train 0.6853 | val 0.6988 | 29.4s
+17:45:14 | INFO    | flynum.run.7_rep_real_s6 |   epoch  19 | loss 0.7319 | train 0.6909 | val 0.6932 | 29.3s
+17:45:43 | INFO    | flynum.run.7_rep_real_s6 |   epoch  20 | loss 0.7074 | train 0.7030 | val 0.7112 | 29.3s
+17:46:13 | INFO    | flynum.run.7_rep_real_s6 |   epoch  21 | loss 0.6965 | train 0.7103 | val 0.6368 | 29.5s
+17:46:42 | INFO    | flynum.run.7_rep_real_s6 |   epoch  22 | loss 0.6801 | train 0.7154 | val 0.7112 | 29.5s
+17:47:12 | INFO    | flynum.run.7_rep_real_s6 |   epoch  23 | loss 0.6699 | train 0.7221 | val 0.6920 | 29.4s
+17:47:41 | INFO    | flynum.run.7_rep_real_s6 |   epoch  24 | loss 0.6562 | train 0.7302 | val 0.6952 | 29.4s
+17:48:11 | INFO    | flynum.run.7_rep_real_s6 |   epoch  25 | loss 0.6489 | train 0.7353 | val 0.7252 | 29.4s
+17:48:40 | INFO    | flynum.run.7_rep_real_s6 |   epoch  26 | loss 0.6337 | train 0.7447 | val 0.7348 | 29.5s
+17:49:10 | INFO    | flynum.run.7_rep_real_s6 |   epoch  27 | loss 0.6255 | train 0.7467 | val 0.7436 | 29.4s
+17:49:39 | INFO    | flynum.run.7_rep_real_s6 |   epoch  28 | loss 0.6201 | train 0.7482 | val 0.7280 | 29.3s
+17:50:09 | INFO    | flynum.run.7_rep_real_s6 |   epoch  29 | loss 0.6125 | train 0.7544 | val 0.7048 | 29.3s
+17:50:38 | INFO    | flynum.run.7_rep_real_s6 |   epoch  30 | loss 0.6044 | train 0.7609 | val 0.7524 | 29.2s
+17:51:07 | INFO    | flynum.run.7_rep_real_s6 |   epoch  31 | loss 0.5967 | train 0.7655 | val 0.7488 | 29.2s
+17:51:36 | INFO    | flynum.run.7_rep_real_s6 |   epoch  32 | loss 0.5917 | train 0.7650 | val 0.7248 | 29.1s
+17:52:06 | INFO    | flynum.run.7_rep_real_s6 |   epoch  33 | loss 0.5894 | train 0.7651 | val 0.7420 | 29.4s
+17:52:35 | INFO    | flynum.run.7_rep_real_s6 |   epoch  34 | loss 0.5806 | train 0.7724 | val 0.7648 | 29.2s
+17:53:05 | INFO    | flynum.run.7_rep_real_s6 |   epoch  35 | loss 0.5740 | train 0.7761 | val 0.7536 | 29.4s
+17:53:34 | INFO    | flynum.run.7_rep_real_s6 |   epoch  36 | loss 0.5707 | train 0.7770 | val 0.7600 | 29.3s
+17:54:03 | INFO    | flynum.run.7_rep_real_s6 |   epoch  37 | loss 0.5682 | train 0.7780 | val 0.7644 | 29.4s
+17:54:33 | INFO    | flynum.run.7_rep_real_s6 |   epoch  38 | loss 0.5588 | train 0.7856 | val 0.7748 | 29.5s
+17:55:02 | INFO    | flynum.run.7_rep_real_s6 |   epoch  39 | loss 0.5574 | train 0.7858 | val 0.7620 | 29.5s
+17:55:32 | INFO    | flynum.run.7_rep_real_s6 |   epoch  40 | loss 0.5515 | train 0.7892 | val 0.7664 | 29.4s
+17:56:01 | INFO    | flynum.run.7_rep_real_s6 |   epoch  41 | loss 0.5484 | train 0.7905 | val 0.7756 | 29.4s
+17:56:31 | INFO    | flynum.run.7_rep_real_s6 |   epoch  42 | loss 0.5457 | train 0.7942 | val 0.7528 | 29.5s
+17:57:00 | INFO    | flynum.run.7_rep_real_s6 |   epoch  43 | loss 0.5405 | train 0.7962 | val 0.7676 | 29.4s
+17:57:30 | INFO    | flynum.run.7_rep_real_s6 |   epoch  44 | loss 0.5396 | train 0.7970 | val 0.7708 | 29.4s
+17:57:59 | INFO    | flynum.run.7_rep_real_s6 |   epoch  45 | loss 0.5356 | train 0.7967 | val 0.7844 | 29.5s
+17:58:29 | INFO    | flynum.run.7_rep_real_s6 |   epoch  46 | loss 0.5323 | train 0.7991 | val 0.7820 | 29.4s
+17:58:58 | INFO    | flynum.run.7_rep_real_s6 |   epoch  47 | loss 0.5300 | train 0.8032 | val 0.7812 | 29.2s
+17:59:27 | INFO    | flynum.run.7_rep_real_s6 |   epoch  48 | loss 0.5275 | train 0.8034 | val 0.7700 | 29.1s
+17:59:56 | INFO    | flynum.run.7_rep_real_s6 |   epoch  49 | loss 0.5259 | train 0.8039 | val 0.7804 | 29.2s
+18:00:25 | INFO    | flynum.run.7_rep_real_s6 |   epoch  50 | loss 0.5236 | train 0.8055 | val 0.7848 | 29.0s
+18:00:55 | INFO    | flynum.run.7_rep_real_s6 |   epoch  51 | loss 0.5227 | train 0.8055 | val 0.7800 | 29.1s
+18:01:24 | INFO    | flynum.run.7_rep_real_s6 |   epoch  52 | loss 0.5210 | train 0.8087 | val 0.7888 | 29.1s
+18:01:53 | INFO    | flynum.run.7_rep_real_s6 |   epoch  53 | loss 0.5202 | train 0.8079 | val 0.7872 | 29.1s
+18:02:22 | INFO    | flynum.run.7_rep_real_s6 |   epoch  54 | loss 0.5188 | train 0.8098 | val 0.7792 | 29.1s
+18:02:51 | INFO    | flynum.run.7_rep_real_s6 |   epoch  55 | loss 0.5180 | train 0.8102 | val 0.7836 | 29.2s
+18:03:21 | INFO    | flynum.run.7_rep_real_s6 |   epoch  56 | loss 0.5173 | train 0.8100 | val 0.7824 | 29.2s
+18:03:50 | INFO    | flynum.run.7_rep_real_s6 |   epoch  57 | loss 0.5167 | train 0.8102 | val 0.7844 | 29.2s
+18:04:19 | INFO    | flynum.run.7_rep_real_s6 |   epoch  58 | loss 0.5162 | train 0.8106 | val 0.7824 | 29.4s
+18:04:49 | INFO    | flynum.run.7_rep_real_s6 |   epoch  59 | loss 0.5160 | train 0.8103 | val 0.7848 | 29.3s
+18:04:49 | INFO    | flynum.run.7_rep_real_s6 | ------------------------------------------------------------------------------
+18:04:49 | INFO    | flynum.run.7_rep_real_s6 |   test A: acc 0.7838 (chance 0.20) | macro-F1 0.7774 | per-class 1.00 0.84 0.76 0.51 0.80
+18:04:50 | INFO    | flynum.run.7_rep_real_s6 |   test B: acc 0.6376 (chance 0.20) | macro-F1 0.6082 | per-class 1.00 0.90 0.70 0.36 0.23
+18:04:51 | INFO    | flynum.run.7_rep_real_s6 |   test C: acc 0.9680 (chance 0.20) | macro-F1 0.9679 | per-class 1.00 1.00 1.00 0.97 0.87
+18:04:51 | INFO    | flynum.run.7_rep_real_s6 |   test D: acc 0.6496 (chance 0.20) | macro-F1 0.6316 | per-class 1.00 0.82 0.66 0.44 0.32
+18:04:51 | INFO    | flynum.run.7_rep_real_s6 | run 7_rep_real_s6 finished: ok (1775.7s)

@@ -91,7 +91,7 @@ BASELINE_EVALS = 60
 SPECTRAL_MATCH_W_SCALE = 1.4106
 
 
-def _grid_fixed_updates() -> list[dict]:
+def _grid_fixed_updates(n_grid: tuple[int, ...] = (5000, 10000, 20000)) -> list[dict]:
     """Stage 7b -- disentangle sample size from optimiser updates.
 
     The original curve gave every N the same 60 *epochs*, so N=20000 received
@@ -101,15 +101,28 @@ def _grid_fixed_updates() -> list[dict]:
     "20k samples unlock a topological advantage" is not licensed by that design.
 
     Here every run spends the same 18,780 updates.  If the real-vs-shuffled gap
-    is still ~0 at N=5000 and ~0.11 at N=20000, the knee is a data-diversity
+    is still ~0 at N=5000 and ~0.10 at N=20000, the knee is a data-diversity
     effect; if the gap opens at N=5000 too, the earlier knee was compute.
 
     ``max_epochs`` is raised per condition so the budget is actually reachable,
     and ``eval_every`` keeps the *number* of validation points at 60 so a
     small-N run is not silently advantaged by selecting over 238 checkpoints.
+
+    ``n_grid`` splits the block by information value, because the queue runs
+    sequentially and every run costs the same ~28 min regardless of N (the step
+    budget is what costs time, not the sample count):
+
+    * ``(5000,)`` is the **decisive** condition -- the pre-registered rule in the
+      README turns on Delta(5000, equal updates), so six runs answer the question.
+    * ``(20000,)`` is the **machinery control**: at N=20000 the epoch-budget runs
+      already spent exactly 18,780 updates, so this must reproduce
+      0.7684/0.7616/0.7768.  It is cheap insurance that the step-budget code path
+      gives the same answer as the epoch path before the decisive numbers are read.
+    * ``(10000,)`` brackets the knee if the decisive condition comes out
+      ambiguous.
     """
     out = []
-    for n in (5000, 10000, 20000):
+    for n in n_grid:
         spe = -(-n // SHARED["batch_size"])              # steps per epoch
         epochs = -(-BASELINE_STEPS // spe)               # epochs to spend it
         eval_every = max(1, round(epochs / BASELINE_EVALS))
@@ -225,7 +238,7 @@ def _grid_spectral_control(n_seeds: int) -> list[dict]:
 
 GRIDS = {
     "replication": lambda a: _grid_replication(a.seeds, a.seed_start),
-    "fixed_updates": lambda a: _grid_fixed_updates(),
+    "fixed_updates": lambda a: _grid_fixed_updates(tuple(a.n_grid)),
     "signed_count": lambda a: _grid_signed_count(a.seeds, a.w_scale),
     "spectral_control": lambda a: _grid_spectral_control(a.seeds),
 }
@@ -301,6 +314,10 @@ def main() -> int:
     ap.add_argument("--seed-start", type=int, default=0, dest="seed_start",
                     help="first model seed (use to add replicates to an existing block)")
     ap.add_argument("--w-scale", type=float, default=0.5, dest="w_scale")
+    ap.add_argument("--n-grid", nargs="*", type=int, default=[5000, 10000, 20000],
+                    dest="n_grid",
+                    help="fixed_updates grid only: which sample sizes to spend the "
+                         "step budget on (5000 is the decisive condition)")
     ap.add_argument("--limit", type=int, default=0, help="run at most N jobs")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()

@@ -1,0 +1,20 @@
+{
+  "run_id": "7_rep_shuffled_s7",
+  "status": "ok",
+  "wall_seconds": 1900.6,
+  "finished_at": "2026-09-16T11:37:34+00:00",
+  "stage": "7",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "n_train": 20000,
+  "model_seed": 7,
+  "shuffle_seed": 7,
+  "best_val_acc": 0.6688,
+  "test_acc_a": 0.665,
+  "test_acc_b": 0.4052,
+  "test_acc_c": 0.448,
+  "n_params": 1249509,
+  "epochs_run": 60
+}

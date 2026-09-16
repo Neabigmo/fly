@@ -1,0 +1,371 @@
+{
+  "circuit": "core",
+  "n_neurons": 33480,
+  "n_edges": 1170024,
+  "n_classes": 5,
+  "label_offset": 1,
+  "readout_population": "vpn",
+  "readout_name": "visual_projection (VPN)",
+  "n_readout_neurons": 9200,
+  "n_input_neurons": 7961,
+  "n_columns_with_input": 1769,
+  "n_driven_columns": 1356,
+  "n_columns": 1771,
+  "hex_bounds": [
+    4.5,
+    53.5,
+    0.8660253882408142,
+    33.77499008178711
+  ],
+  "hex_density": 1.192811653697844,
+  "circuit_qc": {
+    "circuit": "core",
+    "neurons": 33480,
+    "edges": 1170024,
+    "edges_per_neuron": 34.95,
+    "isolated_removed": 4,
+    "self_loops": 0,
+    "synapses": 5796097.0,
+    "in_degree_median": 16.0,
+    "in_degree_mean": 34.94695340501792,
+    "in_degree_max": 1833,
+    "out_degree_median": 20.0,
+    "out_degree_max": 3801,
+    "weight_mean_log1p": 1.298768401145935,
+    "retained_out_weight_fraction": 0.2637,
+    "retained_in_weight_fraction": 0.3218
+  },
+  "shuffle_stats": {
+    "graph": "real"
+  },
+  "signed_synapses": false,
+  "sign_report": null,
+  "run_id": "7_rep_real_s6",
+  "stage": "7",
+  "task": "count",
+  "model": "M1",
+  "n_train": 20000,
+  "model_seed": 6,
+  "shuffle_seed": 0,
+  "n_params": 1249509,
+  "best_val_acc": 0.7888,
+  "test_acc_a": 0.7838,
+  "test_acc_b": 0.6376,
+  "test_acc_c": 0.968,
+  "test_acc_d": 0.6496,
+  "test_macro_f1_a": 0.7774147710893935,
+  "confusion_a": [
+    [
+      1000,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      105,
+      843,
+      52,
+      0,
+      0
+    ],
+    [
+      8,
+      157,
+      759,
+      76,
+      0
+    ],
+    [
+      0,
+      20,
+      235,
+      514,
+      231
+    ],
+    [
+      0,
+      0,
+      29,
+      168,
+      803
+    ]
+  ],
+  "per_class_recall_a": [
+    1.0,
+    0.843,
+    0.759,
+    0.514,
+    0.803
+  ],
+  "per_mode": {
+    "A": {
+      "accuracy": 0.7838,
+      "macro_f1": 0.7774147710893935,
+      "per_class_recall": [
+        1.0,
+        0.843,
+        0.759,
+        0.514,
+        0.803
+      ],
+      "confusion": [
+        [
+          1000,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          105,
+          843,
+          52,
+          0,
+          0
+        ],
+        [
+          8,
+          157,
+          759,
+          76,
+          0
+        ],
+        [
+          0,
+          20,
+          235,
+          514,
+          231
+        ],
+        [
+          0,
+          0,
+          29,
+          168,
+          803
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "B": {
+      "accuracy": 0.6376,
+      "macro_f1": 0.6082254791569227,
+      "per_class_recall": [
+        1.0,
+        0.903,
+        0.696,
+        0.364,
+        0.225
+      ],
+      "confusion": [
+        [
+          1000,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          82,
+          903,
+          15,
+          0,
+          0
+        ],
+        [
+          18,
+          284,
+          696,
+          2,
+          0
+        ],
+        [
+          5,
+          119,
+          495,
+          364,
+          17
+        ],
+        [
+          0,
+          52,
+          331,
+          392,
+          225
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "C": {
+      "accuracy": 0.968,
+      "macro_f1": 0.9678912855520437,
+      "per_class_recall": [
+        1.0,
+        1.0,
+        1.0,
+        0.968,
+        0.872
+      ],
+      "confusion": [
+        [
+          1000,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1000,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1000,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          16,
+          968,
+          16
+        ],
+        [
+          0,
+          0,
+          0,
+          128,
+          872
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "D": {
+      "accuracy": 0.6496,
+      "macro_f1": 0.6316441916469817,
+      "per_class_recall": [
+        0.999,
+        0.825,
+        0.664,
+        0.437,
+        0.323
+      ],
+      "confusion": [
+        [
+          999,
+          1,
+          0,
+          0,
+          0
+        ],
+        [
+          162,
+          825,
+          13,
+          0,
+          0
+        ],
+        [
+          34,
+          302,
+          664,
+          0,
+          0
+        ],
+        [
+          0,
+          114,
+          429,
+          437,
+          20
+        ],
+        [
+          0,
+          62,
+          300,
+          315,
+          323
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    }
+  },
+  "train_info": {
+    "best_val_acc": 0.7888,
+    "best_epoch": 52,
+    "epochs_run": 60,
+    "optimizer_steps": 18780,
+    "wall_seconds": 1763.4,
+    "protocol": "BPTT on per-edge gains + readout"
+  },
+  "wall_seconds_total": 1775.7,
+  "train_seconds": 1765.9,
+  "stimulus_qc": {
+    "A": {
+      "mode": "A",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 26.22,
+        "1": 45.46,
+        "2": 62.81,
+        "3": 81.28,
+        "4": 98.9
+      },
+      "ink_centroid_accuracy": 0.5584,
+      "spread_centroid_accuracy": 0.5032,
+      "ink_std_overall": 29.873
+    },
+    "B": {
+      "mode": "B",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.83,
+        "2": 39.84,
+        "3": 39.8,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4828,
+      "ink_std_overall": 0.427
+    },
+    "C": {
+      "mode": "C",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.85,
+        "2": 39.83,
+        "3": 39.79,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2166,
+      "spread_centroid_accuracy": 0.4324,
+      "ink_std_overall": 0.431
+    },
+    "D": {
+      "mode": "D",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.92,
+        "1": 39.84,
+        "2": 39.8,
+        "3": 39.81,
+        "4": 39.83
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4606,
+      "ink_std_overall": 0.462
+    }
+  }
+}
