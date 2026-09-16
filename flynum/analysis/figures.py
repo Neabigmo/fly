@@ -541,6 +541,69 @@ def plot_paired_seeds(
 
 
 # --------------------------------------------------------------------------- #
+def plot_step_matched(step_matched: dict, out: Path):
+    """Validation accuracy against *optimiser steps* rather than epochs.
+
+    The original curve gave every condition 60 epochs, so the x-axis in epoch space
+    hides that N=20000 spent 18,780 updates and N=5000 only ~4,740.  Plotted against
+    steps, the two conditions line up on the same axis and the vertical line marks the
+    compute N=5000 actually received: whatever gap exists to the left of that line
+    cannot be a compute difference between the two conditions.
+    """
+    _style()
+    grid = np.asarray(step_matched["grid"], dtype=float)
+    fig, axes = plt.subplots(1, 2, figsize=(10.0, 3.9), sharey=True)
+    budget = float(step_matched.get("budget_5000", 4740))
+
+    ax = axes[0]
+    for n, colour in (("N5000", C_ACCENT), ("N20000", C_REAL)):
+        for graph, ls in (("real", "-"), ("shuffled", "--")):
+            arm = step_matched["arms"].get(f"{n}_{graph}")
+            if not arm:
+                continue
+            ax.plot(grid, arm["mean"], ls, color=colour, lw=1.6,
+                    label=f"{n[1:]} {graph} (n={arm['n_seeds']})")
+    ax.axvline(budget, color=C_NEUTRAL, ls=":", lw=1.2)
+    ax.annotate(f"{budget:,.0f} steps\n= N=5000's budget", (budget, 0.06),
+                fontsize=7.5, color=C_NEUTRAL, ha="right",
+                xytext=(-4, 0), textcoords="offset points")
+    ax.axhline(0.2, color=C_NEUTRAL, ls=":", lw=0.8)
+    ax.set_xlabel("optimiser steps")
+    ax.set_ylabel("validation accuracy")
+    ax.set_title("Same step axis, two sample sizes")
+    ax.set_xlim(0, grid[-1] * 1.02)
+    ax.grid(alpha=0.15)
+    ax.legend(fontsize=7.5, loc="lower right")
+
+    ax = axes[1]
+    for n, colour in (("N5000", C_ACCENT), ("N20000", C_REAL)):
+        blk = step_matched["delta"].get(n)
+        if not blk:
+            continue
+        mean = np.asarray(blk["mean"], dtype=float)
+        ci = np.asarray(blk["ci95"], dtype=float)
+        ax.plot(grid, mean, "-", color=colour, lw=1.6,
+                label=f"{n[1:]} ({blk['n_pairs']} paired seeds)")
+        ax.fill_between(grid, mean - ci, mean + ci, color=colour, alpha=0.18,
+                        linewidth=0)
+        obs = blk.get("observed_through_step")
+        if obs:
+            ax.axvline(obs, color=colour, ls=":", lw=1.0, alpha=0.7)
+    ax.axhline(0.0, color="k", lw=0.8)
+    ax.axvline(budget, color=C_NEUTRAL, ls=":", lw=1.2)
+    ax.set_xlabel("optimiser steps")
+    ax.set_ylabel("Δ accuracy (real − shuffled)")
+    ax.set_title("The gap at matched compute")
+    ax.set_xlim(0, grid[-1] * 1.02)
+    ax.grid(alpha=0.15)
+    ax.legend(fontsize=7.5, loc="upper left")
+    fig.suptitle("Within-run step matching: is the N=20000 gap a compute artefact?",
+                 fontsize=10.5)
+    fig.subplots_adjust(top=0.79, wspace=0.08)
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
 def plot_condition_bars(
     agg: dict[str, dict[str, dict]],
     out: Path,

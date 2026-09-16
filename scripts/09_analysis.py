@@ -150,6 +150,47 @@ def _section_fixed_updates(lines: list, df: pd.DataFrame) -> None:
     A("")
 
 
+def _section_step_matched(lines: list) -> None:
+    """What the existing logs already say, before the equal-update grid runs."""
+    A = lines.append
+    A("### 6.2b 步数匹配的初步证据（用已有日志，先于等算力网格）")
+    A("")
+    p = paths.DATA_PROCESSED / "step_matched.json"
+    if not p.exists():
+        lines.extend(_pending("步数匹配分析", "python scripts/22_step_matched.py"))
+        return
+    rep = json.loads(p.read_text(encoding="utf-8"))
+    v = rep.get("verdict")
+    if not v:
+        lines.extend(_pending("步数匹配分析", "python scripts/22_step_matched.py"))
+        return
+    A("每个 epoch 的 `val_acc` 都随 epoch 序号记录在 `metrics.jsonl` 里，而 "
+      "`优化步数 = (epoch+1) × ceil(N/batch)`，所以**不需要新算力**就能把整条曲线画在"
+      "「优化步数」而非「epoch」的横轴上（见 `figures/fig11_step_matched.png`）。"
+      "关键在于 N=5000 是在**多少步**上停止的。")
+    A("")
+    lines.extend(_md_table(
+        ["量", "值"],
+        [["N=5000 实际被观测到的最大步数", f"{v['n5000_observed_through_step']:.0f}"],
+         ["同一批步数下 N=20000 的 Δ", f"{v['n20000_delta_at_matched_compute']:+.4f}"],
+         ["同一批步数下 N=5000 的 Δ", f"{v['n5000_delta_at_same_step']:+.4f}"],
+         ["N=20000 达到最终 Δ 一半所需的步数", f"{v['n20000_half_gap_onset_step']:.0f}"],
+         ["N=20000 最终 Δ", f"{v['n20000_delta_final']:+.4f}"]]))
+    A("")
+    A(f"**结论（初步）**：N=20000 的优势在 step {v['n20000_half_gap_onset_step']:.0f} 附近才开始形成，"
+      f"而 N=5000 早在 step {v['n5000_observed_through_step']:.0f} 就停止了 —— 也就是说，"
+      "原曲线**在差距刚要出现之前就把小样本条件停掉了**。因此"
+      "「拐点是算力」这一解释**目前仍然成立**，用户对原结论的怀疑方向是对的。")
+    A("")
+    A("必须同时声明的三点限定：① 这是**支持性证据而非对照** —— 它比较的是「20k 不同刺激」"
+      "与「5k 不同刺激」在相同步数下的表现，而等算力网格是**固定 N、只改预算**，"
+      "只有后者能排除算力；② N=5000 的三个 seed 分别在 3 239 / 4 424 / 4 740 步停止，"
+      "所以交叉可比范围只到最短的那个（3 950 步），更靠右的取值是外推，图中虚线标出；"
+      "③ 在 3 950 步处 N=20000 仍有 +0.021 的小差距（N=5000 为 +0.005），"
+      "即**并非全部**都是算力，但这部分远小于最终的 +0.106。")
+    A("")
+
+
 def _section_signed(lines: list, df: pd.DataFrame) -> None:
     A = lines.append
     """Fly-v2: one biological change, and what it does to the dynamics."""
@@ -787,6 +828,7 @@ def main() -> int:
     A("")
     _section_seed_stats(lines)
     _section_fixed_updates(lines, df)
+    _section_step_matched(lines)
     _section_signed(lines, df)
     _section_curriculum(lines, summaries)
     _section_lesion(lines)
@@ -805,6 +847,7 @@ def main() -> int:
     extra_figs = [
         ("逐时刻解码（Stage 5 诊断）", paths.FIGURES / "fig5_temporal_decoding_real.png"),
         ("种子级配对图（每个 seed 一条连线）", paths.FIGURES / "fig10_paired_seeds.png"),
+        ("步数匹配：拐点是不是算力", paths.FIGURES / "fig11_step_matched.png"),
         ("视网膜映射", paths.FIGURES / "figS1_retina_map.png"),
         ("随机化对照的混合曲线", paths.FIGURES / "figS2_shuffle_mixing.png"),
         ("校准与信号传播审计", paths.FIGURES / "figS3_calibration.png"),
