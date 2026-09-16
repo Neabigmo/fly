@@ -60,13 +60,27 @@ def _blocks() -> dict[str, dict]:
     lesion, and only afterwards anything that costs full-circuit compute."""
     return {
         # ---- 1. the confound the user identified ------------------------------ #
+        # ---- 1. is the headline comparison even valid? --------------------- #
+        # Cheapest foundational check, so it runs first: 3 runs, 1.6 h.  The
+        # degree/weight-preserving shuffle sits 29% below the real circuit in spectral
+        # radius, so the ordinary real-vs-shuffled gap may be an operating-point
+        # difference rather than a structural one.  If so, that changes how the
+        # headline, the curriculum's shuffled arm and the fixed-update control are all
+        # read -- information worth having in 1.6 h rather than 14 h in.
+        "spectral": {
+            "why": "spectrally matched shuffled control (real rho=3.946, shuffled 2.797)",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "spectral_control",
+                    "--workers", "1", "--seeds", "3"],
+            "est_min": 95,
+        },
+        # ---- 2. the confound the user identified ----------------------------- #
         "fxu": {
             "why": "equal optimiser-update control for the sample-efficiency knee",
             "cmd": ["scripts/15_run_parallel.py", "--grid", "fixed_updates",
                     "--workers", "1"],
             "est_min": 470,
         },
-        # ---- 2. Fly-v2: signed synapses ------------------------------------- #
+        # ---- 3. Fly-v2: signed synapses ------------------------------------- #
         "signed": {
             "why": "signed synapses bound h(t); counting under them, plus a "
                    "scale-matched unsigned control",
@@ -74,7 +88,7 @@ def _blocks() -> dict[str, dict]:
                     "--workers", "1", "--seeds", "3", "--w-scale", "0.5"],
             "est_min": 270,
         },
-        # ---- 3. curriculum addition: the 2x2 transfer table ------------------ #
+        # ---- 4. curriculum addition: the 2x2 transfer table ------------------ #
         "curr_real_pre": {
             "why": "real + count-pretrained, held-out pair 2+3/3+2",
             "cmd": ["scripts/16_run_curriculum.py", "--graph", "real",
@@ -99,14 +113,7 @@ def _blocks() -> dict[str, dict]:
                     "--scratch", "--seeds", "0", "1", "2"],
             "est_min": 75,
         },
-        # ---- 3b. is the shuffle also dynamically matched? -------------------- #
-        "spectral": {
-            "why": "spectrally matched shuffled control (real rho=3.946, shuffled 2.797)",
-            "cmd": ["scripts/15_run_parallel.py", "--grid", "spectral_control",
-                    "--workers", "1", "--seeds", "3"],
-            "est_min": 95,
-        },
-        # ---- 4. is the unseen-pair result specific to which pair is held out? - #
+        # ---- 5. is the unseen-pair result specific to which pair is held out? - #
         "lpo": {
             "why": "same 2x2 at held-out pairs 1+3, 1+4, 2+4 (one seed each)",
             "cmd": None,  # expanded below into several invocations
