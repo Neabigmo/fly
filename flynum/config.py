@@ -112,6 +112,12 @@ class ModelConfig:
     #: circuit has a max/mean row sum of 129 and explodes within one epoch under
     #: global normalisation, whatever the learning rate.
     weight_normalization: str = "global"  # global | row
+    #: Use the MaleCNS neurotransmitter predictions to give each synapse the sign
+    #: of its presynaptic neuron (acetylcholine +, GABA/glutamate/histamine -).
+    #: Without it the recurrence is all-excitatory and only marginally stable.
+    signed_synapses: bool = False
+    #: sign assigned to neurons whose transmitter is unknown or neuromodulatory
+    unknown_nt_sign: int = +1
 
 
 @dataclass
@@ -131,6 +137,16 @@ class TrainConfig:
     n_test: int = 5000
     batch_size: int = 64
     max_epochs: int = 60
+    #: If > 0, train for exactly this many optimiser steps instead of epochs.
+    #: Needed to disentangle sample efficiency from compute: with a fixed epoch
+    #: budget, N=20000 receives 4x the updates of N=5000, so a gap that only
+    #: appears at large N may be a compute effect rather than a data effect.
+    max_steps: int = 0
+    #: Validation/checkpoint cadence in epochs, applied only when ``max_steps`` is
+    #: set.  A small-N run needs hundreds of epochs to spend the same step budget
+    #: as a large-N run, and validating every one of them would dominate the wall
+    #: clock while adding nothing: the trajectory is scheduled in step space.
+    eval_every: int = 0
     patience: int = 10
     lr_gain: float = 3e-3
     lr_readout: float = 3e-3
@@ -194,8 +210,17 @@ class ExperimentConfig:
 
     # ------------------------------------------------------------------ #
     @classmethod
-    def from_dict(cls, raw: dict[str, Any]) -> "ExperimentConfig":
-        """Build from a (possibly partial) nested dict; unknown keys error."""
+    def from_dict(
+        cls, raw: dict[str, Any], *, strict: bool = True
+    ) -> "ExperimentConfig":
+        """Build from a (possibly partial) nested dict.
+
+        With ``strict`` (the default) an unknown key is an error, which is what
+        catches config drift between the code and a stored config.  Run directories
+        store extra annotation keys alongside the config (``curriculum``,
+        ``sign_report``, ...), so a caller reading a run's ``config.json`` back
+        passes ``strict=False`` and gets the recognised fields only.
+        """
         kwargs: dict[str, Any] = {}
         subs = {
             "data": DataConfig,
@@ -208,12 +233,16 @@ class ExperimentConfig:
         valid = {f.name for f in fields(cls)}
         for key, value in raw.items():
             if key not in valid:
-                raise KeyError(f"unknown config key: {key!r}")
+                if strict:
+                    raise KeyError(f"unknown config key: {key!r}")
+                continue
             if key in subs and isinstance(value, dict):
                 sub_valid = {f.name for f in fields(subs[key])}
                 bad = set(value) - sub_valid
                 if bad:
-                    raise KeyError(f"unknown key(s) in {key}: {sorted(bad)}")
+                    if strict:
+                        raise KeyError(f"unknown key(s) in {key}: {sorted(bad)}")
+                    value = {k: v for k, v in value.items() if k in sub_valid}
                 if "holdout_pairs" in value:
                     value = dict(value)
                     value["holdout_pairs"] = tuple(tuple(p) for p in value["holdout_pairs"])

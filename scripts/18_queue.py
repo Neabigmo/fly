@@ -1,0 +1,206 @@
+"""Run the remaining study blocks back to back, one at a time, on one GPU.
+
+Why a queue rather than parallel workers: measured throughput on this card is
+0.0357 epochs/s with one worker, 0.0284 with two and 0.0288 with four.  The GPU
+is compute-saturated at a single run (100% utilisation at 1 and 4 workers), so
+extra workers only add contention -- four workers made an epoch 5x slower, not
+4x faster.  Blocks therefore run strictly sequentially, and the parallelism that
+does pay off (independent shuffled graphs) lives on the CPU side.
+
+Each block writes a marker with its status, so the queue is resumable: a rerun
+skips blocks that already succeeded unless ``--force`` is given.  A failing block
+is recorded and the queue moves on, because the remaining blocks are independent
+and one bad block should not cost the whole night.
+
+Usage::
+
+    python scripts/18_queue.py --dry-run
+    python scripts/18_queue.py                       # every block, in order
+    python scripts/18_queue.py --blocks fxu signed
+    python scripts/18_queue.py --force --blocks lesion
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import subprocess
+import sys
+import time
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from flynum import paths  # noqa: E402
+from flynum.logging_utils import get_logger  # noqa: E402
+
+#: Trained ``core`` + 20k real counting model used as (a) the reference point for
+#: the fixed-update control and (b) the warm start and lesion source.  It is the
+#: seed-0 run of the block that was verified byte-identical to the replication
+#: configuration, so it is the same model the replication averages over.
+REF_REAL = "s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46"
+REF_SHUFFLED = "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561"
+
+
+def _blocks() -> dict[str, dict]:
+    """Ordered block table.  Order follows the priority the user set: get ``core``
+    correct first, then the one biological upgrade, then the curriculum, then the
+    lesion, and only afterwards anything that costs full-circuit compute."""
+    return {
+        # ---- 1. the confound the user identified ------------------------------ #
+        "fxu": {
+            "why": "equal optimiser-update control for the sample-efficiency knee",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "fixed_updates",
+                    "--workers", "1"],
+            "est_min": 470,
+        },
+        # ---- 2. Fly-v2: signed synapses ------------------------------------- #
+        "signed": {
+            "why": "signed synapses bound h(t); re-run counting under them",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "signed_count",
+                    "--workers", "1", "--seeds", "3", "--w-scale", "0.5"],
+            "est_min": 180,
+        },
+        # ---- 3. curriculum addition: the 2x2 transfer table ------------------ #
+        "curr_real_pre": {
+            "why": "real + count-pretrained, held-out pair 2+3/3+2",
+            "cmd": ["scripts/16_run_curriculum.py", "--graph", "real",
+                    "--pretrain", REF_REAL, "--seeds", "0", "1", "2"],
+            "est_min": 75,
+        },
+        "curr_real_scr": {
+            "why": "real + scratch (does count training transfer at all?)",
+            "cmd": ["scripts/16_run_curriculum.py", "--graph", "real",
+                    "--scratch", "--seeds", "0", "1", "2"],
+            "est_min": 75,
+        },
+        "curr_shuf_pre": {
+            "why": "shuffled + count-pretrained (is the transfer topology specific?)",
+            "cmd": ["scripts/16_run_curriculum.py", "--graph", "shuffled",
+                    "--pretrain", REF_SHUFFLED, "--seeds", "0", "1", "2"],
+            "est_min": 75,
+        },
+        "curr_shuf_scr": {
+            "why": "shuffled + scratch",
+            "cmd": ["scripts/16_run_curriculum.py", "--graph", "shuffled",
+                    "--scratch", "--seeds", "0", "1", "2"],
+            "est_min": 75,
+        },
+        # ---- 4. is the unseen-pair result specific to which pair is held out? - #
+        "lpo": {
+            "why": "same 2x2 at held-out pairs 1+3, 1+4, 2+4 (one seed each)",
+            "cmd": None,  # expanded below into several invocations
+            "est_min": 150,
+        },
+        # ---- 5. LC11 / LC10a / random knockout ------------------------------ #
+        "lesion": {
+            "why": "virtual knockout panel on the trained counting model",
+            "cmd": ["scripts/17_run_lesion.py", "--source", REF_REAL,
+                    "--random-repeats", "5"],
+            "est_min": 20,
+        },
+    }
+
+
+def _expand(name: str, spec: dict) -> list[list[str]]:
+    """A block may expand to several sequential invocations."""
+    if name != "lpo":
+        return [spec["cmd"]]
+    cmds = []
+    for holdout in ("13", "14", "24"):
+        for graph, pre in (("real", REF_REAL), ("shuffled", REF_SHUFFLED)):
+            cmds.append(["scripts/16_run_curriculum.py", "--graph", graph,
+                         "--pretrain", pre, "--holdout", holdout, "--seeds", "0"])
+    return cmds
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--blocks", nargs="*", default=None)
+    ap.add_argument("--force", action="store_true", help="rerun blocks that succeeded")
+    ap.add_argument("--dry-run", action="store_true")
+    args = ap.parse_args()
+
+    log = get_logger("queue")
+    table = _blocks()
+    names = args.blocks or list(table)
+    unknown = [n for n in names if n not in table]
+    if unknown:
+        log.error("unknown blocks: %s (known: %s)", unknown, list(table))
+        return 2
+
+    logs = ROOT / "logs"
+    logs.mkdir(exist_ok=True)
+    markers = paths.DATA_PROCESSED / "queue"
+    markers.mkdir(parents=True, exist_ok=True)
+    status_path = markers / "status.json"
+    status = (
+        json.loads(status_path.read_text(encoding="utf-8"))
+        if status_path.exists()
+        else {}
+    )
+
+    total_est = sum(table[n]["est_min"] for n in names)
+    log.info("queue: %d blocks, ~%.1f h estimated", len(names), total_est / 60)
+    for n in names:
+        done = status.get(n, {}).get("status") == "ok"
+        log.info("  %-15s %-6s est %4d min | %s",
+                 n, "DONE" if done else "todo", table[n]["est_min"], table[n]["why"])
+    if args.dry_run:
+        for n in names:
+            for cmd in _expand(n, table[n]):
+                log.info("    %s %s", sys.executable, " ".join(cmd))
+        return 0
+
+    t_all = time.time()
+    for n in names:
+        if status.get(n, {}).get("status") == "ok" and not args.force:
+            log.info("skip %s (already ok)", n)
+            continue
+        cmds = _expand(n, table[n])
+        log.info("=" * 78)
+        log.info("BLOCK %s | %d invocation(s) | %s", n, len(cmds), table[n]["why"])
+        t0 = time.time()
+        rc = 0
+        # One file handle per block, appended to: the log survives a crash and can
+        # be tailed while the queue runs.
+        block_log = logs / f"queue_{n}.log"
+        with block_log.open("a", encoding="utf-8") as fh:
+            fh.write(f"\n\n===== queue block {n} started "
+                     f"{time.strftime('%Y-%m-%d %H:%M:%S')} =====\n")
+            for cmd in cmds:
+                fh.write(f"\n--- {' '.join(cmd)}\n")
+                fh.flush()
+                proc = subprocess.run(
+                    [sys.executable, *cmd], cwd=str(ROOT), stdout=fh,
+                    stderr=subprocess.STDOUT, env=None,
+                )
+                if proc.returncode != 0:
+                    rc = proc.returncode
+                    fh.write(f"\n--- FAILED rc={rc}\n")
+                    break
+        mins = (time.time() - t0) / 60
+        status[n] = {
+            "status": "ok" if rc == 0 else "error",
+            "returncode": rc,
+            "minutes": round(mins, 1),
+            "log": str(block_log.relative_to(ROOT)),
+            "finished_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        }
+        status_path.write_text(json.dumps(status, indent=2), encoding="utf-8")
+        log.info("BLOCK %s %s in %.1f min -> %s", n, "ok" if rc == 0 else f"FAILED rc={rc}",
+                 mins, block_log.name)
+
+    bad = [n for n in names if status.get(n, {}).get("status") != "ok"]
+    log.info("=" * 78)
+    log.info("queue finished in %.1f h | %d/%d blocks ok",
+             (time.time() - t_all) / 3600, len(names) - len(bad), len(names))
+    if bad:
+        log.error("blocks needing attention: %s", bad)
+    return 1 if bad else 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

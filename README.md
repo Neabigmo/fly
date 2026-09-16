@@ -32,6 +32,16 @@ python scripts/08_run_addition.py --graph real --all-seeds
 # 基线与报告
 python scripts/10_baselines.py
 python scripts/09_analysis.py
+
+# 排队跑完剩余所有 GPU 块（串行，可断点续跑）
+python scripts/18_queue.py --dry-run   # 先看顺序与预算
+python scripts/18_queue.py
+
+# 种子级统计（主表用它，不按测试图像算 CI）
+python scripts/20_seed_stats.py
+
+# 排队之前：CPU 冒烟测试（隔离缓存，跑完自动清理）
+python scripts/19_smoke.py
 ```
 
 测试：`python -m pytest tests -q`
@@ -90,20 +100,21 @@ Count Accuracy · Area-controlled Accuracy · Addition Accuracy · Unseen-pair A
 
 ```
 flynum/
-  paths.py config.py seeds.py logging_utils.py pipeline.py
-  data/    download connectome annotations subgraph shuffle manifest
+  paths.py config.py seeds.py devices.py logging_utils.py pipeline.py
+  data/    download connectome annotations subgraph shuffle neurotransmitters manifest
   retina/  hexmap encoder torch_encoder
   stimuli/ dots
   models/  sparse_lin connectome_rnn
   train/   data trainer metrics baselines
-  experiments/ count addition
+  experiments/ count addition curriculum lesion
   analysis/ figures report temporal
-scripts/   00 … 10
-tests/     pytest（数值 / 拓扑 / 刺激 / 视网膜）
+scripts/   00 … 20
+tests/     pytest（数值 / 拓扑 / 刺激 / 视网膜 / shuffle 缓存）
 data/      raw/ processed/        （全部在 I: 盘）
 runs/<run_id>/                    （config / env / metrics.jsonl / log / ckpt / figures）
 runs/index.csv                    （所有 run 的汇总表）
 reports/   report.md + csv + figures/
+logs/      queue_<block>.log       （18_queue.py 的逐块日志）
 ```
 
 ### 日志与分析体系
@@ -199,6 +210,42 @@ reports/   report.md + csv + figures/
     `scripts/14_make_shuffles.py --circuit full --seeds 0 1 2 --workers 3`
     一个进程一个 seed，并把每个 worker 的 BLAS 线程限制在 2，避免相互抢占。
     训练本身是 GPU-bound（GPU 利用率 ~85%），所以并行的是 CPU 侧，不是训练。
+16. **训练并行不但无益，而且有害（实测）。** 8 GB 卡上一个 run 就把 GPU 打到 100% 利用率：
+    单 worker **0.0357 epoch/s**，2 worker **0.0284**，4 worker **0.0288**；每 epoch 墙钟
+    时间 28 s（1 worker）→ 70.5 s（2）→ 139 s（4）。所以 `scripts/18_queue.py` 里所有
+    训练块**严格串行**，只有 CPU 侧的 shuffle 生成用多进程。
+17. **「样本效率」曲线必须控制优化步数，否则不能归因给数据。**
+    原曲线让每个 N 都训 60 个 epoch，于是 N=20000 得到 313×60 = **18 780** 次更新，
+    而 N=5000 提前停止在 41–60 epoch、最多 **4 740** 次。曲线上「N=20000 突然出现
+    Δ≈0.108」同时伴随着 4 倍的算力增加，因此**不能**解释成「20k 样本激活了拓扑优势」。
+    `scripts/15_run_parallel.py --grid fixed_updates` 现在让 N∈{5000, 10000, 20000} 全部
+    只花 **18 780** 次更新（`max_steps`，配 step 级 cosine），并让每个 run 的验证点数
+    也固定为 60（`eval_every`），使模型选择粒度同样可比。若 Δ 在 N=5000 仍≈0、在
+    N=20000 仍≈0.11，则拐点属于数据多样性；若 N=5000 也打开，则原拐点是算力。
+18. **读出标准化会同时放大回传梯度，必须拒绝「寂静读出池」上的标准化。**
+    core + w_scale=1.0 下 VPN 读出池的中位标准差只有 **3.5e-5**，而全网峰值活动是 1.6。
+    标准化把读出输入放大 ~3e4 倍，`dL/dz = Wᵀ·dL/dlogit / σ` 于是把回传到 **Δg 的梯度
+    放大同样倍数**，一个 step 就炸（实测 epoch-0 交叉熵 **600**，更早一次 5834）。
+    这正是当年「full 在任何 lr 下都训不起来」的真正原因。现在
+    `ConnectomeRNN.MAX_STANDARDIZE_GAIN = 1e3`：放大倍数超过 1000 就直接**拒绝标准化并
+    说明原因**，而不是静默训出一个发散模型。全部已报告的 count/add run 都用 `False`，
+    因此这条只影响未来复用它的人。
+19. **`torch.cuda.is_available()` 不等于「本进程有可用 GPU」。** 实测
+    `CUDA_VISIBLE_DEVICES=""` 时它返回 **True** 而 `device_count()` 是 **0**：
+    此时 `torch.load(map_location="cuda")` 拒绝反序列化、`get_device_properties(0)` 直接
+    raise。所有模块现在用 `flynum/devices.pick_device()`（判 `device_count()>0`），
+    checkpoint 一律 `map_location="cpu"` 再 `load_state_dict`。
+20. **统计单位是「训练好的模型」，不是测试图像。** 5000 张测试图由同一个网络打分，
+    不是 5000 个独立观测；按图像算 95% CI 会窄一个数量级（实测 A 条件 1×、C 条件 **10×**
+    偏窄）。`scripts/20_seed_stats.py` 一律**按 seed 配对**（每个 shuffled seed 是一张
+    独立的随机图）报告：两臂均值±95% CI、配对差 Δ 的均值±95% CI、Cohen's d_z、
+    Hedges' g、配对 t 与 Wilcoxon；图像级 CI 只作为对照打印出来。
+21. **排队前先跑 CPU 冒烟测试。** `scripts/19_smoke.py` 用隔离的刺激缓存（把
+    `flynum.train.data.STIM_DIR` 指向 `.cache/smoke`，因为 count 缓存键**不含 `n_test`**，
+    否则会覆盖真实测试集）在 CPU 上把排队里的每条代码路径各跑一遍：config 往返、
+    签名动力学、固定步数预算、标准化拒绝、三头课程+热启动、损伤面板。它在 20 h 的
+    GPU 排队之前抓出了 4 个真 bug（`head_classes` 未接线、`evaluate_with_lesion` 的
+    字典/对象不一致、读出标准化放大、`from_dict` 拒绝 run config 的注解键）。
 
 ---
 
@@ -267,6 +314,24 @@ N_train = 20000，M1 = 训练突触增益 + 读出，M0 = 冻结网络 + 线性�
 两点必须同时声明的限定：① 两档用的归一化不同，所以这不是对「完整度」的干净操纵；
 ② `full` 的随机化弱得多（与真实图重合 **18.2%**，`core` 只有 2.2%），
 所以它的差距若存在会是**保守估计**。要让 `full` 达到同样混合程度需要数倍交换轮数。
+
+### 7.3 种子级统计（进行中：10 seeds）
+
+上表的 Δ 在 3 个 seed 上算出。按用户要求，主表改为**按 seed/图配对**报告，
+因为 5000 张测试图由同一个网络打分，不是独立观测。
+`scripts/20_seed_stats.py` 的输出（3 seeds，`n=3` 时 Wilcoxon 的双侧 p 下限就是 0.25，
+所以它这一列要等 10 seeds 才有意义）：
+
+| 条件 | real 均值±95%CI | shuffled 均值±95%CI | Δ 均值±95%CI | d_z | 配对 t | 图像级 CI（对照） |
+|---|---|---|---|---|---|---|
+| A 自然 | 0.7689 ± 0.0189 | 0.6613 ± 0.0087 | **+0.1076 ± 0.0152** | 17.6 | p=0.0011 | ±0.0176（1× 偏窄） |
+| B 面积控制 | 0.6021 ± 0.0553 | 0.4048 ± 0.0031 | **+0.1973 ± 0.0536** | 9.1 | p=0.0040 | ±0.0192（3× 偏窄） |
+| C 面积+包络 | 0.8977 ± 0.1361 | 0.4167 ± 0.0276 | **+0.4811 ± 0.1635** | 7.3 | p=0.0062 | ±0.0160（10× 偏窄） |
+| D 未见布局 | 0.6009 ± 0.0806 | 0.3653 ± 0.0152 | **+0.2356 ± 0.0758** | 7.7 | p=0.0055 | ±0.0190（4× 偏窄） |
+
+待 `scripts/18_queue.py` 跑完的块（按优先级）：`fxu`（等更新步数对照，15 runs）、
+`signed`（Fly-v2 签名突触，6 runs）、`curr_*`（课程加法 2×2 迁移表）、`lpo`
+（换留出对的稳健性）、`lesion`（LC11 / LC10a / 随机 143 神经元敲除）。
 
 ### 7.2 已知限制
 

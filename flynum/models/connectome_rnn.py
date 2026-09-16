@@ -33,6 +33,7 @@ def make_base_weights(
     *,
     w_scale: float = 1.0,
     normalization: str = "global",
+    edge_sign: torch.Tensor | None = None,
     device: torch.device | str = "cpu",
 ) -> tuple[torch.Tensor, dict]:
     """``log1p(synapse_count)`` scaled into a usable range.
@@ -70,6 +71,16 @@ def make_base_weights(
         denom = float(row_sum.mean().clamp_min(1e-9))
         base = logw / denom * float(w_scale)
 
+    # Signs are applied *after* normalisation, so |W| -- and therefore the total
+    # drive magnitude -- is identical to the unsigned network.  Only the sign
+    # flips, which is what allows excitatory and inhibitory input to cancel.
+    if edge_sign is not None:
+        base = base * edge_sign.to(device=device, dtype=torch.float32)
+
+    signed_row = None
+    if edge_sign is not None:
+        signed_row = torch.zeros(n, device=device).index_add_(0, post, base)
+
     stats = {
         "log1p_mean": float(logw.mean()),
         "log1p_std": float(logw.std()),
@@ -77,10 +88,19 @@ def make_base_weights(
         "row_sum_max_before": float(row_sum.max()),
         "row_sum_heterogeneity": float(row_sum.max() / max(denom, 1e-9)),
         "normalization": normalization,
+        "signed": edge_sign is not None,
         "w_scale": float(w_scale),
         "base_mean": float(base.mean()),
         "base_max": float(base.max()),
+        "base_abs_mean": float(base.abs().mean()),
     }
+    if signed_row is not None:
+        # the signed row sum is what actually drives each neuron; its shrinkage
+        # relative to the unsigned row sum is the stabilising effect
+        stats["signed_row_sum_abs_mean"] = float(signed_row.abs().mean())
+        stats["signed_row_sum_cancellation"] = float(
+            signed_row.abs().mean() / max(row_sum.mean(), 1e-9)
+        )
     return base.to(device), stats
 
 
@@ -95,6 +115,11 @@ class ForwardDiagnostics:
 
 class ConnectomeRNN(nn.Module):
     """Recurrent network over a frozen connectome with trainable edge gains."""
+
+    #: See ``fit_readout_stats``: refuse a feature rescaling larger than this,
+    #: because it multiplies the gradient reaching the recurrent gains by the same
+    #: factor and diverges at any usable gain rate.
+    MAX_STANDARDIZE_GAIN = 1e3
 
     def __init__(
         self,
@@ -113,6 +138,9 @@ class ConnectomeRNN(nn.Module):
         standardize: bool = True,
         learn_gains: bool = True,
         train_bias: bool = True,
+        n_heads: int = 1,
+        #: classes per head; defaults to ``n_classes`` for every head
+        head_classes: tuple[int, ...] | None = None,
         device: torch.device | str = "cpu",
     ):
         super().__init__()
@@ -154,8 +182,29 @@ class ConnectomeRNN(nn.Module):
             self.register_parameter("bias", None)
 
         # the readout pools the last ``readout_window`` steps by averaging, so
-        # its input width is the number of readout neurons, not their product
-        self.readout = nn.Linear(int(len(readout_idx)), int(n_classes)).to(device)
+        # its input width is the number of readout neurons, not their product.
+        # ``n_heads > 1`` gives separate output heads over the same features,
+        # which is what the guided addition curriculum uses to read out the first
+        # count, the second count and their sum simultaneously.
+        self.n_heads = int(n_heads)
+        self.n_classes = int(n_classes)
+        # Heads can need different numbers of classes: in the addition curriculum
+        # the two operand heads answer 1..4 (4 classes) while the sum head answers
+        # 2..8 (7 classes).  Giving every head 7 outputs would leave three logits
+        # per operand head that never receive a gradient, which is a spurious
+        # error mode for an argmax that spans them.
+        self.head_classes = (
+            tuple(int(c) for c in head_classes)
+            if head_classes is not None
+            else (self.n_classes,) * self.n_heads
+        )
+        if len(self.head_classes) != self.n_heads:
+            raise ValueError(
+                f"head_classes has {len(self.head_classes)} entries but n_heads={self.n_heads}"
+            )
+        self.readout = nn.Linear(
+            int(len(readout_idx)), int(sum(self.head_classes))
+        ).to(device)
 
     # ------------------------------------------------------------------ #
     @property
@@ -218,11 +267,15 @@ class ConnectomeRNN(nn.Module):
         )
         return pooled.mean(dim=0).t()
 
-    def classify(self, z: torch.Tensor) -> torch.Tensor:
-        """Standardise (optionally) and apply the linear readout."""
+    def classify(self, z: torch.Tensor) -> list[torch.Tensor]:
+        """Standardise (optionally) and apply the linear readout.
+
+        Always returns a list of ``n_heads`` tensors of shape ``(B, head_classes)``;
+        with the default single head that is a one-element list.
+        """
         if self.standardize:
             z = (z - self.feat_mean) / self.feat_std
-        return self.readout(z)
+        return list(torch.split(self.readout(z), self.head_classes, dim=1))
 
     @torch.no_grad()
     def fit_readout_stats(self, features: torch.Tensor) -> dict:
@@ -246,6 +299,29 @@ class ConnectomeRNN(nn.Module):
         mean = features.mean(dim=0)
         std = features.std(dim=0)
         median_std = float(std.median())
+
+        # Rescaling the readout features rescales the gradient that reaches the
+        # recurrent gains by the same factor: dL/dz = W^T dL/dlogit / sigma.  When
+        # the readout pool is nearly silent -- measured here, the VPN pool has a
+        # median standard deviation of 3.5e-5 while the network's peak activity is
+        # 1.6 -- that factor is ~3e4, and one step at the configured gain rate
+        # blows h up (observed: epoch-0 cross-entropy 600, previously 5834).  A
+        # readout this much quieter than the network is a signal to fix the
+        # *readout pool*, not to paper over it with a rescaling, so refuse and say
+        # so rather than silently training a diverging model.
+        amplification = 1.0 / max(median_std, 1e-30)
+        if amplification > self.MAX_STANDARDIZE_GAIN:
+            return {
+                "standardised": False,
+                "refused": (
+                    f"readout features are {amplification:.3g}x smaller than unit "
+                    f"scale (median std {median_std:.3g}); standardising would "
+                    f"amplify the recurrent gradient by that factor and diverge"
+                ),
+                "std_median": median_std,
+                "amplification": amplification,
+            }
+
         floor = max(median_std * 1e-6, 1e-12)
         constant = std < floor
 
@@ -262,11 +338,37 @@ class ConnectomeRNN(nn.Module):
             "constant_fraction": round(float(constant.float().mean()), 4),
             "std_median": median_std,
             "std_floor": floor,
+            "amplification": amplification,
             "std_p1": float(std.quantile(0.01)),
             "std_p99": float(std.quantile(0.99)),
             "z_abs_p999": float(np.percentile(np.abs(z.numpy()), 99.9)),
             "z_abs_max": float(z.abs().max()),
         }
+
+    # ------------------------------------------------------------------ #
+    @torch.no_grad()
+    def load_recurrent_from(self, state: dict) -> dict:
+        """Warm-start the **recurrent** parameters from a saved checkpoint.
+
+        Only ``delta``, ``bias`` and the frozen buffers are transferred; the
+        readout is left fresh because it is task specific (the counting task has
+        5 classes, the addition curriculum has 7 sums and separate ``a``/``b``
+        heads).  This is what makes "count-pretrained vs scratch" a clean
+        comparison of the *learned connectome*, not of the readout.
+        """
+        current = self.state_dict()
+        transferred, skipped = [], []
+        for key, value in state.items():
+            if key.startswith("readout"):
+                skipped.append(key)
+                continue
+            if key in current and current[key].shape == value.shape:
+                current[key] = value
+                transferred.append(key)
+            else:
+                skipped.append(key)
+        self.load_state_dict(current)
+        return {"transferred": transferred, "skipped": skipped}
 
     # ------------------------------------------------------------------ #
     @torch.no_grad()
@@ -282,14 +384,14 @@ class ConnectomeRNN(nn.Module):
             self.train()
         return out
 
-    def _readout(self, history: list[torch.Tensor]) -> torch.Tensor:
+    def _readout(self, history: list[torch.Tensor]) -> list[torch.Tensor]:
         return self.classify(self.pool(history))
 
     def forward_count(self, column_values: torch.Tensor, steps: int):
         """Constant stimulus for ``steps`` recurrent steps."""
         batch = column_values.shape[0]
         _, history = self._run([column_values] * steps, batch)
-        return self._readout(history), history
+        return self._readout(history)[0], history
 
     def forward_add(
         self,
@@ -306,7 +408,7 @@ class ConnectomeRNN(nn.Module):
             [columns_a] * steps_a + [blank] * steps_gap + [columns_b] * steps_b
         )
         _, history = self._run(seq, batch)
-        return self._readout(history), history
+        return self._readout(history)[0], history
 
     # ------------------------------------------------------------------ #
     @torch.no_grad()

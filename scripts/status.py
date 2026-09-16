@@ -24,7 +24,18 @@ def main() -> int:
     ap.add_argument("--task", default="", help="filter by task (count|add)")
     ap.add_argument("--sort", default="run_id")
     ap.add_argument("--last", type=int, default=0, help="show only the last N runs")
+    ap.add_argument("--rebuild-index", action="store_true", dest="rebuild_index",
+                    help="rewrite runs/index.csv from the run directories, dropping "
+                         "rows whose directory no longer exists")
     args = ap.parse_args()
+
+    if args.rebuild_index:
+        from flynum.logging_utils import rebuild_index
+
+        info = rebuild_index()
+        print(f"rebuilt runs/index.csv: {info['rows']} rows from "
+              f"{info['live_dirs']} run directories, dropped {info['dropped']} "
+              f"stale rows")
 
     rows = []
     # full_summary.json carries every field; summary.json is the short form

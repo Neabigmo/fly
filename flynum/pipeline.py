@@ -172,11 +172,14 @@ class Prepared:
     input_cols: np.ndarray
     n_classes: int
     label_offset: int
+    edge_sign: np.ndarray | None = None
+    sign_report: dict | None = None
     info: dict = field(default_factory=dict)
 
     def build_model(
         self, *, base_weight: torch.Tensor | None = None,
-        device: torch.device | str = "cpu", seed: int = 0,
+        device: torch.device | str = "cpu", seed: int = 0, n_heads: int = 1,
+        head_classes: tuple[int, ...] | None = None,
     ) -> ConnectomeRNN:
         dev = torch.device(device)
         conn = SparseConnectome(
@@ -186,6 +189,9 @@ class Prepared:
             device=dev,
         )
         if base_weight is None:
+            edge_sign = (
+                torch.as_tensor(self.edge_sign) if self.edge_sign is not None else None
+            )
             base_weight, _ = make_base_weights(
                 torch.as_tensor(self.graph.pre.astype(np.int64)),
                 torch.as_tensor(self.graph.post.astype(np.int64)),
@@ -193,6 +199,7 @@ class Prepared:
                 self.subgraph.n_neurons,
                 w_scale=self.cfg.model_cfg.w_scale,
                 normalization=self.cfg.model_cfg.weight_normalization,
+                edge_sign=edge_sign,
                 device=dev,
             )
         model = ConnectomeRNN(
@@ -209,6 +216,8 @@ class Prepared:
             readout_window=self.cfg.model_cfg.readout_window,
             standardize=self.cfg.model_cfg.readout_standardize,
             learn_gains=(self.cfg.model == "M1") and self.cfg.model_cfg.learn_gains,
+            n_heads=n_heads,
+            head_classes=head_classes,
             device=dev,
         )
         return model
@@ -318,6 +327,28 @@ def prepare(
             encoder.qc.n_input_neurons,
         )
 
+    # ---- signed synapses (Fly-v2) ------------------------------------- #
+    edge_sign = None
+    sign_report = None
+    if cfg.model_cfg.signed_synapses:
+        from .data.neurotransmitters import edge_signs, load_neuron_signs
+
+        neuron_signs, rep = load_neuron_signs(
+            ann, unknown_sign=cfg.model_cfg.unknown_nt_sign
+        )
+        sub_signs = neuron_signs[sub_ann]
+        edge_sign = edge_signs(graph.pre, sub_signs)
+        sign_report = rep.as_dict()
+        if logger:
+            logger.info(
+                "signed synapses: %d/%d neurons carry a prediction, "
+                "%d excitatory / %d inhibitory / %d defaulted to %+d "
+                "(%.1f%% signed)",
+                rep.n_with_prediction, rep.n_neurons, rep.n_excitatory,
+                rep.n_inhibitory, rep.n_unknown, rep.unknown_sign,
+                100 * rep.fraction_signed,
+            )
+
     # ---- readout population ------------------------------------------ #
     input_body_ids = set(sg.body_ids[input_mask].tolist())
     readout_idx, readout_name = choose_readout(
@@ -338,7 +369,6 @@ def prepare(
 
     info = {
         "circuit": sg.name,
-        "graph": cfg.data.graph,
         "n_neurons": sg.n_neurons,
         "n_edges": sg.n_edges,
         "n_classes": n_classes,
@@ -354,6 +384,8 @@ def prepare(
         "hex_density": field.qc()["density"],
         "circuit_qc": sg.qc(),
         "shuffle_stats": graph.stats,
+        "signed_synapses": bool(cfg.model_cfg.signed_synapses),
+        "sign_report": sign_report,
     }
     return Prepared(
         cfg=cfg,
@@ -368,6 +400,8 @@ def prepare(
         input_cols=encoder.input_cols,
         n_classes=n_classes,
         label_offset=label_offset,
+        edge_sign=edge_sign,
+        sign_report=sign_report,
         info=info,
     )
 

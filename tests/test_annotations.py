@@ -41,8 +41,12 @@ def test_index_of_matches_a_dense_lookup_table() -> None:
 
     MaleCNS body ids reach 1,571,825,087 while the table has only 211,577 rows,
     so a dense ``np.full(max_id)`` mapping allocated 12.6 GB and repeatedly
-    exhausted memory.  The binary-search implementation must reproduce it
-    exactly.
+    exhausted memory.  The binary-search implementation must agree with an
+    independent reference on every probe id.
+
+    The reference is a dict, not the old dense array: rebuilding that array here
+    would reintroduce the very allocation this test guards against, and it fails
+    whenever other work is holding RAM.
     """
     ann = _require_annotations()
     # round trip over every row
@@ -52,11 +56,8 @@ def test_index_of_matches_a_dense_lookup_table() -> None:
         [-1, 0, 1, int(ann.body_ids.max()), int(ann.body_ids.max()) + 1, 123456789]
         + ann.body_ids[:20].tolist()
     )
-    dense = np.full(int(ann.body_ids.max()) + 1, -1, dtype=np.int64)
-    dense[ann.body_ids] = np.arange(ann.n, dtype=np.int64)
-    ok = (probe >= 0) & (probe < len(dense))
-    expected = np.full(probe.shape, -1, dtype=np.int64)
-    expected[ok] = dense[probe[ok]]
+    lut = {int(b): i for i, b in enumerate(ann.body_ids)}
+    expected = np.array([lut.get(int(i), -1) for i in probe], dtype=np.int64)
     assert np.array_equal(ann.index_of(probe), expected)
 
 

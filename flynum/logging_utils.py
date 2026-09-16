@@ -83,14 +83,20 @@ def environment_fingerprint() -> dict[str, Any]:
     try:
         import torch
 
+        # ``is_available()`` reports whether the *driver* can see CUDA, not whether
+        # any device is visible to this process: with CUDA_VISIBLE_DEVICES="" it
+        # still returns True while device_count() is 0, and get_device_properties
+        # then raises.  Gate on the device count.
+        n_dev = torch.cuda.device_count() if torch.cuda.is_available() else 0
         env.update(
             {
                 "torch": torch.__version__,
-                "cuda_available": torch.cuda.is_available(),
+                "cuda_available": bool(n_dev),
                 "cuda_version": torch.version.cuda,
+                "cuda_device_count": int(n_dev),
             }
         )
-        if torch.cuda.is_available():
+        if n_dev > 0:
             props = torch.cuda.get_device_properties(0)
             env.update(
                 {
@@ -101,6 +107,8 @@ def environment_fingerprint() -> dict[str, Any]:
             )
     except ImportError:
         env["torch"] = "missing"
+    except Exception as exc:  # never let an environment probe kill a run
+        env["cuda_probe_error"] = f"{type(exc).__name__}: {exc}"
     for mod in ("numpy", "pandas", "pyarrow", "scipy", "sklearn", "matplotlib"):
         try:
             m = __import__(mod)
@@ -221,6 +229,56 @@ def append_index_row(row: dict[str, Any]) -> None:
         if not exists:
             writer.writeheader()
         writer.writerow({k: row.get(k, "") for k in _INDEX_FIELDS})
+
+
+def rebuild_index() -> dict:
+    """Rewrite ``runs/index.csv`` from the run directories that actually exist.
+
+    The index is append-only, which is right for a study in progress but leaves
+    the table disagreeing with the filesystem once a run directory is deleted (a
+    re-run that superseded one, an aborted probe, a smoke test that cleaned up
+    after itself).  The directories are the record; this makes the table match
+    them and reports what it dropped.
+    """
+    index = paths.RUNS / "index.csv"
+    live = {d.name for d in paths.RUNS.iterdir() if d.is_dir()}
+    rows: list[dict[str, Any]] = []
+    kept: set[str] = set()
+    for d in sorted(paths.RUNS.iterdir()):
+        if not d.is_dir():
+            continue
+        src = d / "summary.json"
+        if not src.exists():
+            continue
+        try:
+            payload = json.loads(src.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        cfg_path = d / "config.json"
+        if cfg_path.exists():
+            cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+            payload.setdefault("stage", cfg.get("stage"))
+            payload.setdefault("task", cfg.get("task"))
+            payload.setdefault("model", cfg.get("model"))
+            payload.setdefault("circuit", cfg.get("data", {}).get("circuit"))
+            payload.setdefault("graph", cfg.get("data", {}).get("graph"))
+            payload.setdefault("n_train", cfg.get("train", {}).get("n_train"))
+            payload.setdefault("model_seed", cfg.get("seeds", {}).get("model_seed"))
+            payload.setdefault("shuffle_seed", cfg.get("seeds", {}).get("shuffle_seed"))
+        rows.append({k: payload.get(k, "") for k in _INDEX_FIELDS})
+        kept.add(d.name)
+
+    dropped: list[str] = []
+    if index.exists():
+        for r in csv.DictReader(index.open(encoding="utf-8")):
+            rid = r.get("run_id", "")
+            if rid and rid not in live and rid not in kept:
+                dropped.append(rid)
+    with index.open("w", newline="", encoding="utf-8") as fh:
+        writer = csv.DictWriter(fh, fieldnames=_INDEX_FIELDS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+    return {"rows": len(rows), "dropped": len(dropped), "live_dirs": len(live)}
 
 
 def get_logger(name: str) -> logging.Logger:

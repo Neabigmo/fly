@@ -25,6 +25,7 @@ import torch
 
 from .. import paths
 from ..config import ExperimentConfig
+from ..devices import pick_device
 from ..logging_utils import RunContext
 from ..pipeline import prepare
 from ..retina.torch_encoder import TorchRetina
@@ -39,7 +40,7 @@ from ..train.trainer import (
     train_taught,
 )
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = pick_device()
 
 
 def _evaluate_all_modes(
@@ -122,7 +123,10 @@ def run_count_experiment(
             stats["z_abs_p999"], stats["z_abs_max"],
         )
     elif stats.get("standardised") is False:
-        logger.info("readout standardisation disabled")
+        if stats.get("refused"):
+            logger.warning("readout standardisation REFUSED: %s", stats["refused"])
+        else:
+            logger.info("readout standardisation disabled")
 
     t0 = time.time()
     if cfg.model == "M0":
@@ -206,6 +210,7 @@ def run_count_experiment(
         test_acc_c=metrics["C"]["accuracy"],
         n_params=n_params,
         epochs_run=train_info.get("epochs_run", ""),
+        optimizer_steps=train_info.get("optimizer_steps", ""),
         wall_seconds=round(ctx.elapsed(), 1),
     )
     (ctx.dir / "full_summary.json").write_text(

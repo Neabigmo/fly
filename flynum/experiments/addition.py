@@ -20,6 +20,7 @@ import numpy as np
 import torch
 
 from ..config import ExperimentConfig
+from ..devices import pick_device
 from ..logging_utils import RunContext
 from ..pipeline import prepare
 from ..retina.torch_encoder import TorchRetina
@@ -34,7 +35,7 @@ from ..train.trainer import (
 )
 from ..train.trainer import _make_scheduler, make_optimizer  # noqa: F401 (re-export)
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = pick_device()
 
 
 def run_addition_experiment(

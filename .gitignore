@@ -18,6 +18,9 @@ data/processed/stimuli/
 runs/**/ckpt/
 runs/**/figures/
 .cache/
+logs/
+data/processed/queue/
+data/processed/smoke/
 
 # Python
 __pycache__/

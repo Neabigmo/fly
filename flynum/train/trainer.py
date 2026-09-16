@@ -142,7 +142,24 @@ def make_optimizer(model: ConnectomeRNN, cfg: ExperimentConfig):
 def _make_scheduler(opt, cfg: ExperimentConfig, epochs: int):
     if not cfg.train.cosine:
         return None
+    if cfg.train.max_steps > 0:
+        # the schedule is applied per optimiser step instead (see _step_lr)
+        return None
     return torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=max(epochs, 1))
+
+
+def _step_lr(base_lrs: list[float], step: int, total: int) -> list[float]:
+    """Cosine learning rates as a function of *optimiser step*.
+
+    With a fixed step budget this replaces the epoch-based scheduler, which would
+    otherwise give a different amount of annealing depending on how many batches
+    an epoch happens to contain.
+    """
+    if total <= 0:
+        return list(base_lrs)
+    frac = min(step / total, 1.0)
+    scale = 0.5 * (1.0 + np.cos(np.pi * frac))
+    return [lr * scale for lr in base_lrs]
 
 
 # --------------------------------------------------------------------------- #
@@ -174,15 +191,27 @@ def train_taught(
     history: list[dict] = []
     ckpt_dir = ctx.dir / "ckpt"
     t0 = time.time()
+    opt_steps = 0
+    base_lrs = [g["lr"] for g in opt.param_groups]
+    base_lrs_scaled = list(base_lrs)
 
+    epochs_iterated = 0
     for epoch in range(tc.max_epochs):
+        epochs_iterated = epoch + 1
         model.train()
         perm = rng.permutation(len(img_tr))
         ep_loss = 0.0
         ep_correct = 0
         nb = 0
         te = time.time()
+        budget_hit = False
         for i in range(0, len(perm), tc.batch_size):
+            if tc.max_steps and opt_steps >= tc.max_steps:
+                budget_hit = True
+                break
+            if tc.max_steps:
+                for group, lr in zip(opt.param_groups, base_lrs_scaled):
+                    group["lr"] = lr
             idx = perm[i : i + tc.batch_size]
             cols = encode(img_tr[idx], retina_map, device)
             y = torch.as_tensor(y_tr[idx], dtype=torch.long, device=device)
@@ -195,16 +224,36 @@ def train_taught(
                     [p for p in model.parameters() if p.requires_grad], tc.grad_clip
                 )
             opt.step()
+            opt_steps += 1
+            if tc.max_steps:
+                base_lrs_scaled = _step_lr(base_lrs, opt_steps, tc.max_steps)
             ep_loss += float(loss) * len(idx)
             ep_correct += int((logits.argmax(1) == y).sum())
             nb += len(idx)
+
+        train_acc = ep_correct / max(nb, 1)
+        mean_loss = ep_loss / max(nb, 1)
+
+        # Under a fixed step budget the epoch is only a bookkeeping unit: a run
+        # with 4x fewer samples needs 4x more epochs to spend the same number of
+        # updates.  Evaluate on a cadence that keeps the *number of validation
+        # points* comparable across N, and always on the last epoch.
+        every = tc.eval_every if (tc.max_steps and tc.eval_every > 0) else 1
+        if not ((epoch % every == 0) or budget_hit or epoch == tc.max_epochs - 1):
+            if not np.isfinite(mean_loss) or mean_loss > DIVERGENCE_LOSS:
+                logger.error(
+                    "  DIVERGED at epoch %d (train_loss=%s) - aborting this run",
+                    epoch, mean_loss,
+                )
+                ctx.metric(epoch=epoch, train_loss=mean_loss, diverged=True)
+                history.append({"epoch": epoch, "train_loss": mean_loss, "diverged": True})
+                break
+            continue
 
         val_pred = predict_count(
             model, retina_map, img_va, steps=cfg.time.steps, device=device
         )
         val_acc = float((val_pred == y_va).mean())
-        train_acc = ep_correct / max(nb, 1)
-        mean_loss = ep_loss / max(nb, 1)
         rec = {
             "epoch": epoch,
             "train_loss": mean_loss,
@@ -250,7 +299,10 @@ def train_taught(
         )
         if sched is not None:
             sched.step()
-        if bad >= tc.patience:
+        if tc.max_steps and opt_steps >= tc.max_steps:
+            logger.info("  reached the fixed budget of %d optimiser steps", tc.max_steps)
+            break
+        if not tc.max_steps and bad >= tc.patience:
             logger.info("  early stop at epoch %d (best %d, val %.4f)", epoch, best_epoch, best_val)
             break
 
@@ -261,6 +313,8 @@ def train_taught(
         "best_val_acc": best_val,
         "best_epoch": best_epoch,
         "epochs_run": len(history),
+        "epochs_iterated": epochs_iterated,
+        "optimizer_steps": opt_steps,
         "history": history,
         "wall_seconds": round(time.time() - t0, 1),
     }
