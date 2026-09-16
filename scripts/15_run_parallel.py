@@ -83,6 +83,13 @@ BASELINE_STEPS = 60 * 313  # 18_780
 #: *and* equal model-selection granularity.
 BASELINE_EVALS = 60
 
+#: ``w_scale`` that gives the shuffled core circuit the real circuit's spectral
+#: radius.  Derived by measurement (``scripts/23_graph_spectrum.py``): rho(real,
+#: w_scale=1.0) = 3.9460 and rho(shuffled, w_scale=1.0) = 2.7974, and because the
+#: weight matrix is exactly linear in w_scale the required factor is their ratio,
+#: 1.4106.  Verified at 1.4095 to land within 0.1% of the real value.
+SPECTRAL_MATCH_W_SCALE = 1.4106
+
 
 def _grid_fixed_updates() -> list[dict]:
     """Stage 7b -- disentangle sample size from optimiser updates.
@@ -177,10 +184,50 @@ def _grid_signed_count(n_seeds: int, w_scale: float) -> list[dict]:
     return out
 
 
+def _grid_spectral_control(n_seeds: int) -> list[dict]:
+    """Stage 7d -- the spectrally matched control.
+
+    The degree- and weight-preserving shuffle is not dynamically matched: measured on
+    the core circuit, the real graph has spectral radius 3.946 while the shuffled
+    graphs sit at 2.797 (+/- 0.003), i.e. 29% lower, and over 32 recurrent steps the
+    real circuit's peak activity grows 1.9 decades further.  So the ordinary
+    real-vs-shuffled comparison changes routing *and* amplification at once, and part
+    of any accuracy gap could be the operating point rather than the wiring.
+
+    The weight matrix is exactly linear in ``w_scale`` (``W = w_scale * log1p(n)/c``),
+    so scaling the shuffled condition's ``w_scale`` by 3.9460 / 2.7974 = 1.4106 gives
+    it the real circuit's spectral radius to within 0.1% -- verified by measurement,
+    not assumed.  Training the shuffled arm at that scale therefore isolates routing:
+    it matches the real arm in degree, weight distribution shape and spectral radius,
+    and differs only in how the edges are wired.
+
+    If real still wins against *this* control, the structural reading survives; if the
+    gap disappears, the earlier gap was substantially an amplification effect.  Both
+    outcomes are informative, which is why it is worth three runs.
+    """
+    out = []
+    for seed in range(n_seeds):
+        out.append(
+            {
+                **SHARED,
+                "stage": "7d",
+                "graph": "shuffled",
+                "n_train": 20000,
+                "model_seed": seed,
+                "shuffle_seed": seed,
+                "w_scale": SPECTRAL_MATCH_W_SCALE,
+                "signed_synapses": False,
+                "tag": f"spec_{SPECTRAL_MATCH_W_SCALE:g}_shuffled_s{seed}",
+            }
+        )
+    return out
+
+
 GRIDS = {
     "replication": lambda a: _grid_replication(a.seeds, a.seed_start),
     "fixed_updates": lambda a: _grid_fixed_updates(),
     "signed_count": lambda a: _grid_signed_count(a.seeds, a.w_scale),
+    "spectral_control": lambda a: _grid_spectral_control(a.seeds),
 }
 
 

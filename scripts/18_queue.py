@@ -88,6 +88,13 @@ def _blocks() -> dict[str, dict]:
                     "--scratch", "--seeds", "0", "1", "2"],
             "est_min": 75,
         },
+        # ---- 3b. is the shuffle also dynamically matched? -------------------- #
+        "spectral": {
+            "why": "spectrally matched shuffled control (real rho=3.946, shuffled 2.797)",
+            "cmd": ["scripts/15_run_parallel.py", "--grid", "spectral_control",
+                    "--workers", "1", "--seeds", "3"],
+            "est_min": 95,
+        },
         # ---- 4. is the unseen-pair result specific to which pair is held out? - #
         "lpo": {
             "why": "same 2x2 at held-out pairs 1+3, 1+4, 2+4 (one seed each)",

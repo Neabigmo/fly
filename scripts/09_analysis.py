@@ -378,6 +378,59 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
         A("")
 
 
+def _section_control_match(lines: list) -> None:
+    """Is the shuffled control matched on anything beyond degree and weight?"""
+    A = lines.append
+    A("### 6.6 对照的有效性：随机图是否也匹配了「工作点」")
+    A("")
+    p = paths.DATA_PROCESSED / "graph_spectrum_core.json"
+    if not p.exists():
+        lines.extend(_pending("图谱/动力学匹配度测量",
+                              "python scripts/23_graph_spectrum.py --circuit core"))
+        return
+    rep = json.loads(p.read_text(encoding="utf-8"))
+    g = rep.get("graphs", {})
+    real = g.get("real")
+    if not real:
+        lines.extend(_pending("图谱/动力学匹配度测量", "python scripts/23_graph_spectrum.py"))
+        return
+    rows = []
+    for key, label in (("real", "real"), ("shuffled_s0", "shuffled s0"),
+                       ("shuffled_s1", "shuffled s1"), ("shuffled_s2", "shuffled s2"),
+                       ("shuffled_matched", "shuffled（等谱匹配）")):
+        v = g.get(key)
+        if not v:
+            continue
+        rows.append([label, f"{v['perron']:.4f}", f"{v['singular_top']:.4f}",
+                     f"{v['peak_final']:.3g}", f"×{v['growth']:.3g}",
+                     f"{v['fraction_negative']:.3f}"])
+    lines.extend(_md_table(
+        ["图", "谱半径 ρ", "最大奇异值", "t=32 峰值|h|", "增长倍数", "负权比例"], rows))
+    A("")
+    sm = rep.get("spectral_match")
+    A("**这是本次审计发现的一个真实问题**：保度保权重的随机交换**并不保持工作点**。"
+      f"real 图的谱半径是 **ρ={real['perron']:.4f}**，而三张随机图是 "
+      f"**{np.mean([g[k]['perron'] for k in ('shuffled_s0','shuffled_s1','shuffled_s2') if k in g]):.4f}**"
+      "（彼此只差 ±0.003），**低了 29%**；32 步内的峰值活动差了 **1.9 个数量级**。"
+      "也就是说，常规的 real-vs-shuffled 比较**同时改变了「布线」与「放大倍率」**，"
+      "差距里有多少来自布线、多少来自工作点，原先无法区分。")
+    A("")
+    if sm:
+        A(f"**修正办法（已加入队列）**：权重矩阵对 `w_scale` 是严格线性的，所以只需把随机图的 "
+          f"`w_scale` 乘以 ρ_real/ρ_shuffled，就能让它拥有与 real 相同的谱半径。实测 "
+          f"`w_scale={sm['w_scale']:.4f}` 时 ρ={sm['perron']:.4f}，与 real 的 "
+          f"{sm['real_perron']:.4f} 相差 **{100 * sm['relative_residual']:.3f}%**；"
+          f"同时 t=32 的增长倍数变成 ×{g['shuffled_matched']['growth']:.3g}，"
+          f"与 real 的 ×{real['growth']:.3g} 只差 12%。"
+          "这个**等谱匹配对照**在度数、权重分布形状、谱半径、活动增长四个维度上都与 real 对齐，"
+          "**只差边怎么连** —— 于是「结构是否有用」第一次成为干净的操纵。")
+        A("")
+        A("判读：若 real 仍然高于等谱匹配对照，结构解释成立；若差距消失，"
+          "则原先的差距主要是放大倍率（工作点）造成的。两种结果都有信息量，"
+          "所以这个块（3 runs，约 1.5 h）值得跑。")
+        A("")
+
+
 def _section_lesion(lines: list) -> None:
     A = lines.append
     """The virtual knockout panel."""
@@ -880,6 +933,7 @@ def main() -> int:
     _section_step_matched(lines)
     _section_signed(lines, df)
     _section_curriculum(lines, summaries)
+    _section_control_match(lines)
     _section_lesion(lines)
 
     if made:
