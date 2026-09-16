@@ -449,6 +449,31 @@ def make_all_figures(
                 title=f"{label} synapses, core + 20k (real vs shuffled)",
             )
 
+    # What signing costs, at matched weight scale: the real arm under unsigned@1.0
+    # (the headline), unsigned@0.5 and signed@0.5.  Without the middle bar a drop
+    # from the headline cannot be attributed to the sign rather than the scale.
+    cost: dict[str, dict] = {}
+    for key, signed, ws in (("unsigned, w=1.0", False, 1.0),
+                            ("unsigned, w=0.5", False, 0.5),
+                            ("signed, w=0.5", True, 0.5)):
+        sel = df[
+            (df["task"] == "count") & (df["model"] == "M1") & (df["circuit"] == "core")
+            & (df["graph"] == "real") & (df["n_train"] == 20000)
+            & (df["max_steps"] == 0) & (df["signed"] == signed)
+            & (df["standardize"] == False) & (df["w_scale"] == ws)  # noqa: E712
+        ]
+        if len(sel):
+            cost[key] = {
+                c: {"mean": float(sel[f"test_acc_{c.lower()}"].mean()),
+                    "values": sel[f"test_acc_{c.lower()}"].dropna().tolist()}
+                for c in "ABCD"
+            }
+    if len(cost) > 1:
+        made["signed_cost"] = plot_condition_bars(
+            cost, figdir / "fig7_signed_cost.png",
+            title="Cost of signing synapses (real connectome, matched scale)",
+        )
+
     # ---- Figure 8: the addition curriculum ---------------------------- #
     # Only runs sharing the primary held-out pair are drawn: the leave-pair-out
     # block repeats the same conditions at other holdouts, and averaging them into
