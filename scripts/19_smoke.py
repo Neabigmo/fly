@@ -94,11 +94,18 @@ def _tiny_config(**over):
 
 # --------------------------------------------------------------------------- #
 def check_signed_dynamics(log) -> None:
-    """h(t) must stay bounded under signed synapses (Fly-v2's whole point)."""
+    """h(t) must stay bounded under signed synapses (Fly-v2's whole point).
+
+    Also takes a few gradient steps with signed weights at the grid's w_scale.  The
+    forward pass alone would not have caught a divergent *training* run, and the
+    signed grid is hours of GPU time.
+    """
     import torch
 
     from flynum.pipeline import prepare
+    from flynum.train.trainer import encode, make_optimizer
 
+    models = {}
     for signed in (False, True):
         cfg = _tiny_config()
         cfg.model_cfg.signed_synapses = signed
@@ -124,6 +131,42 @@ def check_signed_dynamics(log) -> None:
                 peak = max(float(h.abs().max()) for h in hist)
                 log.info("  signed=%-5s steps=%2d  peak |h| = %.4g", signed, steps, peak)
                 assert np.isfinite(peak), "h went non-finite"
+        models[signed] = (model, prep)
+
+    # a few training steps at the signed grid's weight scale
+    from flynum.retina.torch_encoder import TorchRetina
+    from flynum.train.data import build_count_data
+
+    cfg = _tiny_config()
+    cfg.model_cfg.signed_synapses = True
+    cfg.model_cfg.w_scale = 0.5
+    cfg.train.lr_gain = 3e-4
+    cfg.train.lr_readout = 1e-3
+    prep = prepare(cfg, logger=None)
+    retina = TorchRetina(prep.encoder, device="cpu")
+    data = build_count_data(cfg, logger=None)
+    img, y = data.subset(60, seed=cfg.seeds["split_seed"])
+    torch.manual_seed(0)
+    model = prep.build_model(device="cpu", seed=0)
+    opt, ce = make_optimizer(model, cfg), torch.nn.CrossEntropyLoss()
+    losses = []
+    for i in range(0, 60, 16):
+        cols = encode(img[i : i + 16], retina, "cpu")
+        t = torch.as_tensor(y[i : i + 16], dtype=torch.long)
+        logits, _ = model.forward_count(cols, cfg.time.steps)
+        loss = ce(logits, t) + model.gain_penalty(cfg.model_cfg.lambda_gain)
+        opt.zero_grad(set_to_none=True)
+        loss.backward()
+        torch.nn.utils.clip_grad_norm_(
+            [p for p in model.parameters() if p.requires_grad], cfg.train.grad_clip
+        )
+        opt.step()
+        losses.append(float(loss))
+    log.info("  signed w_scale=0.5 training steps: losses %s",
+             [round(v, 3) for v in losses])
+    assert all(np.isfinite(v) and v < 25.0 for v in losses), (
+        f"signed training diverges at w_scale=0.5: {losses}"
+    )
 
 
 def check_fixed_steps(log) -> None:

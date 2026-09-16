@@ -129,7 +129,21 @@ def _grid_fixed_updates() -> list[dict]:
 
 
 def _grid_signed_count(n_seeds: int, w_scale: float) -> list[dict]:
-    """Stage 7c -- Fly-v2: signed synapses, bounded dynamics, same counting task."""
+    """Stage 7c -- Fly-v2: signed synapses, bounded dynamics, same counting task.
+
+    Two things are being asked at once, and they need different controls:
+
+    * *Does signing synapses cost accuracy?*  A signed run at ``w_scale=0.5`` compared
+      against the unsigned headline at ``w_scale=1.0`` would confound the sign with
+      the weight scale, so the grid also runs **unsigned at the same 0.5** for each
+      seed.  Only that pair isolates the sign.
+    * *Does the topology still help under signed weights?*  That is the real-vs-
+      shuffled comparison inside this grid, paired by seed as everywhere else.
+
+    ``w_scale=0.5`` is the bounded setting: measured over 48 steps, signed at 0.5
+    peaks at 13.8 while signed at 1.0 still grows to 1.8e4 (unsigned at 1.0 reaches
+    3.4e9).  ``scripts/21_dynamics.py`` produces those numbers.
+    """
     out = []
     for seed in range(n_seeds):
         for graph in ("real", "shuffled"):
@@ -146,6 +160,20 @@ def _grid_signed_count(n_seeds: int, w_scale: float) -> list[dict]:
                     "tag": f"v2_{graph}_s{seed}",
                 }
             )
+        # scale-matched control: same w_scale, signs removed
+        out.append(
+            {
+                **SHARED,
+                "stage": "7c",
+                "graph": "real",
+                "n_train": 20000,
+                "model_seed": seed,
+                "shuffle_seed": 0,
+                "w_scale": w_scale,
+                "signed_synapses": False,
+                "tag": f"v2_scalectrl_real_s{seed}",
+            }
+        )
     return out
 
 

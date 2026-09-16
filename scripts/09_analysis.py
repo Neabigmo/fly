@@ -176,16 +176,29 @@ def _section_signed(lines: list, df: pd.DataFrame) -> None:
              & (df["n_train"] == 20000) & (df["max_steps"] == 0)
              & (df["standardize"] == False)]  # noqa: E712
     rows = []
-    for label, flag in (("unsigned", False), ("signed", True)):
-        for graph in ("real", "shuffled"):
-            g = sel[(sel["signed"] == flag) & (sel["graph"] == graph)]
-            if not len(g):
-                continue
-            rows.append([label, graph, str(len(g))] + [
-                f"{g[f'test_acc_{c}'].dropna().mean():.4f}" for c in "abcd"
-            ])
+    # Group by BOTH the sign flag and the weight scale.  The signed grid also runs an
+    # unsigned control at the same w_scale, precisely so the sign can be separated
+    # from the scale; pooling it with the w_scale=1.0 headline would put the control
+    # inside the condition it is meant to control for.
+    for signed in (False, True):
+        for ws in sorted(sel[sel["signed"] == signed]["w_scale"].dropna().unique()):
+            for graph in ("real", "shuffled"):
+                g = sel[(sel["signed"] == signed) & (sel["w_scale"] == ws)
+                        & (sel["graph"] == graph)]
+                if not len(g):
+                    continue
+                label = "signed" if signed else "unsigned"
+                rows.append([label, f"{ws:g}", graph, str(len(g))] + [
+                    f"{g[f'test_acc_{c}'].dropna().mean():.4f}" for c in "abcd"
+                ])
     if rows:
-        lines.extend(_md_table(["突触", "graph", "runs", "A", "B", "C", "D"], rows))
+        lines.extend(_md_table(["突触", "w_scale", "graph", "runs", "A", "B", "C", "D"],
+                               rows))
+        A("")
+        A("判读方式：`signed/0.5` vs `unsigned/0.5` 才是**只改符号**的对照（同权重量级）；"
+          "`unsigned/1` 是主结果所在的那一档，用来回答「签名要付多少准确率的代价」。"
+          "把 signed 直接和 unsigned/1 比会把符号与权重量级混在一起，这正是本网格"
+          "额外跑 `v2_scalectrl_*` 的原因。")
         A("")
     else:
         lines.extend(_pending("签名突触计数网格",

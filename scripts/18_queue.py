@@ -57,10 +57,11 @@ def _blocks() -> dict[str, dict]:
         },
         # ---- 2. Fly-v2: signed synapses ------------------------------------- #
         "signed": {
-            "why": "signed synapses bound h(t); re-run counting under them",
+            "why": "signed synapses bound h(t); counting under them, plus a "
+                   "scale-matched unsigned control",
             "cmd": ["scripts/15_run_parallel.py", "--grid", "signed_count",
                     "--workers", "1", "--seeds", "3", "--w-scale", "0.5"],
-            "est_min": 180,
+            "est_min": 270,
         },
         # ---- 3. curriculum addition: the 2x2 transfer table ------------------ #
         "curr_real_pre": {
