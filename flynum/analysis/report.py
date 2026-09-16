@@ -38,6 +38,12 @@ from .figures import (
 
 
 # --------------------------------------------------------------------------- #
+def _holdout_key(s: dict) -> str:
+    """Which ordered pairs a curriculum run held out, as a stable label."""
+    hp = s.get("holdout_pairs") or []
+    return "-".join(f"{a}{b}" for a, b in hp) if hp else "?"
+
+
 def load_summaries() -> list[dict]:
     """Every completed run, annotated with its stimulus fingerprint.
 
@@ -444,17 +450,26 @@ def make_all_figures(
             )
 
     # ---- Figure 8: the addition curriculum ---------------------------- #
-    cells: dict[str, dict[str, list]] = {}
-    for s in summaries:
-        if s.get("task") != "add_curriculum" or not s.get("acc_a_test"):
-            continue
-        key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
-        cells.setdefault(key, []).append(
-            {"sum_train": s.get("sum_train"), "sum_test": s.get("sum_test")}
-        )
-    cells = {k: v for k, v in cells.items() if all(c["sum_train"] is not None for c in v)}
-    if cells:
-        made["curriculum"] = plot_curriculum(cells, figdir / "fig8_curriculum.png")
+    # Only runs sharing the primary held-out pair are drawn: the leave-pair-out
+    # block repeats the same conditions at other holdouts, and averaging them into
+    # one bar would report a mixture of two different tests.
+    curr = [s for s in summaries
+            if s.get("task") == "add_curriculum" and s.get("sum_train") is not None]
+    if curr:
+        counts: dict[str, int] = {}
+        for s in curr:
+            counts[_holdout_key(s)] = counts.get(_holdout_key(s), 0) + 1
+        primary = max(counts, key=lambda k: counts[k])
+        cells: dict[str, list[dict]] = {}
+        for s in curr:
+            if _holdout_key(s) != primary:
+                continue
+            key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
+            cells.setdefault(key, []).append(
+                {"sum_train": s.get("sum_train"), "sum_test": s.get("sum_test")}
+            )
+        if cells:
+            made["curriculum"] = plot_curriculum(cells, figdir / "fig8_curriculum.png")
 
     # ---- Figure 9: the lesion panel ----------------------------------- #
     lesion_files = sorted(paths.DATA_PROCESSED.glob("lesion_*.json"))

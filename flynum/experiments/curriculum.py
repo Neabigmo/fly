@@ -129,7 +129,15 @@ def run_curriculum(
     from ..logging_utils import get_logger
 
     log = logger or get_logger("curriculum")
-    run_id = f"{cfg.stage}_curr_{'scratch' if cc.scratch else 'pretrained'}_{cfg.data.graph}_s{cfg.seeds['model_seed']}"
+    # The held-out pair belongs in the run id: the leave-pair-out block reruns the
+    # same conditions at other holdouts, and without it the directories would be
+    # indistinguishable (and would collide into _rN suffixes) even though they are
+    # different experiments.
+    hold = "-".join(f"{a}{b}" for a, b in cfg.stimulus.holdout_pairs)
+    run_id = (
+        f"{cfg.stage}_curr_{'scratch' if cc.scratch else 'pretrained'}"
+        f"_{cfg.data.graph}_h{hold}_s{cfg.seeds['model_seed']}"
+    )
     ctx = RunContext(
         run_id,
         {**cfg.to_dict(), "curriculum": cc.__dict__},
@@ -201,6 +209,7 @@ def run_curriculum(
         "scratch": cc.scratch,
         "pretrain_from": cc.pretrain_from,
         "curriculum": cc.__dict__,
+        "holdout_pairs": [list(p) for p in cfg.stimulus.holdout_pairs],
         "acc_a_test": ev["test"]["acc_a"],
         "acc_b_test": ev["test"]["acc_b"],
         "sum_test": ev["test"]["acc_sum"],

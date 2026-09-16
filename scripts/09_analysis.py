@@ -187,37 +187,74 @@ def _section_signed(lines: list, df: pd.DataFrame) -> None:
     A("")
 
 
+def _holdout_label(s: dict) -> str:
+    """The held-out ordered pairs of a curriculum run, as a stable label."""
+    hp = s.get("holdout_pairs") or []
+    if not hp:
+        cfg = s.get("curriculum") or {}
+        return str(cfg.get("holdout", "?"))
+    return "-".join(f"{a}{b}" for a, b in hp)
+
+
 def _section_curriculum(lines: list, summaries: list[dict]) -> None:
     A = lines.append
-    """The 2x2 transfer table plus the seen/unseen split."""
+    """The 2x2 transfer table plus the seen/unseen split.
+
+    Only runs sharing the *primary* holdout go into the 2x2 table: pooling holdout
+    1+3 with 2+3 would average two different tests into one number.  The other
+    holdouts are reported separately as a robustness check on which pair was held
+    out, which is the whole point of running more than one.
+    """
     A("### 6.4 引导式加法课程（2×2 迁移表）")
     A("")
-    cells: dict[str, list[dict]] = {}
-    for s in summaries:
-        if s.get("task") != "add_curriculum" or s.get("acc_a_test") is None:
-            continue
-        key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
-        cells.setdefault(key, []).append(s)
-    if not cells:
-        lines.extend(_pending("课程加法", "python scripts/16_run_curriculum.py --graph real --pretrain ..."))
+    runs = [s for s in summaries
+            if s.get("task") == "add_curriculum" and s.get("acc_a_test") is not None]
+    if not runs:
+        lines.extend(_pending("课程加法",
+                              "python scripts/16_run_curriculum.py --graph real --pretrain ..."))
         return
-    rows = []
-    for key in sorted(cells):
-        g = cells[key]
-        rows.append([
-            key, str(len(g)),
-            f"{np.mean([x['sum_train'] for x in g]):.4f}",
-            f"{np.mean([x['sum_test'] for x in g]):.4f}",
-            f"{np.mean([x['acc_a_test'] for x in g]):.4f}",
-            f"{np.mean([x['acc_b_test'] for x in g]):.4f}",
-        ])
-    lines.extend(_md_table(
-        ["条件", "runs", "训练对（seen）", "留出对（unseen）", "a", "b"], rows))
+
+    by_holdout: dict[str, list[dict]] = {}
+    for s in runs:
+        by_holdout.setdefault(_holdout_label(s), []).append(s)
+    primary = max(by_holdout, key=lambda h: len(by_holdout[h]))
+
+    def _table(subset: list[dict], *, with_holdout: bool) -> list[str]:
+        cells: dict[str, list[dict]] = {}
+        for s in subset:
+            key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
+            cells.setdefault(key, []).append(s)
+        rows = []
+        for key in sorted(cells):
+            g = cells[key]
+            row = [key, str(len(g))]
+            if with_holdout:
+                row.append(_holdout_label(g[0]))
+            row += [
+                f"{np.mean([x['sum_train'] for x in g]):.4f}",
+                f"{np.mean([x['sum_test'] for x in g]):.4f}",
+                f"{np.mean([x['acc_a_test'] for x in g]):.4f}",
+                f"{np.mean([x['acc_b_test'] for x in g]):.4f}",
+            ]
+            rows.append(row)
+        header = ["条件", "runs"] + (["holdout"] if with_holdout else []) + [
+            "训练对（seen）", "留出对（unseen）", "a", "b"]
+        return _md_table(header, rows)
+
+    A(f"主表：留出对 = {primary}（每个条件 {max(len(v) for k, v in by_holdout.items() if k == primary)} 个种子）")
+    A("")
+    lines.extend(_table(by_holdout[primary], with_holdout=False))
     A("")
     A("`pretrained` 只从计数 run 继承**递推**参数（Δg 与偏置），读出层一律重新初始化，"
       "因此差异只能归因于学到的连接组。判据是 seen 与 unseen 的**差距小**，而不是 seen 高："
       "直接训加法时训练对能到 0.31–0.39 而留出对只有 0.004，那是记住了、没泛化。")
     A("")
+    others = {h: v for h, v in by_holdout.items() if h != primary}
+    if others:
+        A("留出对稳健性（换一对留出，看结论是否只对某一对成立）：")
+        A("")
+        lines.extend(_table([s for v in others.values() for s in v], with_holdout=True))
+        A("")
 
 
 def _section_lesion(lines: list) -> None:

@@ -149,10 +149,23 @@ def main() -> int:
         log.info("  %-15s %-6s est %4d min | %s",
                  n, "DONE" if done else "todo", table[n]["est_min"], table[n]["why"])
     if args.dry_run:
+        prereq_ok = True
         for n in names:
             for cmd in _expand(n, table[n]):
                 log.info("    %s %s", sys.executable, " ".join(cmd))
-        return 0
+                # A block that warm-starts or lesions needs a real checkpoint; a
+                # missing one would only surface hours later, after the earlier
+                # blocks had already burned the GPU.
+                for flag in ("--pretrain", "--source"):
+                    if flag in cmd:
+                        ref = cmd[cmd.index(flag) + 1]
+                        ck = paths.run_dir(ref) / "ckpt" / "best.pt"
+                        if not ck.exists():
+                            prereq_ok = False
+                            log.error("      MISSING PREREQUISITE: %s has no %s",
+                                      ref, ck.relative_to(paths.ROOT))
+        log.info("prerequisites: %s", "all present" if prereq_ok else "INCOMPLETE (see above)")
+        return 0 if prereq_ok else 1
 
     t_all = time.time()
     for n in names:
