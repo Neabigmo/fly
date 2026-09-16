@@ -1,6 +1,6 @@
 # Real vs shuffled, at the level of trained models
 
-Generated 2026-09-16 16:40 by `scripts/20_seed_stats.py`.
+Generated 2026-09-16 17:02 by `scripts/20_seed_stats.py`.
 The unit of observation is one trained network, not one test image:
 runs are paired by model seed and each shuffled seed is an independent
 random graph.  Intervals are Student t on n-1 degrees of freedom.

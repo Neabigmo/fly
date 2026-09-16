@@ -369,6 +369,11 @@ def prepare(
 
     info = {
         "circuit": sg.name,
+        # ``graph`` belongs here: run summaries are keyed on it (the learning curve,
+        # the headline table and the fixed-update table all select by graph), and its
+        # absence silently removed every run that recorded it as null from those
+        # analyses while still leaving them in the aggregate counts.
+        "graph": cfg.data.graph,
         "n_neurons": sg.n_neurons,
         "n_edges": sg.n_edges,
         "n_classes": n_classes,

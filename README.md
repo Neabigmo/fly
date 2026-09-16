@@ -335,6 +335,44 @@ logs/      queue_<block>.log       （18_queue.py 的逐块日志）
 
 ---
 
+## 8. 当前状态：已闭合与未闭合项
+
+_最近更新：复现块 6/14（real 全部 6 个 seed 完成、shuffled 5 个），队列排队中。_
+
+### 已闭合
+
+| 项 | 证据 |
+|---|---|
+| 工程正确性 | 51 tests passed；`scripts/19_smoke.py` 在 CPU 上把排队里每条代码路径各跑一遍 |
+| 分析管线覆盖四个块 | 每个块的真实分支（有数据）都已在合成数据上端到端渲染验证，不只是「没数据」的占位分支 |
+| 对照有效性审计 | `scripts/23_graph_spectrum.py` 测出随机图**未匹配工作点**（ρ 低 29%），并给出 `w_scale=1.4106` 的等谱匹配对照（残差 0.000%） |
+| 重复独立性 | 同臂内两两预测一致率 real 0.951–0.975 / shuffled 0.888–0.912（同图会是 1.000），已确认非重复 |
+| 拐点归因的初步证据 | 步数匹配 + 平台诊断（`scripts/22_step_matched.py`）：0/24 个小样本 run 停止时仍在上升 |
+| 文档一致性 | README 第 7 节与报告不再高估结论；两条新限定已写入 §7.2 |
+| 执行可靠性 | 队列 10 blocks 已武装自动交接；`runs/index.csv` 可从 run 目录重建 |
+
+### 未闭合（全部是 GPU 算力依赖，已排队）
+
+| 项 | 状态 | 预计 |
+|---|---|---|
+| 目标 1：10 real + 10 shuffled seeds | **real 6/6 + shuffled 5 已完成**，还差 8 个 run | ~4 h |
+| 目标 2：`fxu` 等更新步数对照（15 runs） | 排队 | 7.8 h |
+| 目标 3：`signed` 签名突触 + 同量级对照（9 runs） | 排队 | 4.5 h |
+| 目标 4a：课程 2×2（12 runs） | 排队 | 5 h |
+| 目标 4b：`lpo` 留出对稳健性（6 runs） | 排队 | 2.5 h |
+| 目标 4c：`lesion` 三 seed 敲除面板 | 排队 | 1 h |
+| 头条有效性：`spectral` 等谱匹配对照（3 runs） | 排队，**排在最前** | 1.6 h |
+
+**如何继续**：`scripts/18_queue.py` 可断点续跑（成功的块有 marker 会被跳过）。
+若交接脚本已不在运行，直接 `pwsh -File scripts\run_queue_after_training.ps1`，
+它会在复现任务释放 GPU 后自动接管；单独跑某个块用
+`python scripts/18_queue.py --blocks fxu signed`。
+
+**结论的可引用边界**：在 `spectral` 与 `fxu` 跑完之前，第 7 节的全部 Δ 都必须
+带着 §7.2 的两条限定引用（对照未匹配工作点；N=20000 有四倍算力）。
+
+---
+
 ## 7. 主要结果（完整数据见 `reports/report.md`）
 
 训练配置：`core` 电路、ReLU、`w_scale = 1.0`、`α = 0.2`、`T = 8`、AdamW 3e-3、无读出标准化。

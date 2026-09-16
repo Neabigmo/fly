@@ -69,6 +69,20 @@ def load_summaries() -> list[dict]:
                 # record how the weights were built, so circuits that need a
                 # different normalisation are never pooled by accident
                 rec["weight_normalization"] = cfg_obj.model_cfg.weight_normalization
+                # ``graph`` was missing from older summaries' info block, so backfill
+                # it (and the other identity fields) from the config rather than
+                # letting a null quietly drop the run out of every graph-keyed table.
+                for field, value in (
+                    ("graph", cfg_obj.data.graph),
+                    ("circuit", cfg_obj.data.circuit),
+                    ("task", cfg_obj.task),
+                    ("model", cfg_obj.model),
+                    ("n_train", int(cfg_obj.train.n_train)),
+                    ("model_seed", cfg_obj.seeds["model_seed"]),
+                    ("shuffle_seed", cfg_obj.seeds["shuffle_seed"]),
+                ):
+                    if rec.get(field) is None:
+                        rec[field] = value
                 # and how it was trained: the fixed-update control differs from the
                 # epoch-budget curve only in these fields, so they must travel with
                 # every summary or the two blocks would be silently pooled

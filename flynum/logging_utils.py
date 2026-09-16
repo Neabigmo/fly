@@ -257,14 +257,21 @@ def rebuild_index() -> dict:
         cfg_path = d / "config.json"
         if cfg_path.exists():
             cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-            payload.setdefault("stage", cfg.get("stage"))
-            payload.setdefault("task", cfg.get("task"))
-            payload.setdefault("model", cfg.get("model"))
-            payload.setdefault("circuit", cfg.get("data", {}).get("circuit"))
-            payload.setdefault("graph", cfg.get("data", {}).get("graph"))
-            payload.setdefault("n_train", cfg.get("train", {}).get("n_train"))
-            payload.setdefault("model_seed", cfg.get("seeds", {}).get("model_seed"))
-            payload.setdefault("shuffle_seed", cfg.get("seeds", {}).get("shuffle_seed"))
+            # Treat an explicit null like a missing value: run summaries written before
+            # ``graph`` was added to the pipeline's info block carry graph=None, and a
+            # plain setdefault would leave the null in place.
+            for key, value in (
+                ("stage", cfg.get("stage")),
+                ("task", cfg.get("task")),
+                ("model", cfg.get("model")),
+                ("circuit", cfg.get("data", {}).get("circuit")),
+                ("graph", cfg.get("data", {}).get("graph")),
+                ("n_train", cfg.get("train", {}).get("n_train")),
+                ("model_seed", cfg.get("seeds", {}).get("model_seed")),
+                ("shuffle_seed", cfg.get("seeds", {}).get("shuffle_seed")),
+            ):
+                if payload.get(key) in (None, ""):
+                    payload[key] = value
         rows.append({k: payload.get(k, "") for k in _INDEX_FIELDS})
         kept.add(d.name)
 

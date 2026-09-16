@@ -38,23 +38,17 @@ def main() -> int:
               f"stale rows")
 
     rows = []
-    # full_summary.json carries every field; summary.json is the short form
-    seen: set[str] = set()
-    for pattern in ("*/full_summary.json", "*/summary.json"):
-        for p in sorted(paths.RUNS.glob(pattern)):
-            rid = p.parent.name
-            if rid in seen:
-                continue
-            try:
-                s = json.loads(p.read_text(encoding="utf-8"))
-            except json.JSONDecodeError:
-                continue
-            if args.task and s.get("task") != args.task:
-                continue
-            seen.add(rid)
-            rows.append(
+    # load_summaries backfills fields a summary may not carry (older runs recorded
+    # graph=None), so the status table and the report agree about which runs exist
+    # instead of one of them silently dropping rows.
+    from flynum.analysis.report import load_summaries
+
+    for s in load_summaries():
+        if args.task and s.get("task") != args.task:
+            continue
+        rows.append(
             {
-                "run_id": s.get("run_id", p.parent.name),
+                "run_id": s.get("run_id"),
                 "task": s.get("task"),
                 "model": s.get("model"),
                 "graph": s.get("graph"),

@@ -83,7 +83,29 @@ def test_blocks_are_distinguishable(fake_runs):
     assert int(fxu["batch_size"]) == 64
 
 
-def test_fields_added_later_still_default_to_the_legacy_behaviour():
+def test_null_summary_fields_are_backfilled_from_the_config(fake_runs):
+    """A null field must not silently delete a run from a graph-keyed table.
+
+    Run summaries written before ``graph`` was added to the pipeline's info block carry
+    graph=None.  Section 1, section 6.2 and the learning curves all select on that
+    field, so those runs vanished from every table while still being counted in the
+    totals -- the report said "3 seeds" in section 1 and "5 paired seeds" in section 6.1
+    about the same data.
+    """
+    import json
+
+    d = fake_runs / "a_epoch_budget"
+    summary = json.loads((d / "full_summary.json").read_text(encoding="utf-8"))
+    summary["graph"] = None
+    summary["n_train"] = None
+    (d / "full_summary.json").write_text(json.dumps(summary), encoding="utf-8")
+
+    df = summaries_to_frame(load_summaries()).set_index("run_id")
+    row = df.loc["a_epoch_budget"]
+    assert row["graph"] == "real", "a null graph was not backfilled from the config"
+    assert int(row["n_train"]) == 20000, "a null n_train was not backfilled"
+    assert df["graph"].notna().all()
+
     """Mixed-generation pools must stay one condition.
 
     The 10-seed replication mixes runs written before the signed-synapse and
