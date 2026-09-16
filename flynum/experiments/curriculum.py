@@ -166,6 +166,7 @@ def run_curriculum(
     )
 
     transferred = None
+    pretrain_info = None
     if cc.pretrain_from and not cc.scratch:
         ckpt = _find_checkpoint(cc.pretrain_from)
         if ckpt is None:
@@ -174,12 +175,30 @@ def run_curriculum(
             )
         state = torch.load(ckpt, map_location="cpu", weights_only=False)["model"]
         transferred = model.load_recurrent_from(state)
+        # Record what the warm start was trained *with*, not just where it came from.
+        # The addition task needs alpha=0.1 (the 14-step horizon diverges at 0.2), so
+        # the gains are transferred across a change in the integration rate.  That is
+        # legitimate -- a per-synapse gain is a multiplier, and the contrast against
+        # the scratch condition still uses one alpha -- but the report has to state it
+        # rather than rely on anyone remembering it.
+        pretrain_info = _source_training_facts(cc.pretrain_from)
+        transferred["source"] = cc.pretrain_from
+        transferred["source_training"] = pretrain_info
         log.info(
             "lesson 1 (warm start): transferred %d recurrent tensors from %s "
             "(%d readout tensors left fresh)",
             len(transferred["transferred"]), ckpt.parent.parent.name,
             len(transferred["skipped"]),
         )
+        if pretrain_info:
+            log.info(
+                "  source was trained at alpha=%s steps=%s w_scale=%s signed=%s; this "
+                "run uses alpha=%s steps=%s -- warm start crosses the integration rate",
+                pretrain_info.get("alpha"), pretrain_info.get("steps"),
+                pretrain_info.get("w_scale"), pretrain_info.get("signed"),
+                cfg.model_cfg.alpha,
+                cfg.time.steps_a + cfg.time.steps_gap + cfg.time.steps_b,
+            )
     else:
         log.info("lesson 1: no warm start -- recurrent parameters are random-gain (all g=1)")
 
@@ -343,3 +362,27 @@ def _find_checkpoint(run_id: str):
         if cand.exists():
             return cand
     return None
+
+
+def _source_training_facts(run_id: str) -> dict | None:
+    """The training configuration a warm-start checkpoint was produced under."""
+    import json
+
+    from .. import paths
+
+    cfg_path = paths.run_dir(run_id) / "config.json"
+    if not cfg_path.exists():
+        return None
+    try:
+        raw = json.loads(cfg_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        return None
+    t, m, tm = raw.get("train", {}), raw.get("model_cfg", {}), raw.get("time", {})
+    return {
+        "alpha": m.get("alpha"),
+        "steps": tm.get("steps"),
+        "w_scale": m.get("w_scale"),
+        "signed": bool(m.get("signed_synapses", False)),
+        "n_train": t.get("n_train"),
+        "max_steps": t.get("max_steps", 0),
+    }

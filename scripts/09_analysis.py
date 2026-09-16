@@ -268,6 +268,18 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
       "因此差异只能归因于学到的连接组。判据是 seen 与 unseen 的**差距小**，而不是 seen 高："
       "直接训加法时训练对能到 0.31–0.39 而留出对只有 0.004，那是记住了、没泛化。")
     A("")
+    # The warm start crosses the integration rate, and saying so is part of the result.
+    src = next((s.get("transferred", {}).get("source_training")
+                for s in runs if s.get("transferred")), None)
+    if src:
+        own = runs[0].get("cfg_alpha")
+        A(f"**温热启动的 α 不同**：源 run 在 α={src.get('alpha')}、T={src.get('steps')} 下训练，"
+          f"本课程用 α={own}"
+          "（加法 14 步在 α=0.2 下会发散，所以必须降低）。"
+          "逐突触增益是一个乘子，跨积分速率迁移是合理的，而且 `scratch` 对照用的是**同一个 α**，"
+          "所以 pretrained 与 scratch 的对比仍然只有「是否继承递推参数」这一个差异；"
+          "但「迁移的是 α=0.2 学到的增益」这一点必须写明，不能靠记忆。")
+        A("")
     others = {h: v for h, v in by_holdout.items() if h != primary}
     if others:
         A("留出对稳健性（换一对留出，看结论是否只对某一对成立）：")
