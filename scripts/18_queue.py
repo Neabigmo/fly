@@ -100,6 +100,15 @@ def _blocks() -> dict[str, dict]:
                     "--random-repeats", "5"],
             "est_min": 20,
         },
+        # ---- plumbing self-test --------------------------------------------- #
+        # Runs on the CPU behind an isolated stimulus cache, so it validates this
+        # script's subprocess/log/marker machinery without touching the GPU:
+        #   python scripts/18_queue.py --blocks smoke --force
+        "smoke": {
+            "why": "queue self-test (CPU only; verifies subprocess + markers)",
+            "cmd": ["scripts/19_smoke.py"],
+            "est_min": 5,
+        },
     }
 
 
