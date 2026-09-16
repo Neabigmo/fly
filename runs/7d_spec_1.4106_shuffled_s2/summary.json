@@ -1,0 +1,21 @@
+{
+  "run_id": "7d_spec_1.4106_shuffled_s2",
+  "status": "ok",
+  "wall_seconds": 1834.2,
+  "finished_at": "2026-09-16T15:11:52+00:00",
+  "stage": "7d",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "n_train": 20000,
+  "model_seed": 2,
+  "shuffle_seed": 2,
+  "best_val_acc": 0.7016,
+  "test_acc_a": 0.7,
+  "test_acc_b": 0.4716,
+  "test_acc_c": 0.477,
+  "n_params": 1249509,
+  "epochs_run": 60,
+  "optimizer_steps": 18780
+}

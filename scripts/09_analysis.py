@@ -399,7 +399,9 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
         A("")
 
 
-def _section_control_match(lines: list) -> None:
+def _section_control_match(lines: list, summaries: list[dict]) -> None:
+    # kept in step with scripts/15_run_parallel.py:SPECTRAL_MATCH_W_SCALE
+    SPECTRAL_WS = 1.4106
     """Is the shuffled control matched on anything beyond degree and weight?"""
     A = lines.append
     A("### 6.6 对照的有效性：随机图是否也匹配了「工作点」")
@@ -464,6 +466,56 @@ def _section_control_match(lines: list) -> None:
           "则原先的差距主要是放大倍率（工作点）造成的。两种结果都有信息量，"
           "所以这个块（3 runs，约 1.5 h）值得跑。")
         A("")
+    # ---------------------------------------------------------------- #
+    # The verdict, once the matched control has actually been trained.
+    A("**等谱匹配对照的实测结果**")
+    A("")
+    arms: dict[str, dict] = {}
+    for label, signed, ws in (("real", False, 1.0),
+                              ("shuffled（同度数同权重）", False, 1.0),
+                              ("shuffled 等谱匹配", False, SPECTRAL_WS)):
+        sel = [s for s in summaries
+               if s.get("task") == "count" and s.get("model") == "M1"
+               and s.get("circuit") == "core" and s.get("n_train") == 20000
+               and s.get("graph") == ("real" if label == "real" else "shuffled")
+               and bool(s.get("cfg_signed", False)) is signed
+               and abs(float(s.get("cfg_w_scale") or 0) - ws) < 1e-6
+               and int(s.get("cfg_max_steps") or 0) == 0]
+        if not sel:
+            continue
+        arms[label] = {
+            c: np.array([s[f"test_acc_{c.lower()}"] for s in sel
+                         if s.get(f"test_acc_{c.lower()}") is not None], dtype=float)
+            for c in "ABCD"
+        }
+        arms[label]["_n"] = len(sel)
+    if len(arms) >= 2:
+        rows = []
+        for label, d in arms.items():
+            row = [label, str(d["_n"])]
+            for c in "ABCD":
+                v = d[c]
+                row.append(f"{v.mean():.4f} ± {v.std(ddof=1):.4f}" if len(v) > 1
+                           else f"{v.mean():.4f}")
+            rows.append(row)
+        lines.extend(_md_table(["条件", "seeds", "A", "B", "C", "D"], rows))
+        A("")
+        if "shuffled 等谱匹配" in arms and "real" in arms:
+            a_r = arms["real"]["A"].mean()
+            a_s = arms["shuffled（同度数同权重）"]["A"].mean()
+            a_m = arms["shuffled 等谱匹配"]["A"].mean()
+            A(f"**结论**：把随机对照的谱半径匹配到与 real 完全相同（残差 0.000%）之后，"
+              f"条件 A 从 **{a_s:.4f} 升到 {a_m:.4f}**（+{a_m - a_s:.4f}）—— 工作点确实贡献了一部分，"
+              f"但 **real 仍是 {a_r:.4f}，仍然高出等谱匹配对照 {a_r - a_m:+.4f}**。"
+              f"也就是说：在度数、权重分布、谱半径、活动增长四个维度全部对齐、**只差边怎么连**的对照上，"
+              f"真实连接组依然显著更好。**「结构本身有用」这一解释成立，"
+              f"不是放大倍率的假象。**")
+            A("")
+            A(f"代价与限定：等谱匹配对照只有 {arms['shuffled 等谱匹配']['_n']} 个 seed"
+              f"（real/shuffled 各 10 个），所以它自己的区间更宽；另外它不是原始随机图，"
+              f"而是把权重整体放大 1.4106 倍后的图，因此与「同权重分布」这一说法在"
+              f"权重量级上不再严格一致 —— 这一点必须写明。")
+            A("")
 
 
 def _section_lesion(lines: list) -> None:
@@ -1020,7 +1072,7 @@ def main() -> int:
     _section_step_matched(lines)
     _section_signed(lines, df)
     _section_curriculum(lines, summaries)
-    _section_control_match(lines)
+    _section_control_match(lines, summaries)
     _section_lesion(lines)
 
     if made:

@@ -1,0 +1,38 @@
+[
+  {
+    "tag": "spec_1.4106_shuffled_s0",
+    "status": "ok",
+    "run_id": "7d_spec_1.4106_shuffled_s0",
+    "test_acc_a": 0.705,
+    "test_acc_b": 0.4652,
+    "test_acc_c": 0.4866,
+    "test_acc_d": 0.4198,
+    "best_val_acc": 0.7032,
+    "optimizer_steps": 18780,
+    "wall_min": 30.0
+  },
+  {
+    "tag": "spec_1.4106_shuffled_s1",
+    "status": "ok",
+    "run_id": "7d_spec_1.4106_shuffled_s1",
+    "test_acc_a": 0.6998,
+    "test_acc_b": 0.462,
+    "test_acc_c": 0.5224,
+    "test_acc_d": 0.4212,
+    "best_val_acc": 0.702,
+    "optimizer_steps": 18780,
+    "wall_min": 30.5
+  },
+  {
+    "tag": "spec_1.4106_shuffled_s2",
+    "status": "ok",
+    "run_id": "7d_spec_1.4106_shuffled_s2",
+    "test_acc_a": 0.7,
+    "test_acc_b": 0.4716,
+    "test_acc_c": 0.477,
+    "test_acc_d": 0.4378,
+    "best_val_acc": 0.7016,
+    "optimizer_steps": 18780,
+    "wall_min": 30.6
+  }
+]
