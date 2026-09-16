@@ -464,6 +464,236 @@ def plot_gain_distribution(
 
 
 # --------------------------------------------------------------------------- #
+def plot_condition_bars(
+    agg: dict[str, dict[str, dict]],
+    out: Path,
+    *,
+    title: str = "",
+    chance: float = 0.2,
+):
+    """Accuracy on conditions A-D, real vs shuffled, with per-seed points.
+
+    ``agg`` maps graph -> {condition -> {"mean": float, "values": [..]}}.
+    Individual seeds are drawn because at n=3 the mean alone hides whether a gap is
+    consistent or one lucky graph.
+    """
+    _style()
+    conds = [c for c in "ABCD" if any(c in v for v in agg.values())]
+    fig, ax = plt.subplots(figsize=(6.2, 3.7))
+    colors = {"real": C_REAL, "shuffled": C_SHUFFLED}
+    x = np.arange(len(conds))
+    graphs = list(agg)
+    w = 0.8 / max(len(graphs), 1)
+    for i, graph in enumerate(graphs):
+        vals = [agg[graph].get(c, {}).get("mean", np.nan) for c in conds]
+        off = (i - (len(graphs) - 1) / 2) * w
+        ax.bar(x + off, vals, w, color=colors.get(graph, PALETTE[i % len(PALETTE)]),
+               alpha=0.9, label=graph)
+        for j, c in enumerate(conds):
+            pts = agg[graph].get(c, {}).get("values", [])
+            if pts:
+                ax.scatter(x[j] + off + np.linspace(-w * 0.25, w * 0.25, len(pts)),
+                           pts, s=12, color="white", edgecolor="black",
+                           linewidth=0.5, zorder=4)
+    labels = {"A": "A natural", "B": "B area", "C": "C area+env", "D": "D unseen"}
+    ax.axhline(chance, color=C_NEUTRAL, ls=":", lw=1, label=f"chance = {chance:.2f}")
+    ax.set_xticks(x)
+    ax.set_xticklabels([labels.get(c, c) for c in conds], fontsize=8)
+    ax.set_ylabel("accuracy")
+    ax.set_ylim(0, 1.02)
+    ax.set_title(title)
+    ax.legend(fontsize=8, loc="upper left")
+    ax.grid(alpha=0.15, axis="y")
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
+def plot_fixed_updates(
+    epoch_budget: dict[str, dict[str, dict]],
+    fixed_updates: dict[str, dict[str, dict]],
+    out: Path,
+    *,
+    budget: int = 18780,
+    ylabel: str = "count accuracy (condition A)",
+):
+    """Does the sample-efficiency knee survive equal optimiser updates?
+
+    Left: the original curve, where each N trained for 60 epochs and N=20000
+    therefore received ~4x the updates of N=5000.  Right: the same conditions
+    spending an identical step budget.  If the two right-hand points stay together
+    while the left-hand ones separate, the knee was compute; if they separate on
+    the right too, the real connectome genuinely benefits from more distinct
+    stimuli.  Both panels use the same axes so the comparison is read directly.
+    """
+    _style()
+    fig, axes = plt.subplots(1, 2, figsize=(9.4, 3.8), sharey=True)
+    colors = {"real": C_REAL, "shuffled": C_SHUFFLED}
+    panels = (
+        (axes[0], epoch_budget, "60 epochs per condition\n(unequal updates)"),
+        (axes[1], fixed_updates, f"{budget:,} updates per condition\n(equal compute)"),
+    )
+    for ax, curves, title in panels:
+        deltas = {}
+        for graph, by_n in curves.items():
+            xs = sorted(by_n, key=lambda k: int(k))
+            x = np.array([int(k) for k in xs], dtype=float)
+            mean = np.array([by_n[k]["mean"] for k in xs])
+            std = np.array([by_n[k]["std"] for k in xs])
+            col = colors.get(graph, C_NEUTRAL)
+            ax.plot(x, mean, "-o", color=col, ms=4,
+                    label=f"{graph} (n={len(by_n[xs[0]]['values'])})")
+            ax.fill_between(x, mean - std, mean + std, color=col, alpha=0.18, linewidth=0)
+            deltas[graph] = dict(zip((int(k) for k in xs), mean))
+        for n in sorted(set(deltas.get("real", {})) & set(deltas.get("shuffled", {}))):
+            d = deltas["real"][n] - deltas["shuffled"][n]
+            ax.annotate(f"Δ {d:+.3f}", (n, max(deltas["real"][n], deltas["shuffled"][n])),
+                        textcoords="offset points", xytext=(0, 8), ha="center",
+                        fontsize=8, color=C_ACCENT if abs(d) > 0.03 else C_NEUTRAL)
+        ax.set_xscale("log")
+        ax.set_xticks([1000, 5000, 10000, 20000])
+        ax.set_xticklabels(["1k", "5k", "10k", "20k"])
+        ax.set_xlabel("distinct training stimuli")
+        ax.set_ylim(0, 1.02)
+        ax.set_title(title)
+        ax.grid(alpha=0.15)
+    axes[0].set_ylabel(ylabel)
+    axes[0].legend(loc="lower right", fontsize=8)
+    fig.suptitle("The sample-efficiency knee, with and without the update confound",
+                 fontsize=11)
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
+def plot_signed_dynamics(records: dict[str, dict], out: Path):
+    """Peak activity over time for unsigned vs signed synapses.
+
+    The v1 network is all-excitatory, so with ReLU units h(t) grows without bound
+    (~10^4-fold over 32 steps at w_scale=1.0) and counting only works because the
+    readout taps the state at t=8 first.  A single biological change -- the sign of
+    each synapse, taken from the MaleCNS neurotransmitter predictions -- is what
+    makes the dynamics bounded.  Log axis because the difference is orders of
+    magnitude, which is the point.
+    """
+    _style()
+    fig, ax = plt.subplots(figsize=(5.6, 3.9))
+    for i, (label, rec) in enumerate(records.items()):
+        col = PALETTE[i % len(PALETTE)]
+        steps = np.asarray(rec["steps"], dtype=float)
+        peak = np.asarray(rec["peak_abs"], dtype=float)
+        ax.plot(steps, np.maximum(peak, 1e-12), "-", color=col, lw=1.6,
+                label=f"{label} (×{rec['growth']:.3g} by t={int(steps[-1])})")
+    ax.set_yscale("log")
+    ax.set_xlabel("recurrent step t")
+    ax.set_ylabel("peak |h(t)| over all neurons")
+    ax.set_title("Signing synapses bounds the dynamics")
+    ax.legend(fontsize=8, loc="upper left")
+    ax.grid(alpha=0.15, which="both")
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
+def plot_curriculum(cells: dict[str, dict], out: Path, *, chance_seen: float = 0.143):
+    """The 2x2 transfer table: {real, shuffled} x {count-pretrained, scratch}.
+
+    Two bars per cell: accuracy on the training pairs (seen) and on the held-out
+    pair (unseen).  A useful curriculum shows a *small* seen-unseen gap, not a high
+    seen bar: the straight-to-addition runs reached 0.31-0.39 on training pairs and
+    0.004 on the held-out pair, which is memorisation.
+    """
+    _style()
+    fig, ax = plt.subplots(figsize=(6.4, 3.9))
+    keys = [k for k in cells if cells[k]]
+    x = np.arange(len(keys))
+    w = 0.36
+    for j, (field, colour, lbl) in enumerate(
+        (("sum_train", C_NEUTRAL, "training pairs (seen)"),
+         ("sum_test", C_ACCENT, "held-out pair (unseen)"))
+    ):
+        vals, errs = [], []
+        for k in keys:
+            v = np.array([c[field] for c in cells[k]], dtype=float)
+            vals.append(v.mean())
+            errs.append(v.std(ddof=1) if len(v) > 1 else 0.0)
+        ax.bar(x + (j - 0.5) * w, vals, w, yerr=errs, capsize=2, color=colour,
+               label=lbl, alpha=0.9)
+        for xi, v in zip(x + (j - 0.5) * w, vals):
+            ax.annotate(f"{v:.3f}", (xi, v), textcoords="offset points",
+                        xytext=(0, 3), ha="center", fontsize=7.5)
+    ax.axhline(chance_seen, color=C_SHUFFLED, ls=":", lw=1,
+               label=f"chance = {chance_seen:.3f}")
+    ax.set_xticks(x)
+    ax.set_xticklabels([k.replace("/", "\n") for k in keys], fontsize=8)
+    ax.set_ylabel("sum accuracy")
+    ax.set_ylim(0, 1.05)
+    ax.set_title("Guided addition: does counting training transfer?")
+    ax.legend(fontsize=8, loc="upper left")
+    ax.grid(alpha=0.15, axis="y")
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
+def plot_lesion(summary: dict, out: Path):
+    """Accuracy lost when LC11, LC10a or a size-matched random set is silenced.
+
+    The fly literature reports that LC11 silencing impairs numerical discrimination
+    while LC10a silencing does not.  A reproduction of that double dissociation has
+    to show the LC11 bars above the random-knockout spread and the LC10a bars inside
+    it -- so the random knockouts are drawn as individual points, not averaged away.
+    """
+    _style()
+    conds = ("A", "B", "C", "D")
+    lc11_n = summary.get("n_neuron_types", {}).get("LC11", 0)
+    panels = [k for k in summary.get("deltas", {}) if not k.startswith("random_")]
+    randoms = [k for k in summary.get("deltas", {}) if k.startswith("random_")]
+
+    fig, axes = plt.subplots(1, 2, figsize=(10.4, 3.8),
+                             gridspec_kw={"width_ratios": [1.35, 1]})
+    ax = axes[0]
+    x = np.arange(len(conds))
+    w = 0.8 / max(len(panels), 1)
+    for i, name in enumerate(panels):
+        vals = [summary["deltas"][name][c] for c in conds]
+        ax.bar(x + (i - (len(panels) - 1) / 2) * w, vals, w, label=name,
+               color=PALETTE[i % len(PALETTE)], alpha=0.9)
+    for j, rname in enumerate(randoms):
+        vals = [summary["deltas"][rname][c] for c in conds]
+        ax.scatter(x + np.full(len(conds), (j - (len(randoms) - 1) / 2) * 0.1),
+                   vals, s=14, marker="D", color=C_NEUTRAL, alpha=0.8,
+                   label=f"random {lc11_n}-neuron" if j == 0 else None, zorder=4)
+    ax.axhline(0, color="k", lw=0.8)
+    ax.set_xticks(x)
+    ax.set_xticklabels([f"{c}\n{['natural', 'area', 'area+env', 'unseen'][i]}"
+                        for i, c in enumerate(conds)], fontsize=8)
+    ax.set_ylabel("accuracy lost vs intact (Δ)")
+    ax.set_title("Virtual knockout of identified neuron types")
+    ax.legend(fontsize=8, loc="upper left")
+    ax.grid(alpha=0.15, axis="y")
+
+    ax = axes[1]
+    for i, c in enumerate(conds):
+        rv = [summary["deltas"][r][c] for r in randoms]
+        if not rv:
+            continue
+        lo, hi = min(rv), max(rv)
+        ax.plot([lo, hi], [i, i], color=C_NEUTRAL, lw=6, alpha=0.35, solid_capstyle="butt")
+        ax.scatter(rv, [i] * len(rv), s=16, color=C_NEUTRAL, zorder=3)
+        for name, col in zip([p for p in panels if "readout" not in p],
+                            [PALETTE[k % len(PALETTE)] for k in range(len(panels))]):
+            ax.scatter([summary["deltas"][name][c]], [i], s=46, marker="*",
+                       color=col, zorder=4,
+                       label=name if i == 0 else None)
+    ax.axvline(0, color="k", lw=0.8)
+    ax.set_yticks(range(len(conds)))
+    ax.set_yticklabels(conds)
+    ax.set_xlabel("Δ accuracy (stars vs the random-knockout range)")
+    ax.set_title("Is the effect outside the random spread?")
+    ax.legend(fontsize=8, loc="lower right")
+    ax.grid(alpha=0.15, axis="x")
+    fig.suptitle(f"source: {summary.get('source_run', '?')}", fontsize=8.5)
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
 def plot_temporal_decoding(dec: dict, meta: dict, out: Path, title: str = ""):
     """Linear decodability of a, b and a+b at every recurrent step.
 

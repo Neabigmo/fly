@@ -44,6 +44,207 @@ def _fmt(x, nd=4):
         return "n/a"
 
 
+def _md_table(header: list[str], rows: list[list[str]]) -> list[str]:
+    out = ["| " + " | ".join(header) + " |", "|" + "---|" * len(header)]
+    for r in rows:
+        out.append("| " + " | ".join(str(c) for c in r) + " |")
+    return out
+
+
+def _pending(name: str, hint: str) -> list[str]:
+    return [f"_尚未运行：{name}（`{hint}`）_", ""]
+
+
+# --------------------------------------------------------------------------- #
+def _section_seed_stats(lines: list) -> None:
+    A = lines.append
+    """The headline table, quoted at the level of trained models."""
+    A("### 6.1 种子级统计（单位是训练好的模型，不是测试图像）")
+    A("")
+    p = paths.DATA_PROCESSED / "seed_stats.json"
+    if not p.exists():
+        lines.extend(_pending("种子级统计", "python scripts/20_seed_stats.py"))
+        return
+    rep = json.loads(p.read_text(encoding="utf-8"))
+    blk = rep.get("blocks", {}).get("replication")
+    if not blk or "conditions" not in blk:
+        lines.extend(_pending("core + 20k 复现块", "python scripts/18_queue.py --blocks ..."))
+        return
+    A(f"{blk['n_seeds']} 个配对 seed（每个 shuffled seed 是一张独立的随机图）："
+      f"{blk['seeds']}")
+    A("")
+    rows = []
+    for cond, c in blk["conditions"].items():
+        img = (f"±{c['image_level_ci95']:.4f}" if "image_level_ci95" in c else "—")
+        rows.append([
+            cond,
+            f"{c['real_mean']:.4f} ± {c['real_ci95']:.4f}",
+            f"{c['shuffled_mean']:.4f} ± {c['shuffled_ci95']:.4f}",
+            f"**{c['delta_mean']:+.4f} ± {c['delta_ci95']:.4f}**",
+            f"{c['cohen_dz']:.2f}", f"{c['hedges_g']:.2f}",
+            f"{c['t_p']:.4f}", f"{c['wilcoxon_p']:.4f}", img,
+        ])
+    lines.extend(_md_table(
+        ["cond", "real", "shuffled", "Δ ± 95%CI", "d_z", "Hedges g", "t p",
+         "Wilcoxon p", "图像级 CI（对照）"], rows))
+    A("")
+    A("最后一列是**错误口径**的对照：把它当独立观测会让区间窄一个数量级。"
+      "完整表与逐 seed Δ 见 `reports/seed_stats.md`。")
+    A("")
+
+
+def _section_fixed_updates(lines: list, df: pd.DataFrame) -> None:
+    A = lines.append
+    """Whether the sample-efficiency knee is data or compute."""
+    A("### 6.2 等优化步数对照（样本效率拐点的归因）")
+    A("")
+    sub = df[(df["task"] == "count") & (df["model"] == "M1") & (df["circuit"] == "core")
+             & (df["standardize"] == False) & (df["signed"] == False)  # noqa: E712
+             & (df["alpha"] == 0.2) & (df["steps"] == 8) & (df["w_scale"] == 1.0)]
+    base = sub[sub["max_steps"] == 0]
+    fxu = sub[sub["max_steps"] > 0]
+    rows = []
+    for n in sorted(set(base["n_train"].dropna()) | set(fxu["n_train"].dropna())):
+        row = [f"{int(n)}"]
+        for blk in (base, fxu):
+            g = blk[blk["n_train"] == n]
+            r = g[g["graph"] == "real"]["test_acc_a"].dropna()
+            s = g[g["graph"] == "shuffled"]["test_acc_a"].dropna()
+            # Runs trained before the step budget existed do not record
+            # optimizer_steps, so recover it from the epochs they actually ran.
+            steps = g["optimizer_steps"].dropna()
+            if len(steps):
+                n_steps = f"{int(steps.max())}"
+            elif len(g):
+                bs = g["batch_size"].dropna()
+                bs = int(bs.max()) if len(bs) else 64
+                ep = g["epochs_run"].dropna()
+                n_steps = f"{int(ep.max()) * -(-int(n) // bs)}" if len(ep) else "—"
+            else:
+                n_steps = "—"
+            row += [
+                n_steps,
+                f"{r.mean():.4f} (n={len(r)})" if len(r) else "—",
+                f"{s.mean():.4f} (n={len(s)})" if len(s) else "—",
+                f"{r.mean() - s.mean():+.4f}" if len(r) and len(s) else "—",
+            ]
+        rows.append(row)
+    if not rows:
+        lines.extend(_pending("固定步数网格",
+                              "python scripts/15_run_parallel.py --grid fixed_updates"))
+        return
+    lines.extend(_md_table(
+        ["N_train", "steps·epoch-budget", "real (60 ep)", "shuffled (60 ep)", "Δ",
+         "steps·equal", "real (equal)", "shuffled (equal)", "Δ"], rows))
+    A("")
+    A("原曲线每个 N 都训 60 epoch，于是 N=20000 得到 18 780 次更新而 N=5000 最多 4 740 次 —— "
+      "拐点与 4 倍算力同时出现，因此**不能**直接归因于数据。右三列是同一批条件只花相同步数"
+      "（并把验证点数也固定为 60，使模型选择粒度可比）的结果：若 Δ 在 N=5000 仍≈0，则拐点属于"
+      "数据多样性；若 N=5000 也打开，则原拐点是算力。")
+    A("")
+
+
+def _section_signed(lines: list, df: pd.DataFrame) -> None:
+    A = lines.append
+    """Fly-v2: one biological change, and what it does to the dynamics."""
+    A("### 6.3 Fly-v2：来自递质身份的签名突触")
+    A("")
+    dpath = paths.DATA_PROCESSED / "dynamics_signed_core.json"
+    if dpath.exists():
+        recs = json.loads(dpath.read_text(encoding="utf-8"))["records"]
+        rows = []
+        for label, rec in recs.items():
+            rows.append([label, f"{rec['peak_abs'][0]:.3g}", _fmt(rec["peak_t8"], 4),
+                         f"{rec['peak_final']:.4g}", f"×{rec['growth']:.4g}",
+                         str(rec["finite"])])
+        A("峰值活动随步数的增长（恒定刺激，48 步，n=48 记录每步的最大 |h|）：")
+        A("")
+        lines.extend(_md_table(["配置", "t=1", "t=8（读出时刻）", "t=48", "增长倍数",
+                            "有限"], rows))
+        A("")
+        A("未签名时 48 步增长 **1.5e10 倍**（这正是「计数只在发散前读状态」的原因）；"
+          "签名后同一权重量级下降 3 个数量级，`w_scale=0.5` 时 48 步只增长 63 倍。"
+          "这就是任何带延迟的任务（加法）的前提条件。")
+        A("")
+    sel = df[(df["task"] == "count") & (df["model"] == "M1") & (df["circuit"] == "core")
+             & (df["n_train"] == 20000) & (df["max_steps"] == 0)
+             & (df["standardize"] == False)]  # noqa: E712
+    rows = []
+    for label, flag in (("unsigned", False), ("signed", True)):
+        for graph in ("real", "shuffled"):
+            g = sel[(sel["signed"] == flag) & (sel["graph"] == graph)]
+            if not len(g):
+                continue
+            rows.append([label, graph, str(len(g))] + [
+                f"{g[f'test_acc_{c}'].dropna().mean():.4f}" for c in "abcd"
+            ])
+    if rows:
+        lines.extend(_md_table(["突触", "graph", "runs", "A", "B", "C", "D"], rows))
+        A("")
+    else:
+        lines.extend(_pending("签名突触计数网格",
+                          "python scripts/15_run_parallel.py --grid signed_count"))
+    A("")
+
+
+def _section_curriculum(lines: list, summaries: list[dict]) -> None:
+    A = lines.append
+    """The 2x2 transfer table plus the seen/unseen split."""
+    A("### 6.4 引导式加法课程（2×2 迁移表）")
+    A("")
+    cells: dict[str, list[dict]] = {}
+    for s in summaries:
+        if s.get("task") != "add_curriculum" or s.get("acc_a_test") is None:
+            continue
+        key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
+        cells.setdefault(key, []).append(s)
+    if not cells:
+        lines.extend(_pending("课程加法", "python scripts/16_run_curriculum.py --graph real --pretrain ..."))
+        return
+    rows = []
+    for key in sorted(cells):
+        g = cells[key]
+        rows.append([
+            key, str(len(g)),
+            f"{np.mean([x['sum_train'] for x in g]):.4f}",
+            f"{np.mean([x['sum_test'] for x in g]):.4f}",
+            f"{np.mean([x['acc_a_test'] for x in g]):.4f}",
+            f"{np.mean([x['acc_b_test'] for x in g]):.4f}",
+        ])
+    lines.extend(_md_table(
+        ["条件", "runs", "训练对（seen）", "留出对（unseen）", "a", "b"], rows))
+    A("")
+    A("`pretrained` 只从计数 run 继承**递推**参数（Δg 与偏置），读出层一律重新初始化，"
+      "因此差异只能归因于学到的连接组。判据是 seen 与 unseen 的**差距小**，而不是 seen 高："
+      "直接训加法时训练对能到 0.31–0.39 而留出对只有 0.004，那是记住了、没泛化。")
+    A("")
+
+
+def _section_lesion(lines: list) -> None:
+    A = lines.append
+    """The virtual knockout panel."""
+    A("### 6.5 虚拟敲除（LC11 / LC10a / 随机 143 神经元）")
+    A("")
+    files = sorted(paths.DATA_PROCESSED.glob("lesion_*.json"))
+    if not files:
+        lines.extend(_pending("敲除面板", "python scripts/17_run_lesion.py --source <run_id>"))
+        return
+    s = json.loads(files[0].read_text(encoding="utf-8"))
+    A(f"来源模型：`{s.get('source_run')}`；LC11 = {s['n_neuron_types'].get('LC11')} 个神经元，"
+      f"LC10a = {s['n_neuron_types'].get('LC10a')} 个。")
+    A("")
+    rows = []
+    for name, d in s.get("deltas", {}).items():
+        rows.append([name, str(next((l["n_lesioned"] for l in s["lesions"]
+                                     if l["name"] == name), "—"))]
+                    + [f"{d[c]:+.4f}" for c in ("A", "B", "C", "D")])
+    lines.extend(_md_table(["敲除", "n", "ΔA", "ΔB", "ΔC", "ΔD"], rows))
+    A("")
+    A("正 Δ = 准确率下降（受损）。要复现文献的双分离，LC11 必须高于随机敲除的分布，"
+      "而 LC10a 落在其中；`LC11_readout_only` 用来区分「解码器依赖」与「电路依赖」。")
+    A("")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--no-figures", action="store_true")
@@ -494,8 +695,19 @@ def main() -> int:
               f"{rep['spread_centroid_accuracy']:.3f} | {rep['blob_ok_fraction']:.4f} |")
         A("")
 
+    # ------------------------------------------------------------------ #
+    # 6. the corrected and newly added blocks
+    # ------------------------------------------------------------------ #
+    A("## 6. 复现性、等算力对照与新增块")
+    A("")
+    _section_seed_stats(lines)
+    _section_fixed_updates(lines, df)
+    _section_signed(lines, df)
+    _section_curriculum(lines, summaries)
+    _section_lesion(lines)
+
     if made:
-        A("## 6. 图")
+        A("## 10. 图")
         A("")
         for name, path in made.items():
             rel = path.relative_to(paths.ROOT)
@@ -513,7 +725,7 @@ def main() -> int:
     ]
     present_extra = [(t, p) for t, p in extra_figs if p.exists()]
     if present_extra:
-        A("## 7. 诊断与质控图")
+        A("## 11. 诊断与质控图")
         A("")
         for title, p in present_extra:
             rel = p.relative_to(paths.ROOT)

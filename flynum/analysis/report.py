@@ -20,14 +20,19 @@ from .. import paths
 from ..train.metrics import bootstrap_ci, paired_gap
 from .figures import (
     plot_addition_matrix,
+    plot_condition_bars,
     plot_confusion,
+    plot_curriculum,
     plot_epoch_curves,
+    plot_fixed_updates,
     plot_gain_distribution,
     plot_gap_over_epochs,
     plot_learning_curve,
+    plot_lesion,
     plot_propagation,
     plot_retina_map,
     plot_shuffle_mixing,
+    plot_signed_dynamics,
     plot_system_diagram,
 )
 
@@ -58,6 +63,17 @@ def load_summaries() -> list[dict]:
                 # record how the weights were built, so circuits that need a
                 # different normalisation are never pooled by accident
                 rec["weight_normalization"] = cfg_obj.model_cfg.weight_normalization
+                # and how it was trained: the fixed-update control differs from the
+                # epoch-budget curve only in these fields, so they must travel with
+                # every summary or the two blocks would be silently pooled
+                rec["cfg_max_steps"] = int(cfg_obj.train.max_steps)
+                rec["cfg_eval_every"] = int(cfg_obj.train.eval_every)
+                rec["cfg_steps"] = int(cfg_obj.time.steps)
+                rec["cfg_alpha"] = float(cfg_obj.model_cfg.alpha)
+                rec["cfg_w_scale"] = float(cfg_obj.model_cfg.w_scale)
+                rec["cfg_signed"] = bool(cfg_obj.model_cfg.signed_synapses)
+                rec["cfg_standardize"] = bool(cfg_obj.model_cfg.readout_standardize)
+                rec["cfg_batch_size"] = int(cfg_obj.train.batch_size)
             except Exception:
                 rec["stimulus_fingerprint"] = "unknown"
                 rec["weight_normalization"] = "unknown"
@@ -114,6 +130,15 @@ def summaries_to_frame(summaries: list[dict]) -> pd.DataFrame:
                 "addition_test_accuracy": s.get("addition_test_accuracy"),
                 "unseen_pair_accuracy": s.get("unseen_pair_accuracy"),
                 "wall_seconds_total": s.get("wall_seconds_total"),
+                "max_steps": s.get("cfg_max_steps"),
+                "steps": s.get("cfg_steps"),
+                "alpha": s.get("cfg_alpha"),
+                "w_scale": s.get("cfg_w_scale"),
+                "signed": s.get("cfg_signed"),
+                "standardize": s.get("cfg_standardize"),
+                "epochs_run": (s.get("train_info") or {}).get("epochs_run"),
+                "optimizer_steps": (s.get("train_info") or {}).get("optimizer_steps"),
+                "batch_size": s.get("cfg_batch_size"),
             }
         )
     return pd.DataFrame(rows)
@@ -368,6 +393,75 @@ def make_all_figures(
             json.loads(cal_path.read_text(encoding="utf-8")),
             figdir / "figS3_calibration.png",
         )
+
+    # ---- Figure 6: the equal-update control ---------------------------- #
+    # Left panel is the original curve (max_steps == 0, 60 epochs each); right
+    # panel is the same conditions spending an identical 18,780 updates.
+    # Numbering starts at 6 because fig5 is the temporal-decoding figure.
+    fxu = df[
+        (df["task"] == "count") & (df["model"] == "M1") & (df["circuit"] == "core")
+        & (df["standardize"] == False)  # noqa: E712 - pandas needs ==
+        & (df["alpha"] == 0.2) & (df["steps"] == 8) & (df["w_scale"] == 1.0)
+        & (df["signed"] == False)  # noqa: E712
+    ]
+    base_curves = build_learning_curves(fxu[fxu["max_steps"] == 0], "test_acc_a")
+    fxu_curves = build_learning_curves(fxu[fxu["max_steps"] > 0], "test_acc_a")
+    if base_curves and fxu_curves:
+        made["fixed_updates"] = plot_fixed_updates(
+            {g: c.by_n for g, c in base_curves.items()},
+            {g: c.by_n for g, c in fxu_curves.items()},
+            figdir / "fig6_fixed_updates.png",
+            budget=int(fxu[fxu["max_steps"] > 0]["max_steps"].max()),
+        )
+
+    # ---- Figure 7: signed synapses (Fly-v2) ---------------------------- #
+    dyn_path = paths.DATA_PROCESSED / "dynamics_signed_core.json"
+    if dyn_path.exists():
+        recs = json.loads(dyn_path.read_text(encoding="utf-8"))["records"]
+        keep = {k: v for k, v in recs.items()
+                if k == "unsigned w=1" or k.startswith("signed w=0.5")}
+        if keep:
+            made["signed_dynamics"] = plot_signed_dynamics(
+                keep, figdir / "fig7_signed_dynamics.png"
+            )
+    for label, flag in (("unsigned", False), ("signed", True)):
+        sel = df[
+            (df["task"] == "count") & (df["model"] == "M1") & (df["circuit"] == "core")
+            & (df["n_train"] == 20000) & (df["signed"] == flag)
+            & (df["max_steps"] == 0) & (df["standardize"] == False)  # noqa: E712
+        ]
+        agg: dict[str, dict] = {}
+        for graph, sub in sel.groupby("graph"):
+            agg[graph] = {
+                c: {"mean": float(sub[f"test_acc_{c.lower()}"].mean()),
+                    "values": sub[f"test_acc_{c.lower()}"].dropna().tolist()}
+                for c in "ABCD"
+            }
+        if agg:
+            made[f"count_{label}"] = plot_condition_bars(
+                agg, figdir / f"fig7_count_{label}.png",
+                title=f"{label} synapses, core + 20k (real vs shuffled)",
+            )
+
+    # ---- Figure 8: the addition curriculum ---------------------------- #
+    cells: dict[str, dict[str, list]] = {}
+    for s in summaries:
+        if s.get("task") != "add_curriculum" or not s.get("acc_a_test"):
+            continue
+        key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
+        cells.setdefault(key, []).append(
+            {"sum_train": s.get("sum_train"), "sum_test": s.get("sum_test")}
+        )
+    cells = {k: v for k, v in cells.items() if all(c["sum_train"] is not None for c in v)}
+    if cells:
+        made["curriculum"] = plot_curriculum(cells, figdir / "fig8_curriculum.png")
+
+    # ---- Figure 9: the lesion panel ----------------------------------- #
+    lesion_files = sorted(paths.DATA_PROCESSED.glob("lesion_*.json"))
+    if lesion_files:
+        summary = json.loads(lesion_files[0].read_text(encoding="utf-8"))
+        if summary.get("deltas"):
+            made["lesion"] = plot_lesion(summary, figdir / "fig9_lesion.png")
 
     return made
 
