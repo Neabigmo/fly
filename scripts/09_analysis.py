@@ -468,26 +468,78 @@ def _section_control_match(lines: list) -> None:
 
 def _section_lesion(lines: list) -> None:
     A = lines.append
-    """The virtual knockout panel."""
+    """The virtual knockout panel, aggregated over source models."""
     A("### 6.5 虚拟敲除（LC11 / LC10a / 随机 143 神经元）")
     A("")
     files = sorted(paths.DATA_PROCESSED.glob("lesion_*.json"))
     if not files:
         lines.extend(_pending("敲除面板", "python scripts/17_run_lesion.py --source <run_id>"))
         return
-    s = json.loads(files[0].read_text(encoding="utf-8"))
-    A(f"来源模型：`{s.get('source_run')}`；LC11 = {s['n_neuron_types'].get('LC11')} 个神经元，"
-      f"LC10a = {s['n_neuron_types'].get('LC10a')} 个。")
-    A("")
+    panels = []
+    for f in files:
+        try:
+            s = json.loads(f.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if s.get("deltas"):
+            panels.append(s)
+    if not panels:
+        lines.extend(_pending("敲除面板", "python scripts/17_run_lesion.py --source <run_id>"))
+        return
+
+    conds = ("A", "B", "C", "D")
+    # A panel per source model: the dissociation claim needs a spread across models,
+    # and reading only files[0] would silently drop the other two.
+    names = sorted({n for p in panels for n in p["deltas"]})
     rows = []
-    for name, d in s.get("deltas", {}).items():
-        rows.append([name, str(next((l["n_lesioned"] for l in s["lesions"]
-                                     if l["name"] == name), "—"))]
-                    + [f"{d[c]:+.4f}" for c in ("A", "B", "C", "D")])
-    lines.extend(_md_table(["敲除", "n", "ΔA", "ΔB", "ΔC", "ΔD"], rows))
+    for name in names:
+        per_model = [[p["deltas"][name][c] for c in conds]
+                     for p in panels if name in p["deltas"]]
+        arr = np.array(per_model, dtype=float)
+        row = [name, str(len(per_model))]
+        for j in range(len(conds)):
+            col = arr[:, j]
+            cell = f"{col.mean():+.4f}"
+            if len(col) > 1:
+                cell += f" [{col.min():+.4f}, {col.max():+.4f}]"
+            row.append(cell)
+        rows.append(row)
+    first = panels[0]
+    A(f"来源模型：{len(panels)} 个（headline 条件的 seed"
+      + ("s" if len(panels) > 1 else "") + "）；"
+      f"LC11 = {first['n_neuron_types'].get('LC11')} 个神经元，"
+      f"LC10a = {first['n_neuron_types'].get('LC10a')} 个。"
+      "多模型时单元格为 **均值 [最小值, 最大值]**。单个模型的敲除结果很容易只是 seed 运气，"
+      "所以面板在 headline 条件的每个 seed 上各跑一次。")
     A("")
-    A("正 Δ = 准确率下降（受损）。要复现文献的双分离，LC11 必须高于随机敲除的分布，"
-      "而 LC10a 落在其中；`LC11_readout_only` 用来区分「解码器依赖」与「电路依赖」。")
+    lines.extend(_md_table(["敲除", "models", "ΔA", "ΔB", "ΔC", "ΔD"], rows))
+    A("")
+
+    # The pre-registered pass line: LC11 must exceed every random knockout of the same
+    # size, and LC10a must stay inside their range.
+    rnd = [n for n in names if n.startswith("random_")]
+    lc11 = [n for n in names if n == "LC11"]
+    lc10 = [n for n in names if n == "LC10a"]
+    if rnd and lc11:
+        r_max = max(p["deltas"][r]["A"] for p in panels for r in rnd if r in p["deltas"])
+        l_mean = float(np.mean([p["deltas"]["LC11"]["A"] for p in panels
+                                if "LC11" in p["deltas"]]))
+        l_min = min(p["deltas"]["LC11"]["A"] for p in panels if "LC11" in p["deltas"])
+        A(f"**按 §6.2 预先锁定的合格线判读**：LC11 的 ΔA 均值 {l_mean:+.4f}"
+          f"（最小 {l_min:+.4f}），5 次随机 143 神经元敲除的 ΔA 最大值 {r_max:+.4f} —— "
+          + ("**LC11 在全部随机敲除之上，双分离成立**。"
+             if l_min > r_max else
+             "**LC11 未完全越出随机敲除范围，不能声称双分离**，只能报告 LC11 与随机敲除的差异幅度。"))
+        if lc10:
+            c_mean = float(np.mean([p["deltas"]["LC10a"]["A"] for p in panels
+                                    if "LC10a" in p["deltas"]]))
+            in_range = c_mean <= r_max
+            A(f"LC10a 的 ΔA 均值 {c_mean:+.4f}，"
+              + ("落在随机范围之内 —— 与文献报告的「LC10a 敲除不损伤数感」一致。"
+                 if in_range else
+                 "**也越出随机范围**，因此只能说「LC11 与 LC10a 均敏感」，不能声称双分离。"))
+        A("")
+    A("正 Δ = 准确率下降（受损）；`LC11_readout_only` 用来区分「解码器依赖」与「电路依赖」。")
     A("")
 
 

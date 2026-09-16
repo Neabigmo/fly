@@ -42,6 +42,17 @@ from flynum.logging_utils import get_logger  # noqa: E402
 REF_REAL = "s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46"
 REF_SHUFFLED = "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561"
 
+#: The lesion panel runs on all three seeds of the headline condition, not one.  A
+#: single-seed knockout is exactly the kind of result that turns out to be seed luck,
+#: and the claim it supports -- LC11 silencing impairs numerosity while LC10a does not
+#: -- is a double dissociation, so it needs a spread across models rather than one
+#: model's number.  Each panel costs ~20 min.
+LESION_SOURCES = (
+    REF_REAL,
+    "s2_count_M1_core_real_N20000_m1_sh0_cc44762d6a",
+    "s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab",
+)
+
 
 def _blocks() -> dict[str, dict]:
     """Ordered block table.  Order follows the priority the user set: get ``core``
@@ -103,10 +114,9 @@ def _blocks() -> dict[str, dict]:
         },
         # ---- 5. LC11 / LC10a / random knockout ------------------------------ #
         "lesion": {
-            "why": "virtual knockout panel on the trained counting model",
-            "cmd": ["scripts/17_run_lesion.py", "--source", REF_REAL,
-                    "--random-repeats", "5"],
-            "est_min": 20,
+            "why": "virtual knockout panel on all three seeds of the headline model",
+            "cmd": None,  # expanded below: one panel per source model
+            "est_min": 60,
         },
         # ---- plumbing self-test --------------------------------------------- #
         # Runs on the CPU behind an isolated stimulus cache, so it validates this
@@ -122,6 +132,9 @@ def _blocks() -> dict[str, dict]:
 
 def _expand(name: str, spec: dict) -> list[list[str]]:
     """A block may expand to several sequential invocations."""
+    if name == "lesion":
+        return [["scripts/17_run_lesion.py", "--source", src,
+                 "--random-repeats", "5"] for src in LESION_SOURCES]
     if name != "lpo":
         return [spec["cmd"]]
     cmds = []

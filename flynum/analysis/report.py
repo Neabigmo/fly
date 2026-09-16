@@ -497,11 +497,37 @@ def make_all_figures(
             made["curriculum"] = plot_curriculum(cells, figdir / "fig8_curriculum.png")
 
     # ---- Figure 9: the lesion panel ----------------------------------- #
+    # One panel per source model; average them so the figure reports the same thing as
+    # the report table.  The random knockouts keep every model's values, which is what
+    # makes the spread visible rather than averaged away.
     lesion_files = sorted(paths.DATA_PROCESSED.glob("lesion_*.json"))
-    if lesion_files:
-        summary = json.loads(lesion_files[0].read_text(encoding="utf-8"))
-        if summary.get("deltas"):
-            made["lesion"] = plot_lesion(summary, figdir / "fig9_lesion.png")
+    panels = []
+    for f in lesion_files:
+        try:
+            s = json.loads(f.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            continue
+        if s.get("deltas"):
+            panels.append(s)
+    if panels:
+        names = sorted({n for p in panels for n in p["deltas"]})
+        merged = {
+            "source_run": ", ".join(p.get("source_run", "?") for p in panels),
+            "n_neuron_types": panels[0].get("n_neuron_types", {}),
+            "deltas": {},
+        }
+        for name in names:
+            per = [p["deltas"][name] for p in panels if name in p["deltas"]]
+            merged["deltas"][name] = {
+                c: float(np.mean([d[c] for d in per])) for c in "ABCD"
+            }
+        if len(panels) > 1:
+            # keep each model's random knockouts distinct so the figure shows a spread
+            for i, p in enumerate(panels):
+                for name, d in p["deltas"].items():
+                    if name.startswith("random_"):
+                        merged["deltas"][f"{name}_m{i}"] = d
+        made["lesion"] = plot_lesion(merged, figdir / "fig9_lesion.png")
 
     return made
 
