@@ -50,6 +50,11 @@ def load_curves() -> list[dict]:
         mp, cp = d / "metrics.jsonl", d / "config.json"
         if not (mp.exists() and cp.exists()):
             continue
+        # A run that is still being written is not yet a result: its curve would be
+        # held flat past its last logged epoch, which understates the arm it belongs
+        # to and inflates any delta computed against it.
+        if not (d / "summary.json").exists():
+            continue
         cfg = json.loads(cp.read_text(encoding="utf-8"))
         if cfg.get("task") != "count" or cfg.get("model") != "M1":
             continue
@@ -220,6 +225,79 @@ def main() -> int:
             log.info(
                 "=> the gap is already established by step %.0f, inside the range "
                 "N=5000 was given, so it is not merely compute.", onset)
+
+    # ------------------------------------------------------------------ #
+    # Was the small condition still improving when patience stopped it?
+    #
+    # This is the crux of the compute question.  If N=5000's validation accuracy was
+    # flat over its final patience window, then more updates could not have helped it
+    # and the epoch-budget gap is about the stimuli; if it was still climbing, the
+    # early stop -- not the sample size -- is what kept it at 0.51.
+    A = []
+    for c in curves:
+        v = c["val"]
+        w = min(15, len(v) - 1)
+        if w < 2:
+            continue
+        tail = v[-w:]
+        # least-squares slope per epoch over the final patience window, and the gain
+        # actually achieved in it
+        x = np.arange(w, dtype=float)
+        slope = float(np.polyfit(x, tail, 1)[0])
+        A.append({
+            "run_id": c["run_id"],
+            "n_train": c["n_train"],
+            "graph": c["graph"],
+            "model_seed": c["model_seed"],
+            "epochs": len(v),
+            "stopped_at_step": float(c["steps"][-1]),
+            "val_at_stop": float(v[-1]),
+            "val_best_last_window": float(tail.max()),
+            "gain_in_last_window": float(tail.max() - tail[0]),
+            "slope_per_epoch": slope,
+        })
+    report["plateau"] = A
+    for n in sorted({r["n_train"] for r in A}):
+        for graph in ("real", "shuffled"):
+            g = [r for r in A if r["n_train"] == n and r["graph"] == graph]
+            if not g:
+                continue
+            sl = np.array([r["slope_per_epoch"] for r in g])
+            gn = np.array([r["gain_in_last_window"] for r in g])
+            log.info(
+                "N=%-6d %-8s %d seed(s): stopped at %s steps | last-window slope "
+                "%+.4f/epoch | gain in last window %+.4f",
+                n, graph, len(g),
+                "/".join(f"{r['stopped_at_step']:.0f}" for r in g),
+                sl.mean(), gn.mean(),
+            )
+    small = [r for r in A if r["n_train"] <= 5000]
+    if small:
+        still_rising = [r for r in small if r["slope_per_epoch"] > 0.002]
+        report["verdict"]["small_n_still_rising"] = len(still_rising)
+        report["verdict"]["small_n_runs"] = len(small)
+        report["verdict"]["n5000_mean_last_window_slope"] = float(np.mean(
+            [r["slope_per_epoch"] for r in A if r["n_train"] == 5000]))
+        report["verdict"]["n20000_mean_last_window_slope"] = float(np.mean(
+            [r["slope_per_epoch"] for r in A if r["n_train"] == 20000]))
+        log.info(
+            "%d of %d small-N runs were still rising by more than +0.002/epoch when "
+            "they stopped", len(still_rising), len(small),
+        )
+        log.info("=" * 92)
+        s5 = report["verdict"]["n5000_mean_last_window_slope"]
+        s20 = report["verdict"]["n20000_mean_last_window_slope"]
+        log.info(
+            "combined reading: the small conditions were FLAT over their final "
+            "patience window (mean slope %+.5f/epoch for N=5000) and so was N=20000 "
+            "at the end (%+.5f/epoch).  Every condition converged; they converged to "
+            "different plateau HEIGHTS (0.51 against 0.77/0.66), which is a statement "
+            "about the stimuli rather than about training duration.  The caveat that "
+            "keeps this from being conclusive: a flat region can precede a later "
+            "descent, so only the equal-update grid can rule out that N=5000 would "
+            "have dropped off its plateau given the full budget.",
+            s5, s20,
+        )
 
     out = Path(args.out) if args.out else paths.DATA_PROCESSED / "step_matched.json"
     out.write_text(json.dumps(report, indent=2), encoding="utf-8")

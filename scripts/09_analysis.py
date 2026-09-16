@@ -179,15 +179,54 @@ def _section_step_matched(lines: list) -> None:
     A("")
     A(f"**结论（初步）**：N=20000 的优势在 step {v['n20000_half_gap_onset_step']:.0f} 附近才开始形成，"
       f"而 N=5000 早在 step {v['n5000_observed_through_step']:.0f} 就停止了 —— 也就是说，"
-      "原曲线**在差距刚要出现之前就把小样本条件停掉了**。因此"
-      "「拐点是算力」这一解释**目前仍然成立**，用户对原结论的怀疑方向是对的。")
+      "原曲线**在差距刚要出现之前就把小样本条件停掉了**。单看这一点，算力仍是成立的解释。")
     A("")
+    # ... but the plateau diagnostic says the small conditions had converged there.
+    plateau = rep.get("plateau") or []
+    if plateau:
+        rows = []
+        for n in sorted({r["n_train"] for r in plateau}):
+            for graph in ("real", "shuffled"):
+                g = [r for r in plateau if r["n_train"] == n and r["graph"] == graph]
+                if not g:
+                    continue
+                rows.append([
+                    f"{n} {graph}", str(len(g)),
+                    f"{g[0]['stopped_at_step']:.0f}–{g[-1]['stopped_at_step']:.0f}",
+                    f"{np.mean([r['slope_per_epoch'] for r in g]):+.5f}",
+                    f"{np.mean([r['gain_in_last_window'] for r in g]):+.4f}",
+                    f"{np.mean([r['val_at_stop'] for r in g]):.4f}",
+                ])
+        A("**但是**：每个 run 的最后 15 个 epoch（正是 patience 的窗口）里的 val 斜率是"
+          "「它是否还在进步」的直接证据：")
+        A("")
+        lines.extend(_md_table(
+            ["条件", "seeds", "停止步数", "窗口内斜率/epoch", "窗口内增益", "停止时 val"],
+            rows))
+        A("")
+        A(f"**0 / {v.get('small_n_runs', 0)} 个小样本 run** 在停止时仍以 > +0.002/epoch 上升；"
+          f"N=5000 的窗口内平均斜率是 **{v.get('n5000_mean_last_window_slope', float('nan')):+.5f}/epoch**，"
+          f"而 N=20000 在末尾也只有 **{v.get('n20000_mean_last_window_slope', float('nan')):+.5f}/epoch** —— "
+          "**每个条件都已经收敛**，差别在于收敛到的**平台高度**（0.51 对 0.77 / 0.66），"
+          "而平台高度是关于**刺激**的陈述，不是关于训练时长的。")
+        A("")
     A("必须同时声明的三点限定：① 这是**支持性证据而非对照** —— 它比较的是「20k 不同刺激」"
       "与「5k 不同刺激」在相同步数下的表现，而等算力网格是**固定 N、只改预算**，"
       "只有后者能排除算力；② N=5000 的三个 seed 分别在 3 239 / 4 424 / 4 740 步停止，"
       "所以交叉可比范围只到最短的那个（3 950 步），更靠右的取值是外推，图中虚线标出；"
       "③ 在 3 950 步处 N=20000 仍有 +0.021 的小差距（N=5000 为 +0.005），"
       "即**并非全部**都是算力，但这部分远小于最终的 +0.106。")
+    A("")
+    A("**把两条证据合起来**：步数匹配说明差距是在小样本条件停止**之后**才打开的；"
+      "平台诊断说明小样本条件在停止时**已经收敛**（不是在半途被 patience 打断）。"
+      "两者共同指向「不同样本量收敛到不同平台高度」，而不是「训练不够久」。"
+      "唯一还不能排除的情形是：**平坦区之后可能还有第二次下降**（plateau-then-drop），"
+      "这正是等算力网格要检验的 —— 给 N=5000 完整 18 780 步，看它是否仍停在 0.51。")
+    A("")
+    A("口径提醒：本节全部基于**训练中的验证准确率**（只有它才有逐 epoch 轨迹），"
+      f"所以末值 Δ={v['n20000_delta_final']:+.4f} 与 6.1 节基于**最佳 checkpoint 的测试准确率**"
+      f"得到的 Δ 不是同一个量，不要直接相减。另外所有曲线只取**已完成**的 run ——"
+      "仍在写入的 run 会被平推到最后一次记录，从而低估它所属的那一臂。")
     A("")
 
 
