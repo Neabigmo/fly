@@ -96,6 +96,27 @@ def _section_seed_stats(lines: list) -> None:
         A(f"对照强度：每个 seed 用自己的随机图，各自保留真实边的 "
           f"{min(so['per_seed']):.4f}–{max(so['per_seed']):.4f}（均值 {so['mean']:.4f}，"
           f"极差 {so['spread']:.4f}），所以配对比较没有被「随机化程度不一」污染。")
+    # Were the replicates actually distinct graphs?
+    dist = blk.get("distinctness") or {}
+    agr = {k: v.get("max_agreement") for k, v in dist.items() if v}
+    if agr:
+        A("")
+        parts = []
+        for arm in ("real", "shuffled"):
+            v = dist.get(arm) or {}
+            if not v.get("pairs"):
+                continue
+            lo = min(p["agreement"] for p in v["pairs"])
+            parts.append(f"{arm} 臂 {lo:.4f}–{v['max_agreement']:.4f}")
+        A("**重复是否真的互相独立**：同一臂内两两 run 在 5000 张测试图上的**逐样本预测一致率**为 "
+          + "，".join(parts) + "（若两个 run 用了**同一张图**，这个数会是 1.000）。"
+          "`_validate_shuffle` 只能证明随机图与**真实图**不同，无法发现「缓存键忽略了 shuffle_seed」"
+          "这类失败 —— 那时所有对照共用一张图却仍然通过与真实图的校验，"
+          "而种子级 CI 就会建立在并非重复的重复之上。这项检查现在每次统计都会跑。")
+        if len(agr) == 2 and all(agr.values()):
+            A("")
+            A("顺带一个观察：real 臂的 seed 间一致率**高于** shuffled 臂，"
+              "即真实连接组把解约束得更紧，而随机图之间存在更多解的分歧。")
     A("")
 
 

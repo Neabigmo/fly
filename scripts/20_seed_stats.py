@@ -132,6 +132,59 @@ def _paired(real: np.ndarray, shuf: np.ndarray) -> dict:
     }
 
 
+def check_arm_distinctness(runs: list[dict], log, label: str) -> dict:
+    """Two runs in the same arm must not be the same graph.
+
+    ``_validate_shuffle`` proves each control graph differs from the *real* one, but it
+    cannot catch a cache key that ignored the shuffle seed -- every control run would
+    then share a single graph while still passing that check, and the seed-level CI
+    would be computed over replicates that are not replicates.
+
+    Independent graphs trained on the same stimuli agree on roughly 90% of individual
+    test predictions; the same graph would agree on 100%.  Verified on this block:
+    shuffled seeds 3 and 4 share 303 of 1,170,024 edges and agree on 90.2% of
+    predictions, so this is a live check and not a formality.
+    """
+    import numpy as np
+
+    from flynum import paths as _paths
+
+    preds: dict[str, np.ndarray] = {}
+    for r in runs:
+        p = _paths.run_dir(r["run_id"]) / "predictions.npz"
+        if not p.exists():
+            continue
+        with np.load(p) as z:
+            if "A_pred" in z.files:
+                preds[r["run_id"]] = z["A_pred"]
+
+    pairs: list[dict] = []
+    worst = 0.0
+    ids = sorted(preds)
+    for i in range(len(ids)):
+        for j in range(i + 1, len(ids)):
+            a, b = preds[ids[i]], preds[ids[j]]
+            if a.shape != b.shape:
+                continue
+            agree = float((a == b).mean())
+            pairs.append({"a": ids[i], "b": ids[j], "agreement": round(agree, 6)})
+            worst = max(worst, agree)
+    out = {"n_runs_with_predictions": len(preds), "pairs": pairs,
+           "max_agreement": worst}
+    if pairs:
+        log.info("  %s: %d run pairs, per-sample prediction agreement "
+                 "%.4f-%.4f (identical graphs would be 1.0)",
+                 label, len(pairs),
+                 min(p["agreement"] for p in pairs), worst)
+        if worst > 0.995:
+            bad = [p for p in pairs if p["agreement"] > 0.995][0]
+            log.error("  %s: %s and %s agree on %.4f of predictions -- these are "
+                      "almost certainly the same graph, so this arm is not a set of "
+                      "independent replicates", label, bad["a"], bad["b"],
+                      bad["agreement"])
+    return out
+
+
 def compare(real_runs: list[dict], shuf_runs: list[dict], log, label: str) -> dict:
     """Real vs shuffled, paired by model seed, on every test condition."""
     by_seed_r = {r["model_seed"]: r for r in real_runs}
@@ -166,6 +219,12 @@ def compare(real_runs: list[dict], shuf_runs: list[dict], log, label: str) -> di
             rec = by_seed_s[s]
             if not (rec.get("shuffle_degrees_ok") and rec.get("shuffle_weights_ok")):
                 log.warning("  seed %d: shuffle did not preserve degrees/weights", s)
+    out["distinctness"] = {
+        "real": check_arm_distinctness([by_seed_r[s] for s in seeds], log,
+                                       f"{label} real arm"),
+        "shuffled": check_arm_distinctness([by_seed_s[s] for s in seeds], log,
+                                           f"{label} shuffled arm"),
+    }
     for cond in CONDITIONS:
         key = f"acc_{cond}"
         r = np.array([by_seed_r[s][key] for s in seeds], dtype=float)
