@@ -548,11 +548,16 @@ def plot_fixed_updates(
                     label=f"{graph} (n={len(by_n[xs[0]]['values'])})")
             ax.fill_between(x, mean - std, mean + std, color=col, alpha=0.18, linewidth=0)
             deltas[graph] = dict(zip((int(k) for k in xs), mean))
-        for n in sorted(set(deltas.get("real", {})) & set(deltas.get("shuffled", {}))):
+        shared = sorted(set(deltas.get("real", {})) & set(deltas.get("shuffled", {})))
+        for j, n in enumerate(shared):
             d = deltas["real"][n] - deltas["shuffled"][n]
+            # alternate the offset: adjacent Ns sit close together on a log axis and
+            # the labels collide when they all land on the same height.  The leftmost
+            # label is anchored left so it cannot fall outside the axes.
             ax.annotate(f"Δ {d:+.3f}", (n, max(deltas["real"][n], deltas["shuffled"][n])),
-                        textcoords="offset points", xytext=(0, 8), ha="center",
-                        fontsize=8, color=C_ACCENT if abs(d) > 0.03 else C_NEUTRAL)
+                        textcoords="offset points", xytext=(0, 9 if j % 2 == 0 else 20),
+                        ha="left" if j == 0 else "center", fontsize=8,
+                        color=C_ACCENT if abs(d) > 0.03 else C_NEUTRAL)
         ax.set_xscale("log")
         ax.set_xticks([1000, 5000, 10000, 20000])
         ax.set_xticklabels(["1k", "5k", "10k", "20k"])
@@ -564,6 +569,8 @@ def plot_fixed_updates(
     axes[0].legend(loc="lower right", fontsize=8)
     fig.suptitle("The sample-efficiency knee, with and without the update confound",
                  fontsize=11)
+    # the suptitle needs its own band or it lands on the panel titles
+    fig.subplots_adjust(top=0.80, wspace=0.08)
     return _save(fig, out)
 
 
@@ -691,7 +698,8 @@ def plot_lesion(summary: dict, out: Path):
     ax.set_yticklabels(conds)
     ax.set_xlabel("Δ accuracy (stars vs the random-knockout range)")
     ax.set_title("Is the effect outside the random spread?")
-    ax.legend(fontsize=8, loc="lower right")
+    if ax.get_legend_handles_labels()[0]:
+        ax.legend(fontsize=8, loc="lower right")
     ax.grid(alpha=0.15, axis="x")
     fig.suptitle(f"source: {summary.get('source_run', '?')}", fontsize=8.5)
     return _save(fig, out)
