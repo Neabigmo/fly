@@ -337,7 +337,9 @@ logs/      queue_<block>.log       （18_queue.py 的逐块日志）
 
 ## 8. 当前状态：已闭合与未闭合项
 
-_最近更新：复现块 6/14（real 全部 6 个 seed 完成、shuffled 5 个），队列排队中。_
+_最近更新：复现块 5/14 个 run 完成（real s3–s5、shuffled s3–s4），
+加上原有的 s0–s2 共 **6 个 real seed / 5 个 shuffled seed** 可用；
+`7_rep_shuffled_s5` 正在训练，其余 8 个 run 待跑。_
 
 ### 已闭合
 
@@ -355,7 +357,7 @@ _最近更新：复现块 6/14（real 全部 6 个 seed 完成、shuffled 5 个�
 
 | 项 | 状态 | 预计 |
 |---|---|---|
-| 目标 1：10 real + 10 shuffled seeds | **real 6/6 + shuffled 5 已完成**，还差 8 个 run | ~4 h |
+| 目标 1：10 real + 10 shuffled seeds | 已有 **6 real / 5 shuffled**（含 s0–s2）；复现块还差 **1 个在跑 + 8 个待跑** | ~4 h |
 | 目标 2：`fxu` 等更新步数对照（15 runs） | 排队 | 7.8 h |
 | 目标 3：`signed` 签名突触 + 同量级对照（9 runs） | 排队 | 4.5 h |
 | 目标 4a：课程 2×2（12 runs） | 排队 | 5 h |
