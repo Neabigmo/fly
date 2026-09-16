@@ -43,7 +43,11 @@ def _save(fig, out: Path) -> Path:
     out = Path(out)
     out.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out, bbox_inches="tight")
-    fig.savefig(out.with_suffix(".pdf"), bbox_inches="tight")
+    # matplotlib stamps a creation date into every PDF, so regenerating a figure
+    # from unchanged data rewrote the file and buried real figure changes in a
+    # diff of timestamps.  The figures are committed, so make them reproducible.
+    fig.savefig(out.with_suffix(".pdf"), bbox_inches="tight",
+                metadata={"CreationDate": None})
     plt.close(fig)
     return out
 
