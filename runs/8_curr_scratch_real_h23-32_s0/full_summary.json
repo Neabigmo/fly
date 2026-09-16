@@ -1,0 +1,44 @@
+{
+  "run_id": "8_curr_scratch_real_h23-32_s0",
+  "task": "add_curriculum",
+  "graph": "real",
+  "circuit": "core",
+  "model_seed": 0,
+  "scratch": true,
+  "pretrain_from": "",
+  "curriculum": {
+    "operand_epochs": 15,
+    "w_a": 1.0,
+    "w_b": 1.0,
+    "w_sum": 1.0,
+    "pretrain_from": "",
+    "scratch": true
+  },
+  "holdout_pairs": [
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "acc_a_test": 0.4066666666666667,
+  "acc_b_test": 0.22083333333333333,
+  "sum_test": 0.0,
+  "acc_a_train": 0.5792857142857143,
+  "acc_b_train": 0.3969047619047619,
+  "sum_train": 0.14345238095238094,
+  "chance_a": 0.25,
+  "chance_sum": 0.14285714285714285,
+  "transferred": null,
+  "train_info": {
+    "best_val_acc": 0.31375,
+    "best_epoch": 10,
+    "epochs_run": 31,
+    "wall_seconds": 589.5
+  },
+  "sign_report": null,
+  "wall_seconds": 595.2
+}

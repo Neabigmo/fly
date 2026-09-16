@@ -1,0 +1,44 @@
+{
+  "run_id": "8_curr_scratch_shuffled_h23-32_s1",
+  "task": "add_curriculum",
+  "graph": "shuffled",
+  "circuit": "core",
+  "model_seed": 1,
+  "scratch": true,
+  "pretrain_from": "",
+  "curriculum": {
+    "operand_epochs": 15,
+    "w_a": 1.0,
+    "w_b": 1.0,
+    "w_sum": 1.0,
+    "pretrain_from": "",
+    "scratch": true
+  },
+  "holdout_pairs": [
+    [
+      2,
+      3
+    ],
+    [
+      3,
+      2
+    ]
+  ],
+  "acc_a_test": 0.4075,
+  "acc_b_test": 0.2841666666666667,
+  "sum_test": 0.008333333333333333,
+  "acc_a_train": 0.6182142857142857,
+  "acc_b_train": 0.5853571428571429,
+  "sum_train": 0.41904761904761906,
+  "chance_a": 0.25,
+  "chance_sum": 0.14285714285714285,
+  "transferred": null,
+  "train_info": {
+    "best_val_acc": 0.3458333333333333,
+    "best_epoch": 35,
+    "epochs_run": 56,
+    "wall_seconds": 1099.0
+  },
+  "sign_report": null,
+  "wall_seconds": 1103.1
+}

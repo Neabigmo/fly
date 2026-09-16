@@ -606,12 +606,15 @@ def main() -> int:
     reports.mkdir(parents=True, exist_ok=True)
     figdir = paths.FIGURES
 
-    summaries = load_summaries()
-    log.info("loaded %d completed runs", len(summaries))
+    all_summaries = load_summaries()
+    log.info("loaded %d completed runs", len(all_summaries))
     # Never pool runs trained on different stimulus definitions: the radius range
     # changed materially during development, and mixing the two would blend two
-    # different experiments into one number.
-    summaries, fingerprint = filter_current_stimuli(summaries, logger=log)
+    # different experiments into one number.  The curriculum block is exempt: a
+    # held-out pair is part of that block's *design*, and each holdout is compared only
+    # against itself, so filtering the non-default holdouts away would silently delete
+    # the leave-pair-out robustness check they exist to provide.
+    summaries, fingerprint = filter_current_stimuli(all_summaries, logger=log)
     log.info("analysing %d runs at stimulus fingerprint %s", len(summaries), fingerprint)
     if not summaries:
         log.error("no runs found - nothing to analyse")
@@ -1071,7 +1074,7 @@ def main() -> int:
     _section_fixed_updates(lines, df)
     _section_step_matched(lines)
     _section_signed(lines, df)
-    _section_curriculum(lines, summaries)
+    _section_curriculum(lines, all_summaries)
     _section_control_match(lines, summaries)
     _section_lesion(lines)
 

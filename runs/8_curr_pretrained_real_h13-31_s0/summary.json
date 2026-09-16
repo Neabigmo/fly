@@ -1,0 +1,14 @@
+{
+  "run_id": "8_curr_pretrained_real_h13-31_s0",
+  "status": "ok",
+  "wall_seconds": 1679.6,
+  "finished_at": "2026-09-16T22:03:09+00:00",
+  "stage": "8",
+  "task": "add_curriculum",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.58125
+}

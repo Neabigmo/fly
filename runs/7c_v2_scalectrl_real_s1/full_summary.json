@@ -1,0 +1,373 @@
+{
+  "circuit": "core",
+  "graph": "real",
+  "n_neurons": 33480,
+  "n_edges": 1170024,
+  "n_classes": 5,
+  "label_offset": 1,
+  "readout_population": "vpn",
+  "readout_name": "visual_projection (VPN)",
+  "n_readout_neurons": 9200,
+  "n_input_neurons": 7961,
+  "n_columns_with_input": 1769,
+  "n_driven_columns": 1356,
+  "n_columns": 1771,
+  "hex_bounds": [
+    4.5,
+    53.5,
+    0.8660253882408142,
+    33.77499008178711
+  ],
+  "hex_density": 1.192811653697844,
+  "circuit_qc": {
+    "circuit": "core",
+    "neurons": 33480,
+    "edges": 1170024,
+    "edges_per_neuron": 34.95,
+    "isolated_removed": 4,
+    "self_loops": 0,
+    "synapses": 5796097.0,
+    "in_degree_median": 16.0,
+    "in_degree_mean": 34.94695340501792,
+    "in_degree_max": 1833,
+    "out_degree_median": 20.0,
+    "out_degree_max": 3801,
+    "weight_mean_log1p": 1.298769235610962,
+    "retained_out_weight_fraction": 0.2637,
+    "retained_in_weight_fraction": 0.3218
+  },
+  "shuffle_stats": {
+    "graph": "real"
+  },
+  "signed_synapses": false,
+  "sign_report": null,
+  "run_id": "7c_v2_scalectrl_real_s1",
+  "stage": "7c",
+  "task": "count",
+  "model": "M1",
+  "n_train": 20000,
+  "model_seed": 1,
+  "shuffle_seed": 0,
+  "n_params": 1249509,
+  "best_val_acc": 0.6596,
+  "test_acc_a": 0.6598,
+  "test_acc_b": 0.395,
+  "test_acc_c": 0.4182,
+  "test_acc_d": 0.3492,
+  "test_macro_f1_a": 0.6520580302475263,
+  "confusion_a": [
+    [
+      986,
+      14,
+      0,
+      0,
+      0
+    ],
+    [
+      216,
+      620,
+      164,
+      0,
+      0
+    ],
+    [
+      26,
+      238,
+      561,
+      172,
+      3
+    ],
+    [
+      1,
+      47,
+      284,
+      421,
+      247
+    ],
+    [
+      0,
+      1,
+      79,
+      209,
+      711
+    ]
+  ],
+  "per_class_recall_a": [
+    0.986,
+    0.62,
+    0.561,
+    0.421,
+    0.711
+  ],
+  "per_mode": {
+    "A": {
+      "accuracy": 0.6598,
+      "macro_f1": 0.6520580302475263,
+      "per_class_recall": [
+        0.986,
+        0.62,
+        0.561,
+        0.421,
+        0.711
+      ],
+      "confusion": [
+        [
+          986,
+          14,
+          0,
+          0,
+          0
+        ],
+        [
+          216,
+          620,
+          164,
+          0,
+          0
+        ],
+        [
+          26,
+          238,
+          561,
+          172,
+          3
+        ],
+        [
+          1,
+          47,
+          284,
+          421,
+          247
+        ],
+        [
+          0,
+          1,
+          79,
+          209,
+          711
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "B": {
+      "accuracy": 0.395,
+      "macro_f1": 0.2963485797041133,
+      "per_class_recall": [
+        0.914,
+        0.863,
+        0.192,
+        0.005,
+        0.001
+      ],
+      "confusion": [
+        [
+          914,
+          86,
+          0,
+          0,
+          0
+        ],
+        [
+          133,
+          863,
+          4,
+          0,
+          0
+        ],
+        [
+          86,
+          722,
+          192,
+          0,
+          0
+        ],
+        [
+          66,
+          611,
+          318,
+          5,
+          0
+        ],
+        [
+          29,
+          600,
+          361,
+          9,
+          1
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "C": {
+      "accuracy": 0.4182,
+      "macro_f1": 0.3460614050726746,
+      "per_class_recall": [
+        1.0,
+        1.0,
+        0.091,
+        0.0,
+        0.0
+      ],
+      "confusion": [
+        [
+          1000,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1000,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          909,
+          91,
+          0,
+          0
+        ],
+        [
+          0,
+          50,
+          950,
+          0,
+          0
+        ],
+        [
+          0,
+          43,
+          799,
+          158,
+          0
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    },
+    "D": {
+      "accuracy": 0.3492,
+      "macro_f1": 0.2512725295663678,
+      "per_class_recall": [
+        0.893,
+        0.745,
+        0.108,
+        0.0,
+        0.0
+      ],
+      "confusion": [
+        [
+          893,
+          107,
+          0,
+          0,
+          0
+        ],
+        [
+          252,
+          745,
+          3,
+          0,
+          0
+        ],
+        [
+          137,
+          755,
+          108,
+          0,
+          0
+        ],
+        [
+          80,
+          696,
+          224,
+          0,
+          0
+        ],
+        [
+          21,
+          677,
+          295,
+          7,
+          0
+        ]
+      ],
+      "n": 5000,
+      "chance": 0.2
+    }
+  },
+  "train_info": {
+    "best_val_acc": 0.6596,
+    "best_epoch": 46,
+    "epochs_run": 60,
+    "epochs_iterated": 60,
+    "optimizer_steps": 18780,
+    "wall_seconds": 1190.6,
+    "protocol": "BPTT on per-edge gains + readout"
+  },
+  "wall_seconds_total": 1195.4,
+  "train_seconds": 1192.9,
+  "stimulus_qc": {
+    "A": {
+      "mode": "A",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 26.22,
+        "1": 45.46,
+        "2": 62.81,
+        "3": 81.28,
+        "4": 98.9
+      },
+      "ink_centroid_accuracy": 0.5584,
+      "spread_centroid_accuracy": 0.5032,
+      "ink_std_overall": 29.873
+    },
+    "B": {
+      "mode": "B",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.83,
+        "2": 39.84,
+        "3": 39.8,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4828,
+      "ink_std_overall": 0.427
+    },
+    "C": {
+      "mode": "C",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.87,
+        "1": 39.85,
+        "2": 39.83,
+        "3": 39.79,
+        "4": 39.82
+      },
+      "ink_centroid_accuracy": 0.2166,
+      "spread_centroid_accuracy": 0.4324,
+      "ink_std_overall": 0.431
+    },
+    "D": {
+      "mode": "D",
+      "chance": 0.2,
+      "ink_mean_by_class": {
+        "0": 39.92,
+        "1": 39.84,
+        "2": 39.8,
+        "3": 39.81,
+        "4": 39.83
+      },
+      "ink_centroid_accuracy": 0.2178,
+      "spread_centroid_accuracy": 0.4606,
+      "ink_std_overall": 0.462
+    }
+  }
+}

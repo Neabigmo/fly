@@ -1,0 +1,21 @@
+{
+  "run_id": "7_fxu_real_N20000_s2",
+  "status": "ok",
+  "wall_seconds": 1983.3,
+  "finished_at": "2026-09-16T17:30:50+00:00",
+  "stage": "7",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 2,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.7708,
+  "test_acc_a": 0.773,
+  "test_acc_b": 0.621,
+  "test_acc_c": 0.9436,
+  "n_params": 1249509,
+  "epochs_run": 60,
+  "optimizer_steps": 18780
+}

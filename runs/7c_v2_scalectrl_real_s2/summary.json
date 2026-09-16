@@ -1,0 +1,21 @@
+{
+  "run_id": "7c_v2_scalectrl_real_s2",
+  "status": "ok",
+  "wall_seconds": 1375.2,
+  "finished_at": "2026-09-16T20:24:13+00:00",
+  "stage": "7c",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 2,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.6536,
+  "test_acc_a": 0.6666,
+  "test_acc_b": 0.3826,
+  "test_acc_c": 0.4078,
+  "n_params": 1249509,
+  "epochs_run": 60,
+  "optimizer_steps": 18780
+}

@@ -1,0 +1,14 @@
+{
+  "run_id": "8_curr_pretrained_shuffled_h14-41_s0",
+  "status": "ok",
+  "wall_seconds": 989.4,
+  "finished_at": "2026-09-16T22:55:08+00:00",
+  "stage": "8",
+  "task": "add_curriculum",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "model_seed": 0,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.5420833333333334
+}

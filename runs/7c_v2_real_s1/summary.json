@@ -1,0 +1,21 @@
+{
+  "run_id": "7c_v2_real_s1",
+  "status": "ok",
+  "wall_seconds": 1077.6,
+  "finished_at": "2026-09-16T18:34:06+00:00",
+  "stage": "7c",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 1,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.6736,
+  "test_acc_a": 0.6834,
+  "test_acc_b": 0.4298,
+  "test_acc_c": 0.4388,
+  "n_params": 1249509,
+  "epochs_run": 60,
+  "optimizer_steps": 18780
+}

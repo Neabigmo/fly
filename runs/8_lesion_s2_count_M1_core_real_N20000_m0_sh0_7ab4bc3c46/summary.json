@@ -1,0 +1,9 @@
+{
+  "run_id": "8_lesion_s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46",
+  "status": "ok",
+  "wall_seconds": 40.0,
+  "finished_at": "2026-09-16T23:40:11+00:00",
+  "stage": "8",
+  "task": "lesion",
+  "source_run": "s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46"
+}

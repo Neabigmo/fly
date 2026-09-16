@@ -1,0 +1,14 @@
+{
+  "run_id": "8_curr_scratch_real_h23-32_s2",
+  "status": "ok",
+  "wall_seconds": 498.8,
+  "finished_at": "2026-09-16T21:04:39+00:00",
+  "stage": "8",
+  "task": "add_curriculum",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 2,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.32458333333333333
+}

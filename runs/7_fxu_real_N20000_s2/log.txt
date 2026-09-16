@@ -1,0 +1,85 @@
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | run 7_fxu_real_N20000_s2 started -> I:\2026.9.14\9.15果蝇识字\runs\7_fxu_real_N20000_s2
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | ==============================================================================
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | COUNT RUN | model=M1 graph=real circuit=core N=20000 model_seed=2 shuffle_seed=0
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | ==============================================================================
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | ------------------------------------------------------------------------------
+00:57:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+00:57:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+00:57:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+00:57:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+00:57:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 | readout: visual_projection (VPN) -> 9200 neurons
+00:57:52 | INFO    | flynum.run.7_fxu_real_N20000_s2 | count stimuli loaded from cache (20000 pool images)
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | model: 1249509 trainable parameters | readout=visual_projection (VPN) (9200 neurons) | alpha=0.20 steps=8
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | training set: 20000 images (class counts [4000, 4000, 4000, 4000, 4000])
+00:57:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 | readout standardisation disabled
+00:58:27 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   0 | loss 1.6281 | train 0.4127 | val 0.4808 | 29.6s
+00:58:57 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   1 | loss 1.0815 | train 0.4856 | val 0.4988 | 29.1s
+00:59:26 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   2 | loss 1.0609 | train 0.4954 | val 0.4936 | 29.2s
+00:59:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   3 | loss 1.0519 | train 0.5039 | val 0.4948 | 29.3s
+01:00:27 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   4 | loss 1.0411 | train 0.5096 | val 0.5160 | 31.8s
+01:00:59 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   5 | loss 1.0413 | train 0.5088 | val 0.5148 | 31.5s
+01:01:28 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   6 | loss 1.0295 | train 0.5149 | val 0.5200 | 29.7s
+01:01:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   7 | loss 1.0240 | train 0.5202 | val 0.5192 | 29.5s
+01:02:27 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   8 | loss 1.0140 | train 0.5232 | val 0.5296 | 29.4s
+01:02:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch   9 | loss 1.0084 | train 0.5265 | val 0.5248 | 30.1s
+01:03:27 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  10 | loss 0.9977 | train 0.5324 | val 0.5352 | 29.6s
+01:03:57 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  11 | loss 0.9745 | train 0.5433 | val 0.5632 | 30.0s
+01:04:28 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  12 | loss 0.9587 | train 0.5507 | val 0.5716 | 30.4s
+01:04:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  13 | loss 0.9335 | train 0.5681 | val 0.5432 | 30.0s
+01:05:29 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  14 | loss 0.9087 | train 0.5867 | val 0.6024 | 30.8s
+01:05:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  15 | loss 0.8855 | train 0.5984 | val 0.6084 | 29.8s
+01:06:27 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  16 | loss 0.8556 | train 0.6188 | val 0.5952 | 28.9s
+01:06:58 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  17 | loss 0.8281 | train 0.6346 | val 0.6272 | 30.3s
+01:07:28 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  18 | loss 0.8048 | train 0.6470 | val 0.6484 | 29.9s
+01:07:57 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  19 | loss 0.7871 | train 0.6582 | val 0.6460 | 29.2s
+01:08:26 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  20 | loss 0.7602 | train 0.6724 | val 0.6776 | 29.2s
+01:08:56 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  21 | loss 0.7456 | train 0.6828 | val 0.6712 | 29.3s
+01:09:26 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  22 | loss 0.7275 | train 0.6925 | val 0.6876 | 30.3s
+01:09:56 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  23 | loss 0.7104 | train 0.7034 | val 0.6624 | 29.7s
+01:10:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  24 | loss 0.6984 | train 0.7100 | val 0.6960 | 29.2s
+01:10:54 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  25 | loss 0.6822 | train 0.7177 | val 0.7012 | 29.0s
+01:11:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  26 | loss 0.6748 | train 0.7227 | val 0.7076 | 30.6s
+01:11:54 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  27 | loss 0.6653 | train 0.7250 | val 0.7148 | 29.3s
+01:12:24 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  28 | loss 0.6544 | train 0.7330 | val 0.7216 | 29.7s
+01:12:54 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  29 | loss 0.6451 | train 0.7398 | val 0.7296 | 30.0s
+01:13:24 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  30 | loss 0.6384 | train 0.7426 | val 0.7236 | 30.2s
+01:13:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  31 | loss 0.6305 | train 0.7470 | val 0.7380 | 30.4s
+01:14:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  32 | loss 0.6212 | train 0.7530 | val 0.7332 | 30.3s
+01:14:56 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  33 | loss 0.6163 | train 0.7533 | val 0.7308 | 31.0s
+01:15:26 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  34 | loss 0.6082 | train 0.7571 | val 0.7512 | 29.7s
+01:15:56 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  35 | loss 0.6058 | train 0.7588 | val 0.7136 | 30.0s
+01:16:26 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  36 | loss 0.5971 | train 0.7636 | val 0.7420 | 29.7s
+01:16:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  37 | loss 0.5938 | train 0.7638 | val 0.7464 | 29.8s
+01:17:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  38 | loss 0.5892 | train 0.7695 | val 0.7232 | 29.9s
+01:17:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  39 | loss 0.5845 | train 0.7729 | val 0.7380 | 29.7s
+01:18:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  40 | loss 0.5799 | train 0.7742 | val 0.7544 | 30.2s
+01:18:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  41 | loss 0.5772 | train 0.7750 | val 0.7524 | 29.9s
+01:19:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  42 | loss 0.5740 | train 0.7772 | val 0.7408 | 29.7s
+01:19:55 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  43 | loss 0.5707 | train 0.7795 | val 0.7508 | 29.8s
+01:20:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  44 | loss 0.5679 | train 0.7823 | val 0.7192 | 29.9s
+01:21:25 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  45 | loss 0.5652 | train 0.7836 | val 0.7696 | 60.3s
+01:22:31 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  46 | loss 0.5608 | train 0.7866 | val 0.7628 | 59.4s
+01:23:39 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  47 | loss 0.5589 | train 0.7870 | val 0.7616 | 62.5s
+01:24:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  48 | loss 0.5579 | train 0.7870 | val 0.7568 | 58.2s
+01:25:41 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  49 | loss 0.5540 | train 0.7910 | val 0.7552 | 53.5s
+01:26:21 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  50 | loss 0.5531 | train 0.7896 | val 0.7644 | 28.9s
+01:26:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  51 | loss 0.5515 | train 0.7912 | val 0.7564 | 28.8s
+01:27:19 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  52 | loss 0.5512 | train 0.7923 | val 0.7644 | 29.5s
+01:27:48 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  53 | loss 0.5496 | train 0.7935 | val 0.7636 | 28.9s
+01:28:17 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  54 | loss 0.5489 | train 0.7913 | val 0.7708 | 29.1s
+01:28:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  55 | loss 0.5479 | train 0.7936 | val 0.7624 | 30.0s
+01:29:18 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  56 | loss 0.5473 | train 0.7929 | val 0.7648 | 30.2s
+01:29:48 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  57 | loss 0.5469 | train 0.7935 | val 0.7672 | 30.0s
+01:30:18 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  58 | loss 0.5465 | train 0.7945 | val 0.7672 | 29.8s
+01:30:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   epoch  59 | loss 0.5464 | train 0.7945 | val 0.7676 | 29.8s
+01:30:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   reached the fixed budget of 18780 optimiser steps
+01:30:47 | INFO    | flynum.run.7_fxu_real_N20000_s2 | ------------------------------------------------------------------------------
+01:30:48 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   test A: acc 0.7730 (chance 0.20) | macro-F1 0.7693 | per-class 1.00 0.85 0.66 0.59 0.76
+01:30:49 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   test B: acc 0.6210 (chance 0.20) | macro-F1 0.5851 | per-class 1.00 0.91 0.65 0.37 0.17
+01:30:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   test C: acc 0.9436 (chance 0.20) | macro-F1 0.9429 | per-class 1.00 1.00 0.99 0.97 0.76
+01:30:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 |   test D: acc 0.6246 (chance 0.20) | macro-F1 0.6007 | per-class 0.99 0.82 0.62 0.43 0.26
+01:30:50 | INFO    | flynum.run.7_fxu_real_N20000_s2 | run 7_fxu_real_N20000_s2 finished: ok (1983.3s)

@@ -1,0 +1,75 @@
+[
+  {
+    "run_id": "8_curr_pretrained_shuffled_h24-42_s0",
+    "task": "add_curriculum",
+    "graph": "shuffled",
+    "circuit": "core",
+    "model_seed": 0,
+    "scratch": false,
+    "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+    "curriculum": {
+      "operand_epochs": 15,
+      "w_a": 1.0,
+      "w_b": 1.0,
+      "w_sum": 1.0,
+      "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "scratch": false
+    },
+    "holdout_pairs": [
+      [
+        2,
+        4
+      ],
+      [
+        4,
+        2
+      ]
+    ],
+    "acc_a_test": 0.6383333333333333,
+    "acc_b_test": 0.3416666666666667,
+    "sum_test": 0.010833333333333334,
+    "acc_a_train": 0.679047619047619,
+    "acc_b_train": 0.626547619047619,
+    "sum_train": 0.4942857142857143,
+    "chance_a": 0.25,
+    "chance_sum": 0.14285714285714285,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ],
+      "source": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "source_training": {
+        "alpha": 0.2,
+        "steps": 8,
+        "w_scale": 1.0,
+        "signed": false,
+        "n_train": 20000,
+        "max_steps": 0
+      }
+    },
+    "train_info": {
+      "best_val_acc": 0.49,
+      "best_epoch": 56,
+      "epochs_run": 70,
+      "wall_seconds": 1627.3
+    },
+    "sign_report": null,
+    "wall_seconds": 1640.9,
+    "label": "shuffled/pretrained/lpo24/s0",
+    "holdout": [
+      [
+        2,
+        4
+      ],
+      [
+        4,
+        2
+      ]
+    ]
+  }
+]

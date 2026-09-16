@@ -1,0 +1,23 @@
+07:41:02 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | run 8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab started -> I:\2026.9.14\9.15果蝇识字\runs\8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab
+07:41:02 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | ------------------------------------------------------------------------------
+07:41:02 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+07:41:05 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | circuit core loaded from cache: 33480 neurons / 1170024 edges
+07:41:05 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+07:41:05 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+07:41:05 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | readout: visual_projection (VPN) -> 9200 neurons
+07:41:06 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | loaded s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab (epoch 54)
+07:41:06 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | count stimuli loaded from cache (20000 pool images)
+07:41:12 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | stimuli A: chance=0.20  ink-baseline=0.558  spread-baseline=0.503
+07:41:12 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | stimuli B: chance=0.20  ink-baseline=0.218  spread-baseline=0.483
+07:41:12 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | stimuli C: chance=0.20  ink-baseline=0.217  spread-baseline=0.432
+07:41:12 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | stimuli D: chance=0.20  ink-baseline=0.218  spread-baseline=0.461
+07:41:15 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   intact                 n=    0  A 0.7768  B 0.6210  C 0.9496  D 0.6308
+07:41:18 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   LC11                   n=  143  A 0.7350  B 0.6206  C 0.9622  D 0.6314
+07:41:21 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   LC10a                  n=  275  A 0.5948  B 0.4700  C 0.8438  D 0.5004
+07:41:23 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   LC11_readout_only      n=  143  A 0.7436  B 0.6266  C 0.9624  D 0.6346
+07:41:26 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   random_143_r0          n=  143  A 0.7572  B 0.6284  C 0.9620  D 0.6356
+07:41:29 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   random_143_r1          n=  143  A 0.7752  B 0.6168  C 0.9338  D 0.6212
+07:41:32 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   random_143_r2          n=  143  A 0.7600  B 0.6240  C 0.9606  D 0.6334
+07:41:35 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   random_143_r3          n=  143  A 0.7754  B 0.6148  C 0.9392  D 0.6240
+07:41:38 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab |   random_143_r4          n=  143  A 0.7696  B 0.6072  C 0.9288  D 0.6034
+07:41:38 | INFO    | flynum.run.8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab | run 8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab finished: ok (38.6s)

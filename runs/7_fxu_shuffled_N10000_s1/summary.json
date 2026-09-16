@@ -1,0 +1,21 @@
+{
+  "run_id": "7_fxu_shuffled_N10000_s1",
+  "status": "ok",
+  "wall_seconds": 3412.6,
+  "finished_at": "2026-09-16T20:35:40+00:00",
+  "stage": "7",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "n_train": 10000,
+  "model_seed": 1,
+  "shuffle_seed": 1,
+  "best_val_acc": 0.6404,
+  "test_acc_a": 0.6408,
+  "test_acc_b": 0.3846,
+  "test_acc_c": 0.5026,
+  "n_params": 1249509,
+  "epochs_run": 61,
+  "optimizer_steps": 18780
+}

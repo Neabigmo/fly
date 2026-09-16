@@ -62,8 +62,15 @@ def load_summaries() -> list[dict]:
                 raw = json.loads(cfg_path.read_text(encoding="utf-8"))
                 from ..config import ExperimentConfig
 
+                # strict=False: a run's config.json carries annotation keys alongside
+                # the configuration (``curriculum``, ``sign_report``, ...).  With the
+                # strict default this raised, the fingerprint became "unknown", and
+                # filter_current_stimuli then dropped every curriculum run -- so all
+                # twelve of them were missing from the report while the block had
+                # reported success.
                 cfg_obj = ExperimentConfig.from_dict(
-                    {k: v for k, v in raw.items() if not k.startswith("_")}
+                    {k: v for k, v in raw.items() if not k.startswith("_")},
+                    strict=False,
                 )
                 rec["stimulus_fingerprint"] = cfg_obj.stimulus_fingerprint()
                 # record how the weights were built, so circuits that need a

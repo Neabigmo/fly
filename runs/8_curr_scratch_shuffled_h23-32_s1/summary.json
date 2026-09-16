@@ -1,0 +1,14 @@
+{
+  "run_id": "8_curr_scratch_shuffled_h23-32_s1",
+  "status": "ok",
+  "wall_seconds": 1103.1,
+  "finished_at": "2026-09-16T21:46:19+00:00",
+  "stage": "8",
+  "task": "add_curriculum",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "shuffled",
+  "model_seed": 1,
+  "shuffle_seed": 1,
+  "best_val_acc": 0.3458333333333333
+}

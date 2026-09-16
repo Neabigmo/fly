@@ -153,6 +153,15 @@ def main() -> int:
         out = paths.DATA_PROCESSED / f"curriculum_{args.graph}_{args.holdout}.json"
         out.write_text(json.dumps(results, indent=2, default=str), encoding="utf-8")
         log.info("wrote %s", out)
+    # A failed seed must not look like a finished block.  Catching the per-seed
+    # exception keeps the remaining seeds running, but returning 0 regardless meant a
+    # block whose every run died in 0.1 min was recorded as "ok" by the queue -- which
+    # is how six curriculum runs went missing while the queue reported 6/6 blocks ok.
+    bad = [r for r in results if r.get("status") == "error"]
+    if bad:
+        log.error("%d/%d curriculum run(s) failed: %s", len(bad), len(results),
+                  "; ".join(str(r.get("error", ""))[:120] for r in bad))
+        return 1
     return 0
 
 
