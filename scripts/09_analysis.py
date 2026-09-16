@@ -379,21 +379,38 @@ def main() -> int:
     ]
     if len(m1):
         n_max = int(m1["n_train"].max())
-        top = m1[m1["n_train"] == n_max]
+        # Only the epoch-budget, unsigned, core runs at that size: mixing in the
+        # equal-update control or the signed grid here would report a blend of three
+        # different experiments as "the headline number".
+        top = m1[(m1["n_train"] == n_max) & (m1["circuit"] == args.circuit)]
+        if "max_steps" in top:
+            top = top[top["max_steps"] == 0]
+        if "signed" in top:
+            top = top[top["signed"] == False]  # noqa: E712
         n_seeds = int(top["model_seed"].nunique())
-        A(f"在最大样本预算 N_train = {n_max} 下，对 {n_seeds} 个 seed 取 mean ± std：")
+        A(f"在最大样本预算 N_train = {n_max} 下，对 {n_seeds} 个 seed 取 "
+          f"mean ± std 与种子级 95% CI（口径见第 6.1 节；单位是训练好的模型）：")
         A("")
-        A("| 指标 | real connectome | 说明 |")
-        A("|---|---|---|")
+        A("| 指标 | real connectome | 95% CI | 说明 |")
+        A("|---|---|---|---|")
         for col, label, note in (
             ("test_acc_a", "Count Accuracy (Test A)", "自然刺激"),
             ("test_acc_b", "Area-controlled (Test B)", "总面积恒定"),
             ("test_acc_c", "Test C", "面积 + 空间包络双控制"),
             ("test_acc_d", "Test D", "未见布局（规则网格）"),
         ):
-            vals = top[col].dropna().astype(float)
-            if len(vals):
-                A(f"| {label} | {vals.mean():.4f} ± {vals.std(ddof=1):.4f} | {note} |")
+            vals = top[col].dropna().astype(float).to_numpy()
+            if not len(vals):
+                continue
+            if len(vals) > 1:
+                from scipy import stats as _stats
+
+                half = float(_stats.t.ppf(0.975, len(vals) - 1)
+                             * vals.std(ddof=1) / np.sqrt(len(vals)))
+                ci = f"±{half:.4f}"
+            else:
+                ci = "—"
+            A(f"| {label} | {vals.mean():.4f} ± {vals.std(ddof=1):.4f} | {ci} | {note} |")
         A("")
         # frozen fly at the same budget, for the M0/M1 contrast
         m0 = df[(df["task"] == "count") & (df["graph"] == "real") & (df["model"] == "M0")]
