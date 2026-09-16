@@ -340,7 +340,17 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
             "训练对（seen）", "留出对（unseen）", "a", "b"]
         return _md_table(header, rows)
 
-    A(f"主表：留出对 = {primary}（每个条件 {max(len(v) for k, v in by_holdout.items() if k == primary)} 个种子）")
+    def _cell_counts(subset: list[dict]) -> list[int]:
+        cells: dict[str, int] = {}
+        for s in subset:
+            key = f"{s.get('graph')}/{'scratch' if s.get('scratch') else 'pretrained'}"
+            cells[key] = cells.get(key, 0) + 1
+        return sorted(cells.values())
+
+    prim_counts = _cell_counts(by_holdout[primary])
+    per_cell = (f"{prim_counts[0]}" if len(set(prim_counts)) == 1
+                else f"{prim_counts[0]}–{prim_counts[-1]}")
+    A(f"主表：留出对 = {primary}（每个条件 {per_cell} 个 run）")
     A("")
     lines.extend(_table(by_holdout[primary], with_holdout=False))
     A("")
