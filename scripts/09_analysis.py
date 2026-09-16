@@ -429,6 +429,20 @@ def _section_control_match(lines: list) -> None:
         ["图", "谱半径 ρ", "最大奇异值", "t=32 峰值|h|", "增长倍数", "负权比例"], rows))
     A("")
     sm = rep.get("spectral_match")
+    sh_keys = [k for k in ("shuffled_s0", "shuffled_s1", "shuffled_s2") if k in g]
+    rho_s = np.array([g[k]["perron"] for k in sh_keys]) if sh_keys else np.array([])
+    if len(rho_s) >= 2:
+        z = (real["perron"] - rho_s.mean()) / max(rho_s.std(ddof=1), 1e-12)
+        A("**更强的一句话（这才是重点）**：三张独立的保度保权重随机图的谱半径是 "
+          f"{'、'.join(f'{v:.4f}' for v in rho_s)}（彼此标准差仅 **{rho_s.std(ddof=1):.4f}**，"
+          f"即 {100 * rho_s.std(ddof=1) / rho_s.mean():.2f}%），而真实图是 "
+          f"**{real['perron']:.4f}** —— **高出 {z:.0f} 个标准差**、"
+          f"比三张图的**全部取值范围还高 {real['perron'] / rho_s.max() - 1:.1%}**。"
+          "也就是说：**在「同一个度数序列与同一批突触权重」能连成的所有图里，"
+          "真实连接组在「信号放大倍率」这个决定动力学的量上是一个极端离群值**。"
+          "这既是「真实布线非同一般」的独立结构证据，也正是必须做等谱匹配对照的理由 ——"
+          "否则 real-vs-shuffled 的比较会把「布线好」与「放大倍率天生更高」混为一谈。")
+        A("")
     A("**这是本次审计发现的一个真实问题**：保度保权重的随机交换**并不保持工作点**。"
       f"real 图的谱半径是 **ρ={real['perron']:.4f}**，而三张随机图是 "
       f"**{np.mean([g[k]['perron'] for k in ('shuffled_s0','shuffled_s1','shuffled_s2') if k in g]):.4f}**"
