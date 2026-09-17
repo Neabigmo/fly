@@ -6,7 +6,6 @@
 # ---------------------------------------------------------------------------
 data/raw/
 data/processed/edges.npz
-data/processed/edges_qc.json
 data/processed/circuits/*.npz
 data/processed/stimuli/
 

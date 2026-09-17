@@ -732,16 +732,28 @@ def main() -> int:
     ]
     if len(m1):
         n_max = int(m1["n_train"].max())
-        # Only the epoch-budget, unsigned, core runs at that size: mixing in the
-        # equal-update control or the signed grid here would report a blend of three
-        # different experiments as "the headline number".
+        # Only the epoch-budget, unsigned, core runs **at the headline weight scale**.
+        # Every condition family added later (the equal-update control, the signed
+        # grid, and the scale-matched unsigned control at w_scale=0.5) independently
+        # satisfies "N=20000, max_steps=0, signed=False", so without pinning w_scale
+        # this table averaged 13 runs while reporting "10 seeds": the three
+        # scale-matched controls at 0.66 pulled the headline from 0.7716 to 0.7470.
         top = m1[(m1["n_train"] == n_max) & (m1["circuit"] == args.circuit)]
         if "max_steps" in top:
             top = top[top["max_steps"] == 0]
         if "signed" in top:
             top = top[top["signed"] == False]  # noqa: E712
-        n_seeds = int(top["model_seed"].nunique())
-        A(f"在最大样本预算 N_train = {n_max} 下，对 {n_seeds} 个 seed 取 "
+        if "w_scale" in top:
+            headline_ws = float(np.round(top["w_scale"].mode().iloc[0], 6))
+            top = top[np.isclose(top["w_scale"].astype(float), headline_ws)]
+            A(f"（口径：`w_scale={headline_ws:g}`、无签名、无步数上限、`{args.circuit}`）")
+            A("")
+        # Count only runs that actually contribute a number: the lesion panels are
+        # count-task runs at the same budget but carry no test accuracy, and counting
+        # their rows would overstate how many runs the headline rests on.
+        n_runs = int(top["test_acc_a"].notna().sum())
+        n_seeds = int(top[top["test_acc_a"].notna()]["model_seed"].nunique())
+        A(f"在最大样本预算 N_train = {n_max} 下，对 {n_seeds} 个 seed（{n_runs} 个 run）取 "
           f"mean ± std 与种子级 95% CI（口径见第 6.1 节；单位是训练好的模型）：")
         A("")
         A("| 指标 | real connectome | 95% CI | 说明 |")
