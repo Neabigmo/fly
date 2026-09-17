@@ -27,6 +27,9 @@ from flynum.phase1 import emergence, spec  # noqa: E402
 
 ORDER = [t.run for t in (spec.FOUNDATION + spec.LINE_A + spec.LINE_B)]
 
+#: Curriculum cells are compared against their scratch twin at matched update counts.
+PAIRS_TO_COMPARE = [("A1-S", "A1-C"), ("A2-S", "A2-C"), ("A3-S", "A3-C")]
+
 
 # --------------------------------------------------------------------------- #
 def load_cells(root: Path, tag: str) -> dict[str, dict]:
@@ -116,7 +119,42 @@ def load_baselines() -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
 
 
-def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None) -> str:
+def matched_deltas(cells: dict[str, dict], pairs: list[tuple[str, str]],
+                   keys: tuple[str, ...] = ("taught_area_acc", "seen_acc")) -> list[dict]:
+    """Curriculum minus scratch at *matched update counts*.
+
+    Comparing endpoints is only valid once both cells have finished, and even then it
+    throws away the curve.  Every probe is recorded at a pre-registered update count, so
+    the pair can be compared at each count they share -- which is also the comparison the
+    whole line is built on.
+    """
+    out = []
+    for scratch, curriculum in pairs:
+        a, b = cells.get(scratch), cells.get(curriculum)
+        if not a or not b:
+            continue
+        ha = {r["updates"]: r for r in a["history"]}
+        hb = {r["updates"]: r for r in b["history"]}
+        shared = sorted(set(ha) & set(hb))
+        row = {"scratch": scratch, "curriculum": curriculum, "updates": shared,
+               "n_shared": len(shared),
+               "finished": bool(a["finished"] and b["finished"]), "delta": {}}
+        for key in keys:
+            ds = [hb[u].get(key, float("nan")) - ha[u].get(key, float("nan"))
+                  for u in shared]
+            ds = [d for d in ds if d == d]
+            row["delta"][key] = {
+                "per_probe": [round(d, 4) for d in ds],
+                "mean": round(float(np.mean(ds)), 4) if ds else None,
+                "final": round(ds[-1], 4) if ds else None,
+                "n": len(ds),
+            }
+        out.append(row)
+    return out
+
+
+def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None,
+                 pairs: list[dict] | None = None) -> str:
     base = base or {}
     L = []
     L.append("# Phase I — 一个果蝇 connectome 能被教育到多复杂的数学\n")
@@ -185,6 +223,32 @@ def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None
                  "样本），它偏低，应当下界读，而不是「前馈能达到的上限」。")
         L.append("")
 
+    L.append("## 课程 vs 从零：同一 update 数下的配对比较\n")
+    if pairs is None:
+        pairs = matched_deltas(cells, PAIRS_TO_COMPARE)
+    if not pairs:
+        L.append("_两个 cell 都还没跑，无法配对。_\n")
+    else:
+        L.append("| 从零 | 课程脑 | 共享探针数 | Δ(B) 均值 | Δ(B) 末端 | Δ(A) 均值 | "
+                 "Δ(A) 末端 | 两边都跑完 |")
+        L.append("|---|---|---|---|---|---|---|---|")
+        for r in pairs:
+            b = r["delta"]["taught_area_acc"]
+            a = r["delta"]["seen_acc"]
+            L.append("| {} | {} | {} | {} | {} | {} | {} | {} |".format(
+                r["scratch"], r["curriculum"], r["n_shared"], _num(b["mean"], 4),
+                _num(b["final"], 4), _num(a["mean"], 4), _num(a["final"], 4),
+                "是" if r["finished"] else "**否（进行中）**"))
+        L.append("")
+        L.append("Δ = 课程脑 − 从零脑，正值表示课程脑更好。B 列是诊断条件；A 列是"
+                 "自然布局。单 seed，所以只有量级明显、且方向在多个探针上一致时才值得"
+                 "当成信号。")
+        for r in pairs:
+            L.append(f"- `{r['scratch']}` vs `{r['curriculum']}`：B 上逐探针 Δ = "
+                     f"{r['delta']['taught_area_acc']['per_probe']}（updates "
+                     f"{r['updates']}）")
+        L.append("")
+
     L.append("## Line B — 长期训练会不会从记忆跃迁到规则\n")
     if not b_rows:
         L.append("_尚未有完成的 Line B cell。_\n")
@@ -241,15 +305,16 @@ def main() -> int:
     a_rows, b_rows = line_a_table(cells), line_b_verdicts(cells)
 
     base = load_baselines()
+    pairs = matched_deltas(cells, PAIRS_TO_COMPARE)
     report = write_report(cells, a_rows, b_rows,
-                          paths.REPORTS / "phase1_report.md", base)
+                          paths.REPORTS / "phase1_report.md", base, pairs)
     (paths.REPORTS / "phase1_report.md").write_text(report, encoding="utf-8")
 
     payload = {
         "spec_fingerprint": spec.fingerprint(),
         "cells": {k: {kk: vv for kk, vv in v.items() if kk != "history"}
                   for k, v in cells.items()},
-        "line_a": a_rows, "line_b": b_rows, "references": base,
+        "line_a": a_rows, "line_b": b_rows, "references": base, "matched": pairs,
     }
     (paths.DATA_PROCESSED / "phase1_summary.json").write_text(
         json.dumps(payload, indent=2, default=str), encoding="utf-8")
