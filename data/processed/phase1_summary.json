@@ -461,6 +461,121 @@
         }
       }
     },
+    "A3-C": {
+      "dir": "10_A3-C_s0",
+      "phase1": {
+        "cell": "A3-C",
+        "task": "two_step",
+        "line": "A",
+        "brain": "curriculum",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "does the accumulated curriculum reach a two-step computation?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": false,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
     "A3-S": {
       "dir": "10_A3-S_s0",
       "phase1": {
@@ -529,7 +644,7 @@
           }
         }
       },
-      "finished": false,
+      "finished": true,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -821,28 +936,53 @@
     },
     "A3-S": {
       "line": "A",
-      "final_train_acc": 0.23933641612529755,
-      "final_seen_acc": 0.23933333903551102,
-      "auc_seen_acc": 0.23482500165700912,
+      "final_train_acc": 0.29262346029281616,
+      "final_seen_acc": 0.2980000078678131,
+      "auc_seen_acc": 0.26176500126719476,
       "updates_to_50": null,
       "updates_to_80": null,
       "updates_to_95": null,
       "task": "two_step",
       "brain": "scratch",
       "budget": 50000,
-      "finished": false,
-      "seen_acc": 0.23933333903551102,
-      "taught_area_acc": 0.2266666740179062,
-      "taught_env_acc": 0.21666666865348816,
-      "train_acc": 0.23933641612529755,
+      "finished": true,
+      "seen_acc": 0.2980000078678131,
+      "taught_area_acc": 0.28200000524520874,
+      "taught_env_acc": 0.2553333342075348,
+      "train_acc": 0.29262346029281616,
       "probe_n": null,
-      "probe_a": 0.5733333230018616,
-      "probe_b": 0.46533334255218506,
+      "probe_a": 0.5519999861717224,
+      "probe_b": 0.4013333320617676,
       "probe_sum": null,
-      "probe_answer": 0.2719999849796295,
-      "probe_partial": 0.31200000643730164,
-      "delta_abs_mean": 0.038479033857584,
-      "activity_dim": 27.538022994995117
+      "probe_answer": 0.2746666669845581,
+      "probe_partial": 0.31333333253860474,
+      "delta_abs_mean": 0.11646590381860733,
+      "activity_dim": 30.65570640563965
+    },
+    "A3-C": {
+      "line": "A",
+      "final_train_acc": 0.33416667580604553,
+      "final_seen_acc": 0.31299999356269836,
+      "auc_seen_acc": 0.28636249601840974,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "two_step",
+      "brain": "curriculum",
+      "budget": 50000,
+      "finished": false,
+      "seen_acc": 0.31299999356269836,
+      "taught_area_acc": 0.28333333134651184,
+      "taught_env_acc": 0.25,
+      "train_acc": 0.33416667580604553,
+      "probe_n": null,
+      "probe_a": 0.5173333287239075,
+      "probe_b": 0.36399999260902405,
+      "probe_sum": null,
+      "probe_answer": 0.2226666659116745,
+      "probe_partial": 0.26133331656455994,
+      "delta_abs_mean": 0.49338507652282715,
+      "activity_dim": 22.429161071777344
     }
   },
   "line_b": {},
