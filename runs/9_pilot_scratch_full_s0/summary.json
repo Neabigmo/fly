@@ -1,0 +1,12 @@
+{
+  "run_id": "9_pilot_scratch_full_s0",
+  "status": "ok",
+  "wall_seconds": 886.4,
+  "finished_at": "2026-09-17T02:45:08+00:00",
+  "stage": "9",
+  "task": "add_pilot",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0
+}

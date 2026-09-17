@@ -1,0 +1,19 @@
+10:59:39 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | run 9_pilot_scratch_holdout_s0 started -> /root/autodl-tmp/fly/runs/9_pilot_scratch_holdout_s0
+10:59:39 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | ==============================================================================
+10:59:39 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | PILOT B1 | brain=scratch teaching=holdout | budget=10000 updates | holdout=(2, 3)
+10:59:39 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | ------------------------------------------------------------------------------
+10:59:39 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | readout: visual_projection (VPN) -> 9200 neurons
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | addition data loaded from cache (9000 train pairs items)
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   taught pairs: 9000 items (2+3 withheld) | held-out probe: 600 items
+10:59:40 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   scratch: gains g=1 everywhere, readout freshly initialised
+10:59:41 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [     0 updates] seen 0.0670 | 2+3 acc 0.0000  P(5|2+3) 0.1215 | a 0.000 b 0.000
+11:00:24 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [   500 updates] seen 0.2905 | 2+3 acc 0.1783  P(5|2+3) 0.2169 | a 0.228 b 0.003
+11:01:08 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [  1000 updates] seen 0.3040 | 2+3 acc 0.1000  P(5|2+3) 0.2046 | a 0.320 b 0.000
+11:02:35 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [  2000 updates] seen 0.3425 | 2+3 acc 0.0000  P(5|2+3) 0.1554 | a 0.540 b 0.007
+11:06:55 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [  5000 updates] seen 0.4220 | 2+3 acc 0.2183  P(5|2+3) 0.2391 | a 0.302 b 0.017
+11:14:08 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 |   [ 10000 updates] seen 0.4645 | 2+3 acc 0.0950  P(5|2+3) 0.1903 | a 0.618 b 0.207
+11:14:08 | INFO    | flynum.run.9_pilot_scratch_holdout_s0 | run 9_pilot_scratch_holdout_s0 finished: ok (869.0s)

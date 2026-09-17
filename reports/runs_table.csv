@@ -55,6 +55,7 @@ run_id,stage,task,model,circuit,graph,n_train,model_seed,shuffle_seed,n_params,b
 8_lesion_s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46,,count,M1,core,real,20000,0,0,,,,,,,,,,,0,8,0.2,1.0,False,False,,,64
 8_lesion_s2_count_M1_core_real_N20000_m1_sh0_cc44762d6a,,count,M1,core,real,20000,1,0,,,,,,,,,,,0,8,0.2,1.0,False,False,,,64
 8_lesion_s2_count_M1_core_real_N20000_m2_sh0_758f75b4ab,,count,M1,core,real,20000,2,0,,,,,,,,,,,0,8,0.2,1.0,False,False,,,64
+countA01_src,1,count,M1,core,real,20000,0,0,1249509.0,0.6316,0.6376,0.3642,0.4012,0.3214,,,,932.1,0,8,0.1,1.0,False,False,60.0,18780.0,64
 full_real_N5000,1,count,M1,full,real,5000,0,0,12537926.0,0.4812,0.4874,0.1832,0.1878,0.1704,,,,4551.3,0,8,0.2,0.4,False,False,40.0,,16
 full_shuffled_N5000,1,count,M1,full,shuffled,5000,0,0,12537926.0,0.4852,0.4906,0.1792,0.1718,0.1786,,,,6809.8,0,8,0.2,0.4,False,False,40.0,,16
 s2_count_M0_core_real_N20000_m0_sh0_f54039ffe3,2,count,M0,core,real,20000,0,0,79485.0,0.5232,0.5244,0.1934,0.1988,0.19,,,,288.8,0,8,0.2,1.0,False,False,60.0,,64

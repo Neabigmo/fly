@@ -1,0 +1,12 @@
+{
+  "run_id": "9_pilot_pretrained_holdout_s0",
+  "status": "ok",
+  "wall_seconds": 869.1,
+  "finished_at": "2026-09-17T03:28:38+00:00",
+  "stage": "9",
+  "task": "add_pilot",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0
+}

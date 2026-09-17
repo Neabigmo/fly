@@ -1,0 +1,21 @@
+{
+  "run_id": "countA01_src",
+  "status": "ok",
+  "wall_seconds": 932.1,
+  "finished_at": "2026-09-17T02:24:15+00:00",
+  "stage": "1",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "n_train": 20000,
+  "model_seed": 0,
+  "shuffle_seed": 0,
+  "best_val_acc": 0.6316,
+  "test_acc_a": 0.6376,
+  "test_acc_b": 0.3642,
+  "test_acc_c": 0.4012,
+  "n_params": 1249509,
+  "epochs_run": 60,
+  "optimizer_steps": 18780
+}

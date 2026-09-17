@@ -1,0 +1,458 @@
+[
+  {
+    "run_id": "9_pilot_scratch_full_s0",
+    "task": "add_pilot",
+    "console": "A1",
+    "brain": "scratch",
+    "teaching": "full",
+    "pretrain_from": "",
+    "teach_holdout": true,
+    "holdout_pair": [
+      2,
+      3
+    ],
+    "model_seed": 0,
+    "budget_steps": 10000,
+    "optimizer_steps": 10000,
+    "n_taught_items": 9600,
+    "n_probe_items": 600,
+    "transferred": null,
+    "history": [
+      {
+        "updates": 0,
+        "acc_seen": 0.067,
+        "acc_a_seen": 0.2665,
+        "acc_b_seen": 0.2675,
+        "acc_2p3": 0.0,
+        "p_y5_given_2p3": 0.12152580171823502,
+        "acc_a_2p3": 0.0,
+        "acc_b_2p3": 0.0,
+        "elapsed": 0.8,
+        "tag": "initial",
+        "acc_all16": 0.0625
+      },
+      {
+        "updates": 500,
+        "acc_seen": 0.231,
+        "acc_a_seen": 0.541,
+        "acc_b_seen": 0.3765,
+        "acc_2p3": 0.9283333333333333,
+        "p_y5_given_2p3": 0.334809273481369,
+        "acc_a_2p3": 0.51,
+        "acc_b_2p3": 0.22,
+        "elapsed": 44.7,
+        "tag": "updates=500",
+        "acc_all16": 0.2725
+      },
+      {
+        "updates": 1000,
+        "acc_seen": 0.2885,
+        "acc_a_seen": 0.5655,
+        "acc_b_seen": 0.411,
+        "acc_2p3": 0.4633333333333333,
+        "p_y5_given_2p3": 0.2629091143608093,
+        "acc_a_2p3": 0.38166666666666665,
+        "acc_b_2p3": 0.4483333333333333,
+        "elapsed": 88.7,
+        "tag": "updates=1000",
+        "acc_all16": 0.3075
+      },
+      {
+        "updates": 2000,
+        "acc_seen": 0.3495,
+        "acc_a_seen": 0.575,
+        "acc_b_seen": 0.5125,
+        "acc_2p3": 0.17833333333333334,
+        "p_y5_given_2p3": 0.22972701489925385,
+        "acc_a_2p3": 0.33166666666666667,
+        "acc_b_2p3": 0.013333333333333334,
+        "elapsed": 176.1,
+        "tag": "updates=2000",
+        "acc_all16": 0.343
+      },
+      {
+        "updates": 5000,
+        "acc_seen": 0.415,
+        "acc_a_seen": 0.5745,
+        "acc_b_seen": 0.5445,
+        "acc_2p3": 0.585,
+        "p_y5_given_2p3": 0.29450806975364685,
+        "acc_a_2p3": 0.5333333333333333,
+        "acc_b_2p3": 0.28833333333333333,
+        "elapsed": 437.3,
+        "tag": "updates=5000",
+        "acc_all16": 0.43
+      },
+      {
+        "updates": 10000,
+        "acc_seen": 0.435,
+        "acc_a_seen": 0.7825,
+        "acc_b_seen": 0.5505,
+        "acc_2p3": 0.6416666666666667,
+        "p_y5_given_2p3": 0.3649049997329712,
+        "acc_a_2p3": 0.765,
+        "acc_b_2p3": 0.4083333333333333,
+        "elapsed": 872.3,
+        "tag": "updates=10000",
+        "acc_all16": 0.469
+      }
+    ],
+    "final": {
+      "updates": 10000,
+      "acc_seen": 0.435,
+      "acc_a_seen": 0.7825,
+      "acc_b_seen": 0.5505,
+      "acc_2p3": 0.6416666666666667,
+      "p_y5_given_2p3": 0.3649049997329712,
+      "acc_a_2p3": 0.765,
+      "acc_b_2p3": 0.4083333333333333,
+      "elapsed": 872.3,
+      "tag": "updates=10000",
+      "acc_all16": 0.469
+    },
+    "wall_seconds": 886.4
+  },
+  {
+    "run_id": "9_pilot_pretrained_full_s0",
+    "task": "add_pilot",
+    "console": "A2",
+    "brain": "pretrained",
+    "teaching": "full",
+    "pretrain_from": "countA01_src",
+    "teach_holdout": true,
+    "holdout_pair": [
+      2,
+      3
+    ],
+    "model_seed": 0,
+    "budget_steps": 10000,
+    "optimizer_steps": 10000,
+    "n_taught_items": 9600,
+    "n_probe_items": 600,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ]
+    },
+    "history": [
+      {
+        "updates": 0,
+        "acc_seen": 0.1265,
+        "acc_a_seen": 0.2805,
+        "acc_b_seen": 0.2585,
+        "acc_2p3": 0.0,
+        "p_y5_given_2p3": 0.13643477857112885,
+        "acc_a_2p3": 0.44666666666666666,
+        "acc_b_2p3": 0.051666666666666666,
+        "elapsed": 0.7,
+        "tag": "initial",
+        "acc_all16": 0.1135
+      },
+      {
+        "updates": 500,
+        "acc_seen": 0.2565,
+        "acc_a_seen": 0.6635,
+        "acc_b_seen": 0.3945,
+        "acc_2p3": 0.8033333333333333,
+        "p_y5_given_2p3": 0.3017652928829193,
+        "acc_a_2p3": 0.44666666666666666,
+        "acc_b_2p3": 0.33666666666666667,
+        "elapsed": 44.4,
+        "tag": "updates=500",
+        "acc_all16": 0.2955
+      },
+      {
+        "updates": 1000,
+        "acc_seen": 0.314,
+        "acc_a_seen": 0.745,
+        "acc_b_seen": 0.419,
+        "acc_2p3": 0.675,
+        "p_y5_given_2p3": 0.28768596053123474,
+        "acc_a_2p3": 0.5383333333333333,
+        "acc_b_2p3": 0.5716666666666667,
+        "elapsed": 88.4,
+        "tag": "updates=1000",
+        "acc_all16": 0.348
+      },
+      {
+        "updates": 2000,
+        "acc_seen": 0.402,
+        "acc_a_seen": 0.795,
+        "acc_b_seen": 0.4535,
+        "acc_2p3": 0.3333333333333333,
+        "p_y5_given_2p3": 0.25958988070487976,
+        "acc_a_2p3": 0.78,
+        "acc_b_2p3": 0.16,
+        "elapsed": 175.7,
+        "tag": "updates=2000",
+        "acc_all16": 0.398
+      },
+      {
+        "updates": 5000,
+        "acc_seen": 0.473,
+        "acc_a_seen": 0.8415,
+        "acc_b_seen": 0.528,
+        "acc_2p3": 0.195,
+        "p_y5_given_2p3": 0.23440170288085938,
+        "acc_a_2p3": 0.815,
+        "acc_b_2p3": 0.31333333333333335,
+        "elapsed": 436.4,
+        "tag": "updates=5000",
+        "acc_all16": 0.445
+      },
+      {
+        "updates": 10000,
+        "acc_seen": 0.49,
+        "acc_a_seen": 0.8535,
+        "acc_b_seen": 0.5665,
+        "acc_2p3": 0.32,
+        "p_y5_given_2p3": 0.2994329333305359,
+        "acc_a_2p3": 0.8716666666666667,
+        "acc_b_2p3": 0.395,
+        "elapsed": 870.6,
+        "tag": "updates=10000",
+        "acc_all16": 0.4765
+      }
+    ],
+    "final": {
+      "updates": 10000,
+      "acc_seen": 0.49,
+      "acc_a_seen": 0.8535,
+      "acc_b_seen": 0.5665,
+      "acc_2p3": 0.32,
+      "p_y5_given_2p3": 0.2994329333305359,
+      "acc_a_2p3": 0.8716666666666667,
+      "acc_b_2p3": 0.395,
+      "elapsed": 870.6,
+      "tag": "updates=10000",
+      "acc_all16": 0.4765
+    },
+    "wall_seconds": 871.7
+  },
+  {
+    "run_id": "9_pilot_scratch_holdout_s0",
+    "task": "add_pilot",
+    "console": "B1",
+    "brain": "scratch",
+    "teaching": "holdout",
+    "pretrain_from": "",
+    "teach_holdout": false,
+    "holdout_pair": [
+      2,
+      3
+    ],
+    "model_seed": 0,
+    "budget_steps": 10000,
+    "optimizer_steps": 10000,
+    "n_taught_items": 9000,
+    "n_probe_items": 600,
+    "transferred": null,
+    "history": [
+      {
+        "updates": 0,
+        "acc_seen": 0.067,
+        "acc_a_seen": 0.2665,
+        "acc_b_seen": 0.2675,
+        "acc_2p3": 0.0,
+        "p_y5_given_2p3": 0.12152580171823502,
+        "acc_a_2p3": 0.0,
+        "acc_b_2p3": 0.0,
+        "elapsed": 0.4,
+        "tag": "initial"
+      },
+      {
+        "updates": 500,
+        "acc_seen": 0.2905,
+        "acc_a_seen": 0.573,
+        "acc_b_seen": 0.4015,
+        "acc_2p3": 0.17833333333333334,
+        "p_y5_given_2p3": 0.21686610579490662,
+        "acc_a_2p3": 0.22833333333333333,
+        "acc_b_2p3": 0.0033333333333333335,
+        "elapsed": 44.0,
+        "tag": "updates=500"
+      },
+      {
+        "updates": 1000,
+        "acc_seen": 0.304,
+        "acc_a_seen": 0.584,
+        "acc_b_seen": 0.479,
+        "acc_2p3": 0.1,
+        "p_y5_given_2p3": 0.20455685257911682,
+        "acc_a_2p3": 0.32,
+        "acc_b_2p3": 0.0,
+        "elapsed": 87.6,
+        "tag": "updates=1000"
+      },
+      {
+        "updates": 2000,
+        "acc_seen": 0.3425,
+        "acc_a_seen": 0.5685,
+        "acc_b_seen": 0.5295,
+        "acc_2p3": 0.0,
+        "p_y5_given_2p3": 0.15538403391838074,
+        "acc_a_2p3": 0.54,
+        "acc_b_2p3": 0.006666666666666667,
+        "elapsed": 174.6,
+        "tag": "updates=2000"
+      },
+      {
+        "updates": 5000,
+        "acc_seen": 0.422,
+        "acc_a_seen": 0.6285,
+        "acc_b_seen": 0.562,
+        "acc_2p3": 0.21833333333333332,
+        "p_y5_given_2p3": 0.2390819787979126,
+        "acc_a_2p3": 0.3016666666666667,
+        "acc_b_2p3": 0.016666666666666666,
+        "elapsed": 434.8,
+        "tag": "updates=5000"
+      },
+      {
+        "updates": 10000,
+        "acc_seen": 0.4645,
+        "acc_a_seen": 0.78,
+        "acc_b_seen": 0.569,
+        "acc_2p3": 0.095,
+        "p_y5_given_2p3": 0.19030718505382538,
+        "acc_a_2p3": 0.6183333333333333,
+        "acc_b_2p3": 0.20666666666666667,
+        "elapsed": 868.2,
+        "tag": "updates=10000"
+      }
+    ],
+    "final": {
+      "updates": 10000,
+      "acc_seen": 0.4645,
+      "acc_a_seen": 0.78,
+      "acc_b_seen": 0.569,
+      "acc_2p3": 0.095,
+      "p_y5_given_2p3": 0.19030718505382538,
+      "acc_a_2p3": 0.6183333333333333,
+      "acc_b_2p3": 0.20666666666666667,
+      "elapsed": 868.2,
+      "tag": "updates=10000"
+    },
+    "wall_seconds": 869.0
+  },
+  {
+    "run_id": "9_pilot_pretrained_holdout_s0",
+    "task": "add_pilot",
+    "console": "B2",
+    "brain": "pretrained",
+    "teaching": "holdout",
+    "pretrain_from": "countA01_src",
+    "teach_holdout": false,
+    "holdout_pair": [
+      2,
+      3
+    ],
+    "model_seed": 0,
+    "budget_steps": 10000,
+    "optimizer_steps": 10000,
+    "n_taught_items": 9000,
+    "n_probe_items": 600,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ]
+    },
+    "history": [
+      {
+        "updates": 0,
+        "acc_seen": 0.1265,
+        "acc_a_seen": 0.2805,
+        "acc_b_seen": 0.2585,
+        "acc_2p3": 0.0,
+        "p_y5_given_2p3": 0.13643477857112885,
+        "acc_a_2p3": 0.44666666666666666,
+        "acc_b_2p3": 0.051666666666666666,
+        "elapsed": 0.4,
+        "tag": "initial"
+      },
+      {
+        "updates": 500,
+        "acc_seen": 0.284,
+        "acc_a_seen": 0.673,
+        "acc_b_seen": 0.4295,
+        "acc_2p3": 0.35,
+        "p_y5_given_2p3": 0.2354944795370102,
+        "acc_a_2p3": 0.38333333333333336,
+        "acc_b_2p3": 0.0016666666666666668,
+        "elapsed": 44.0,
+        "tag": "updates=500"
+      },
+      {
+        "updates": 1000,
+        "acc_seen": 0.3425,
+        "acc_a_seen": 0.7285,
+        "acc_b_seen": 0.423,
+        "acc_2p3": 0.04833333333333333,
+        "p_y5_given_2p3": 0.18870504200458527,
+        "acc_a_2p3": 0.5733333333333334,
+        "acc_b_2p3": 0.025,
+        "elapsed": 87.7,
+        "tag": "updates=1000"
+      },
+      {
+        "updates": 2000,
+        "acc_seen": 0.3935,
+        "acc_a_seen": 0.76,
+        "acc_b_seen": 0.515,
+        "acc_2p3": 0.05333333333333334,
+        "p_y5_given_2p3": 0.17613567411899567,
+        "acc_a_2p3": 0.6583333333333333,
+        "acc_b_2p3": 0.0,
+        "elapsed": 174.7,
+        "tag": "updates=2000"
+      },
+      {
+        "updates": 5000,
+        "acc_seen": 0.4695,
+        "acc_a_seen": 0.826,
+        "acc_b_seen": 0.5745,
+        "acc_2p3": 0.22333333333333333,
+        "p_y5_given_2p3": 0.25406667590141296,
+        "acc_a_2p3": 0.685,
+        "acc_b_2p3": 0.04833333333333333,
+        "elapsed": 434.8,
+        "tag": "updates=5000"
+      },
+      {
+        "updates": 10000,
+        "acc_seen": 0.5305,
+        "acc_a_seen": 0.854,
+        "acc_b_seen": 0.581,
+        "acc_2p3": 0.11666666666666667,
+        "p_y5_given_2p3": 0.2021644562482834,
+        "acc_a_2p3": 0.8816666666666667,
+        "acc_b_2p3": 0.12,
+        "elapsed": 868.3,
+        "tag": "updates=10000"
+      }
+    ],
+    "final": {
+      "updates": 10000,
+      "acc_seen": 0.5305,
+      "acc_a_seen": 0.854,
+      "acc_b_seen": 0.581,
+      "acc_2p3": 0.11666666666666667,
+      "p_y5_given_2p3": 0.2021644562482834,
+      "acc_a_2p3": 0.8816666666666667,
+      "acc_b_2p3": 0.12,
+      "elapsed": 868.3,
+      "tag": "updates=10000"
+    },
+    "wall_seconds": 869.1
+  }
+]

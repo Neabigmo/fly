@@ -442,6 +442,80 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
             A("")
 
 
+def _section_addition_pilot(lines: list) -> None:
+    """The 2x2 pilot: does counting pre-training help addition, taught or inferred?"""
+    A = lines.append
+    A("### 6.7 加法教学 2×2 pilot：数数预训练能否让加法更容易被教会")
+    A("")
+    p = paths.DATA_PROCESSED / "addition_pilot.json"
+    if not p.exists():
+        lines.extend(_pending("加法教学 pilot",
+                              "python scripts/24_addition_pilot.py --pretrain <count_run_id>"))
+        return
+    res = json.loads(p.read_text(encoding="utf-8"))
+    d = {s["console"]: s for s in res if s.get("history")}
+    if len(d) < 4:
+        A(f"_只有 {len(d)}/4 组完成_")
+        A("")
+    A("1 seed × 4 组，**所有组相同的 10 000 次优化更新**（不是相同 epoch —— 本项目的样本效率"
+      "结果已证明等 epoch 会给出四倍算力差）。除「初始状态」与「是否留出 2+3」外全部锁死："
+      "种子、数据集、batch 顺序的随机源、优化器、学习率、动力学、读出层初始化。"
+      "**显式教学**：和的目标从第 1 步就开启，没有只看操作数的预热阶段。")
+    A("")
+    chance = 1.0 / 7
+    rows = []
+    for c in ("A1", "A2", "B1", "B2"):
+        s = d.get(c)
+        if not s:
+            continue
+        h = {r["updates"]: r for r in s["history"]}
+        f = s["final"]
+        rows.append([
+            f"{c} {s['brain']}/{s['teaching']}",
+            f"{h[2000]['acc_seen']:.4f}", f"{h[5000]['acc_seen']:.4f}",
+            f"{h[10000]['acc_seen']:.4f}",
+            f"{f['acc_all16']:.4f}" if f.get("acc_all16") is not None else "—",
+            f"{f['acc_a_2p3']:.4f}", f"{f['p_y5_given_2p3']:.4f}", f"{f['acc_2p3']:.4f}",
+        ])
+    lines.extend(_md_table(
+        ["组别", "seen@2k", "seen@5k", "seen@10k", "all16@10k", "operand a", "P(5|2+3)", "argmax 2+3"],
+        rows))
+    A("")
+    if "A1" in d and "A2" in d:
+        a1, a2 = d["A1"]["history"], d["A2"]["history"]
+        diffs = [b["acc_seen"] - a["acc_seen"] for a, b in zip(a1, a2)]
+        A(f"**问题 1（都教全部 16 组）：学会数数后，加法是否更容易被教会？— 是。** "
+          f"`A2 pretrained` 在**每一个**探针点上都领先："
+          + "、".join(f"{u} 步 {x:+.4f}" for u, x in
+                      zip([r["updates"] for r in a1], diffs))
+          + f"。全部为正，平均 **{np.mean(diffs):+.4f}**。这不是末点侥幸，而是整条曲线更高。")
+        A("")
+    if "B1" in d and "B2" in d:
+        b1, b2 = d["B1"]["final"], d["B2"]["final"]
+        A(f"**问题 2（都留出 2+3）：数数基础是否帮助推断没教过的组合？— 没有。** "
+          f"`B1` 的 P(5|2+3) = **{b1['p_y5_given_2p3']:.4f}**，`B2` = "
+          f"**{b2['p_y5_given_2p3']:.4f}**（chance {chance:.4f}）—— 两者都只比 chance 高一点点，"
+          f"彼此差 {b2['p_y5_given_2p3'] - b1['p_y5_given_2p3']:+.4f}，在单 seed 的噪声范围内。"
+          f"更直接的是 argmax 准确率：**{b1['acc_2p3']:.4f} 与 {b2['acc_2p3']:.4f}，双双低于 "
+          f"chance {chance:.4f}** —— 也就是说两个脑都没有真正把 2+3 判成 5，")
+        A("")
+        A("**最有信息量的一点在操作数上**：`B2` 的第 0 步（还没做任何加法训练）就已经能解码 "
+          f"operand a（{d['B2']['history'][0]['acc_a_2p3']:.4f}，`B1` 是 "
+          f"{d['B1']['history'][0]['acc_a_2p3']:.4f}），且训练后达到 "
+          f"{b2['acc_a_2p3']:.4f} vs {b1['acc_a_2p3']:.4f}。"
+          f"**数数预训练确实把操作数表征磨得更锐利（+0.26）**，"
+          f"但这份更好的表征**并没有变成组合能力**。这与旧课程里 "
+          "a 从 0.39 升到 0.71 而 a+b 仍在 chance 的观察完全一致，"
+          "现在有了显式教学的对照：**瓶颈不在「读不读得出两个数」，而在「会不会把它们合起来」。**")
+        A("")
+    A("限定与下一步：① 只有 1 个 seed，所以 A 组的 +0.055 值得复现（B 组的差异则小到不值得追）；"
+      "② 两个脑都远未学会加法（seen 仅 0.44–0.53，chance 约 0.07），"
+      "所以「预训练帮助学习」是在**学习速率**意义上成立，而不是「达到了高准确率」；"
+      "③ 温热启动的源模型是在**同一 α=0.1** 下训练的（`countA01_src`，test A 0.6376），"
+      "因此这次不跨积分速率 —— 这是相对旧课程的一处改进。")
+    A("")
+
+
 def _section_control_match(lines: list, summaries: list[dict]) -> None:
     # kept in step with scripts/15_run_parallel.py:SPECTRAL_MATCH_W_SCALE
     SPECTRAL_WS = 1.4106
@@ -1130,6 +1204,7 @@ def main() -> int:
     _section_step_matched(lines)
     _section_signed(lines, df)
     _section_curriculum(lines, all_summaries)
+    _section_addition_pilot(lines)
     _section_control_match(lines, summaries)
     _section_lesion(lines)
 

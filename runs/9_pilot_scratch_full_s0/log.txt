@@ -1,0 +1,19 @@
+10:30:22 | INFO    | flynum.run.9_pilot_scratch_full_s0 | run 9_pilot_scratch_full_s0 started -> /root/autodl-tmp/fly/runs/9_pilot_scratch_full_s0
+10:30:22 | INFO    | flynum.run.9_pilot_scratch_full_s0 | ==============================================================================
+10:30:22 | INFO    | flynum.run.9_pilot_scratch_full_s0 | PILOT A1 | brain=scratch teaching=full | budget=10000 updates | holdout=(2, 3)
+10:30:22 | INFO    | flynum.run.9_pilot_scratch_full_s0 | ------------------------------------------------------------------------------
+10:30:22 | INFO    | flynum.run.9_pilot_scratch_full_s0 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+10:30:23 | INFO    | flynum.run.9_pilot_scratch_full_s0 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+10:30:23 | INFO    | flynum.run.9_pilot_scratch_full_s0 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+10:30:23 | INFO    | flynum.run.9_pilot_scratch_full_s0 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+10:30:23 | INFO    | flynum.run.9_pilot_scratch_full_s0 | readout: visual_projection (VPN) -> 9200 neurons
+10:30:34 | INFO    | flynum.run.9_pilot_scratch_full_s0 | generated addition data: 9000 train items, 600 holdout items
+10:30:34 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   taught pairs: 9600 items (incl. 2+3) | held-out probe: 600 items
+10:30:34 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   scratch: gains g=1 everywhere, readout freshly initialised
+10:30:36 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [     0 updates] seen 0.0670 | 2+3 acc 0.0000  P(5|2+3) 0.1215 | a 0.000 b 0.000 | all16 0.0625
+10:31:20 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [   500 updates] seen 0.2310 | 2+3 acc 0.9283  P(5|2+3) 0.3348 | a 0.510 b 0.220 | all16 0.2725
+10:32:04 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [  1000 updates] seen 0.2885 | 2+3 acc 0.4633  P(5|2+3) 0.2629 | a 0.382 b 0.448 | all16 0.3075
+10:33:31 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [  2000 updates] seen 0.3495 | 2+3 acc 0.1783  P(5|2+3) 0.2297 | a 0.332 b 0.013 | all16 0.3430
+10:37:53 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [  5000 updates] seen 0.4150 | 2+3 acc 0.5850  P(5|2+3) 0.2945 | a 0.533 b 0.288 | all16 0.4300
+10:45:08 | INFO    | flynum.run.9_pilot_scratch_full_s0 |   [ 10000 updates] seen 0.4350 | 2+3 acc 0.6417  P(5|2+3) 0.3649 | a 0.765 b 0.408 | all16 0.4690
+10:45:08 | INFO    | flynum.run.9_pilot_scratch_full_s0 | run 9_pilot_scratch_full_s0 finished: ok (886.4s)
