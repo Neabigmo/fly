@@ -1,0 +1,162 @@
+{
+  "count": {
+    "A": {
+      "n_items": 7,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.6666666666666666,
+      "size_centroid": 0.21428571428571427,
+      "ridge_on_scalars": 0.3333333333333333,
+      "ceiling": 0.6666666666666666,
+      "retina_linear": 0.17142857142857143,
+      "retina_mlp": 0.33472803347280333
+    },
+    "B": {
+      "n_items": 7,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.16666666666666666,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.19047619047619047,
+      "ceiling": 1.0,
+      "retina_linear": 0.1523809523809524,
+      "retina_mlp": 0.22813688212927757
+    },
+    "C": {
+      "n_items": 7,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.21428571428571427,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.2857142857142857,
+      "ceiling": 1.0,
+      "retina_linear": 0.8071428571428572,
+      "retina_mlp": 0.8937007874015748
+    }
+  },
+  "add": {
+    "A": {
+      "n_items": 49,
+      "chance": 0.07692307692307693,
+      "ink_centroid": 0.4013605442176871,
+      "size_centroid": 0.05442176870748299,
+      "ridge_on_scalars": 0.08163265306122448,
+      "ceiling": 0.4013605442176871,
+      "retina_linear": 0.12074829931972789,
+      "retina_mlp": 0.17717206132879046
+    },
+    "B": {
+      "n_items": 49,
+      "chance": 0.07692307692307693,
+      "ink_centroid": 0.06462585034013606,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.1360544217687075,
+      "ceiling": 1.0,
+      "retina_linear": 0.1,
+      "retina_mlp": 0.120958751393534
+    },
+    "C": {
+      "n_items": 49,
+      "chance": 0.07692307692307693,
+      "ink_centroid": 0.05442176870748299,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.14965986394557823,
+      "ceiling": 1.0,
+      "retina_linear": 0.1595238095238095,
+      "retina_mlp": 0.7345998848589522
+    }
+  },
+  "cyc7": {
+    "A": {
+      "n_items": 49,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.1836734693877551,
+      "size_centroid": 0.15306122448979592,
+      "ridge_on_scalars": 0.14965986394557823,
+      "ceiling": 0.1836734693877551,
+      "retina_linear": 0.14727891156462586,
+      "retina_mlp": 0.16695059625212946
+    },
+    "B": {
+      "n_items": 49,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.16666666666666666,
+      "size_centroid": 0.04081632653061224,
+      "ridge_on_scalars": 0.14285714285714285,
+      "ceiling": 0.16666666666666666,
+      "retina_linear": 0.1414965986394558,
+      "retina_mlp": 0.1399108138238573
+    },
+    "C": {
+      "n_items": 49,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.16666666666666666,
+      "size_centroid": 0.13945578231292516,
+      "ridge_on_scalars": 0.1360544217687075,
+      "ceiling": 0.16666666666666666,
+      "retina_linear": 0.14421768707482993,
+      "retina_mlp": 0.7063903281519862
+    }
+  },
+  "addsub": {
+    "A": {
+      "n_items": 26,
+      "chance": 0.1111111111111111,
+      "ink_centroid": 0.5,
+      "size_centroid": 0.30128205128205127,
+      "ridge_on_scalars": 0.11538461538461539,
+      "ceiling": 0.5,
+      "retina_linear": 0.1467948717948718,
+      "retina_mlp": 0.2913553895410886
+    },
+    "B": {
+      "n_items": 26,
+      "chance": 0.1111111111111111,
+      "ink_centroid": 0.3076923076923077,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.1794871794871795,
+      "ceiling": 1.0,
+      "retina_linear": 0.14038461538461539,
+      "retina_mlp": 0.2791932059447983
+    },
+    "C": {
+      "n_items": 26,
+      "chance": 0.1111111111111111,
+      "ink_centroid": 0.23076923076923078,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.1794871794871795,
+      "ceiling": 1.0,
+      "retina_linear": 0.14166666666666666,
+      "retina_mlp": 0.8342303552206674
+    }
+  },
+  "two_step": {
+    "A": {
+      "n_items": 54,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.49691358024691357,
+      "size_centroid": 0.21604938271604937,
+      "ridge_on_scalars": 0.3950617283950617,
+      "ceiling": 0.49691358024691357,
+      "retina_linear": 0.18703703703703703,
+      "retina_mlp": 0.2795969773299748
+    },
+    "B": {
+      "n_items": 54,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.08950617283950617,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.345679012345679,
+      "ceiling": 1.0,
+      "retina_linear": 0.1765432098765432,
+      "retina_mlp": 0.2169474221541603
+    },
+    "C": {
+      "n_items": 54,
+      "chance": 0.14285714285714285,
+      "ink_centroid": 0.06481481481481481,
+      "size_centroid": 1.0,
+      "ridge_on_scalars": 0.41358024691358025,
+      "ceiling": 1.0,
+      "retina_linear": 0.21358024691358024,
+      "retina_mlp": 0.5360169491525424
+    }
+  }
+}

@@ -69,7 +69,7 @@
           }
         }
       },
-      "finished": false,
+      "finished": true,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -185,6 +185,351 @@
         }
       },
       "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "A2-C": {
+      "dir": "10_A2-C_s0",
+      "phase1": {
+        "cell": "A2-C",
+        "task": "addsub",
+        "line": "A",
+        "brain": "add",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "does already holding one arithmetic rule help acquire a second?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "A2-S": {
+      "dir": "10_A2-S_s0",
+      "phase1": {
+        "cell": "A2-S",
+        "task": "addsub",
+        "line": "A",
+        "brain": "scratch",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "can the +/- rule be selected from a visual cue, from scratch?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "A3-S": {
+      "dir": "10_A3-S_s0",
+      "phase1": {
+        "cell": "A3-S",
+        "task": "two_step",
+        "line": "A",
+        "brain": "scratch",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "can a two-step computation be taught from scratch?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": false,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -401,29 +746,266 @@
     },
     "A1-C": {
       "line": "A",
-      "final_train_acc": 0.17224489152431488,
-      "final_seen_acc": 0.17400000244379044,
-      "auc_seen_acc": 0.14650000352412462,
+      "final_train_acc": 0.23734693229198456,
+      "final_seen_acc": 0.19866666197776794,
+      "auc_seen_acc": 0.1882866658642888,
       "updates_to_50": null,
       "updates_to_80": null,
       "updates_to_95": null,
       "task": "add",
       "brain": "count",
       "budget": 50000,
-      "finished": false,
-      "seen_acc": 0.17400000244379044,
-      "taught_area_acc": 0.15333333611488342,
-      "taught_env_acc": 0.1379999965429306,
-      "train_acc": 0.17224489152431488,
+      "finished": true,
+      "seen_acc": 0.19866666197776794,
+      "taught_area_acc": 0.1459999978542328,
+      "taught_env_acc": 0.12733332812786102,
+      "train_acc": 0.23734693229198456,
       "probe_n": null,
-      "probe_a": 0.37466666102409363,
-      "probe_b": 0.15333333611488342,
-      "probe_sum": 0.1706666648387909,
+      "probe_a": 0.3853333294391632,
+      "probe_b": 0.1693333387374878,
+      "probe_sum": 0.171999990940094,
       "probe_answer": null,
       "probe_partial": null,
-      "delta_abs_mean": 0.6273264288902283,
-      "activity_dim": 19.168476104736328
+      "delta_abs_mean": 0.5525633692741394,
+      "activity_dim": 24.191314697265625
+    },
+    "A2-S": {
+      "line": "A",
+      "final_train_acc": 0.3637862205505371,
+      "final_seen_acc": 0.3566666692495346,
+      "auc_seen_acc": 0.32370332965627313,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "addsub",
+      "brain": "scratch",
+      "budget": 50000,
+      "finished": true,
+      "seen_acc": 0.3566666692495346,
+      "taught_area_acc": 0.3186666667461395,
+      "taught_env_acc": 0.32733333110809326,
+      "train_acc": 0.3637862205505371,
+      "probe_n": null,
+      "probe_a": 0.5293333530426025,
+      "probe_b": 0.4546666741371155,
+      "probe_sum": null,
+      "probe_answer": 0.36266666650772095,
+      "probe_partial": null,
+      "delta_abs_mean": 0.1920064240694046,
+      "activity_dim": 29.07521629333496
+    },
+    "A2-C": {
+      "line": "A",
+      "final_train_acc": 0.42477521300315857,
+      "final_seen_acc": 0.37833333015441895,
+      "auc_seen_acc": 0.3542116665840149,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "addsub",
+      "brain": "add",
+      "budget": 50000,
+      "finished": true,
+      "seen_acc": 0.37833333015441895,
+      "taught_area_acc": 0.32066667079925537,
+      "taught_env_acc": 0.2693333327770233,
+      "train_acc": 0.42477521300315857,
+      "probe_n": null,
+      "probe_a": 0.5093333125114441,
+      "probe_b": 0.3813333213329315,
+      "probe_sum": null,
+      "probe_answer": 0.30533331632614136,
+      "probe_partial": null,
+      "delta_abs_mean": 0.5267563462257385,
+      "activity_dim": 20.597475051879883
+    },
+    "A3-S": {
+      "line": "A",
+      "final_train_acc": 0.23933641612529755,
+      "final_seen_acc": 0.23933333903551102,
+      "auc_seen_acc": 0.23482500165700912,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "two_step",
+      "brain": "scratch",
+      "budget": 50000,
+      "finished": false,
+      "seen_acc": 0.23933333903551102,
+      "taught_area_acc": 0.2266666740179062,
+      "taught_env_acc": 0.21666666865348816,
+      "train_acc": 0.23933641612529755,
+      "probe_n": null,
+      "probe_a": 0.5733333230018616,
+      "probe_b": 0.46533334255218506,
+      "probe_sum": null,
+      "probe_answer": 0.2719999849796295,
+      "probe_partial": 0.31200000643730164,
+      "delta_abs_mean": 0.038479033857584,
+      "activity_dim": 27.538022994995117
     }
   },
-  "line_b": {}
+  "line_b": {},
+  "references": {
+    "count": {
+      "A": {
+        "n_items": 7,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.6666666666666666,
+        "size_centroid": 0.21428571428571427,
+        "ridge_on_scalars": 0.3333333333333333,
+        "ceiling": 0.6666666666666666,
+        "retina_linear": 0.17142857142857143,
+        "retina_mlp": 0.33472803347280333
+      },
+      "B": {
+        "n_items": 7,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.16666666666666666,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.19047619047619047,
+        "ceiling": 1.0,
+        "retina_linear": 0.1523809523809524,
+        "retina_mlp": 0.22813688212927757
+      },
+      "C": {
+        "n_items": 7,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.21428571428571427,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.2857142857142857,
+        "ceiling": 1.0,
+        "retina_linear": 0.8071428571428572,
+        "retina_mlp": 0.8937007874015748
+      }
+    },
+    "add": {
+      "A": {
+        "n_items": 49,
+        "chance": 0.07692307692307693,
+        "ink_centroid": 0.4013605442176871,
+        "size_centroid": 0.05442176870748299,
+        "ridge_on_scalars": 0.08163265306122448,
+        "ceiling": 0.4013605442176871,
+        "retina_linear": 0.12074829931972789,
+        "retina_mlp": 0.17717206132879046
+      },
+      "B": {
+        "n_items": 49,
+        "chance": 0.07692307692307693,
+        "ink_centroid": 0.06462585034013606,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.1360544217687075,
+        "ceiling": 1.0,
+        "retina_linear": 0.1,
+        "retina_mlp": 0.120958751393534
+      },
+      "C": {
+        "n_items": 49,
+        "chance": 0.07692307692307693,
+        "ink_centroid": 0.05442176870748299,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.14965986394557823,
+        "ceiling": 1.0,
+        "retina_linear": 0.1595238095238095,
+        "retina_mlp": 0.7345998848589522
+      }
+    },
+    "cyc7": {
+      "A": {
+        "n_items": 49,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.1836734693877551,
+        "size_centroid": 0.15306122448979592,
+        "ridge_on_scalars": 0.14965986394557823,
+        "ceiling": 0.1836734693877551,
+        "retina_linear": 0.14727891156462586,
+        "retina_mlp": 0.16695059625212946
+      },
+      "B": {
+        "n_items": 49,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.16666666666666666,
+        "size_centroid": 0.04081632653061224,
+        "ridge_on_scalars": 0.14285714285714285,
+        "ceiling": 0.16666666666666666,
+        "retina_linear": 0.1414965986394558,
+        "retina_mlp": 0.1399108138238573
+      },
+      "C": {
+        "n_items": 49,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.16666666666666666,
+        "size_centroid": 0.13945578231292516,
+        "ridge_on_scalars": 0.1360544217687075,
+        "ceiling": 0.16666666666666666,
+        "retina_linear": 0.14421768707482993,
+        "retina_mlp": 0.7063903281519862
+      }
+    },
+    "addsub": {
+      "A": {
+        "n_items": 26,
+        "chance": 0.1111111111111111,
+        "ink_centroid": 0.5,
+        "size_centroid": 0.30128205128205127,
+        "ridge_on_scalars": 0.11538461538461539,
+        "ceiling": 0.5,
+        "retina_linear": 0.1467948717948718,
+        "retina_mlp": 0.2913553895410886
+      },
+      "B": {
+        "n_items": 26,
+        "chance": 0.1111111111111111,
+        "ink_centroid": 0.3076923076923077,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.1794871794871795,
+        "ceiling": 1.0,
+        "retina_linear": 0.14038461538461539,
+        "retina_mlp": 0.2791932059447983
+      },
+      "C": {
+        "n_items": 26,
+        "chance": 0.1111111111111111,
+        "ink_centroid": 0.23076923076923078,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.1794871794871795,
+        "ceiling": 1.0,
+        "retina_linear": 0.14166666666666666,
+        "retina_mlp": 0.8342303552206674
+      }
+    },
+    "two_step": {
+      "A": {
+        "n_items": 54,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.49691358024691357,
+        "size_centroid": 0.21604938271604937,
+        "ridge_on_scalars": 0.3950617283950617,
+        "ceiling": 0.49691358024691357,
+        "retina_linear": 0.18703703703703703,
+        "retina_mlp": 0.2795969773299748
+      },
+      "B": {
+        "n_items": 54,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.08950617283950617,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.345679012345679,
+        "ceiling": 1.0,
+        "retina_linear": 0.1765432098765432,
+        "retina_mlp": 0.2169474221541603
+      },
+      "C": {
+        "n_items": 54,
+        "chance": 0.14285714285714285,
+        "ink_centroid": 0.06481481481481481,
+        "size_centroid": 1.0,
+        "ridge_on_scalars": 0.41358024691358025,
+        "ceiling": 1.0,
+        "retina_linear": 0.21358024691358024,
+        "retina_mlp": 0.5360169491525424
+      }
+    }
+  }
 }

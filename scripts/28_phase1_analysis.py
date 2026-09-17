@@ -110,7 +110,14 @@ def line_b_verdicts(cells: dict[str, dict]) -> dict[str, dict]:
     return out
 
 
-def write_report(cells, a_rows, b_rows, out_path: Path) -> str:
+def load_baselines() -> dict:
+    """The reference levels: cue ceilings and fixed-retina decoders, if measured."""
+    path = paths.DATA_PROCESSED / "phase1_cue_ceilings.json"
+    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+
+
+def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None) -> str:
+    base = base or {}
     L = []
     L.append("# Phase I — 一个果蝇 connectome 能被教育到多复杂的数学\n")
     L.append(f"- spec fingerprint: `{spec.fingerprint()}`")
@@ -125,24 +132,57 @@ def write_report(cells, a_rows, b_rows, out_path: Path) -> str:
     L.append("- 比较单位: **optimiser updates**（不是 epoch）；探针固定在同一批 update 数")
     L.append("- 单 seed；无 early stopping；不用留出集选 checkpoint\n")
 
+    if base:
+        L.append("## 参考水平：这些准确率该跟什么比\n")
+        L.append("| task | cond | chance | 线索天花板（oracle 标量） | 固定视网膜 线性 | "
+                 "固定视网膜 MLP |")
+        L.append("|---|---|---|---|---|---|")
+        for task, rows in base.items():
+            for mode in spec.EVAL_MODES:
+                r = rows.get(mode) or {}
+                L.append("| {} | {} | {:.3f} | {:.3f} | {:.3f} | {} |".format(
+                    task, mode, r.get("chance", float("nan")),
+                    r.get("ceiling", float("nan")), r.get("retina_linear", float("nan")),
+                    _num(r.get("retina_mlp"), 3)))
+        L.append("")
+        L.append("**条件 B 才是诊断性的。** 条件 C 把点阵放在固定半径圆环上，刺激高度定型，"
+                 "于是一个**没有任何循环**的前馈 MLP 直接读固定视网膜就能拿到 0.71–0.89 —— "
+                 "在 C 上得高分不需要这个 connectome 做任何计算。条件 B（面积受控、布局自由）"
+                 "里同一个 MLP 只有 0.12–0.28，接近 chance，所以 **B 上的准确率才是「循环回路"
+                 "是否真的在算」的证据**。线索天花板用的是生成器自己的标量统计（ink / radius），"
+                 "是「读线索」策略的上界，不是网络能达到的水平。")
+        L.append("")
+
     L.append("## Line A — 教学能到达的复杂度\n")
     if not a_rows:
         L.append("_尚未有完成的 Line A cell。_\n")
     else:
-        L.append("| cell | task | brain | budget | train | **seen** | area B | env C | "
-                 "AUC(seen) | →0.50 | →0.80 | →0.95 |")
+        L.append("| cell | task | brain | budget | **seen B（主）** | MLP(B) | seen A | "
+                 "seen C | train | AUC | →0.50 | →0.80 |")
         L.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
         for name, r in a_rows.items():
-            L.append("| {} | {} | {} | {} | {} | **{}** | {} | {} | {} | {} | {} | {} |".format(
-                name, r["task"], r["brain"], r["budget"], _num(r["final_train_acc"], 3),
-                _num(r["final_seen_acc"], 3), _num(r.get("taught_area_acc"), 3),
-                _num(r.get("taught_env_acc"), 3), _num(r["auc_seen_acc"], 3),
-                r["updates_to_50"] or "--", r["updates_to_80"] or "--",
-                r["updates_to_95"] or "--"))
+            ref = (base.get(r["task"], {}).get("B", {}) or {})
+            L.append("| {} | {} | {} | {} | **{}** | {} | {} | {} | {} | {} | {} | {} |".format(
+                name, r["task"], r["brain"], r["budget"], _num(r.get("taught_area_acc"), 3),
+                _num(ref.get("retina_mlp"), 3), _num(r.get("seen_acc"), 3),
+                _num(r.get("taught_env_acc"), 3), _num(r["final_train_acc"], 3),
+                _num(r.get("auc_seen_acc"), 3),
+                r["updates_to_50"] or "--", r["updates_to_80"] or "--"))
         L.append("")
-        L.append("`seen` 是教学内容上的准确率（chance: count 0.143 / add 0.077 / "
-                 "addsub 0.111 / two_step 0.143）；`area B`、`env C` 是同一批 item 在"
-                 "另外两个条件下的读数，C 从未参与教学。")
+        L.append("`seen` 是教学内容（A、B 两条件）上的平均准确率；chance: count 0.143 / "
+                 "add 0.077 / addsub 0.111 / two_step 0.143。")
+        L.append("")
+        L.append("**怎么读这张表（重要）：**")
+        L.append("1. 条件 B 上明显高于 `MLP(B)`，说明网络做出了固定视网膜上前馈解码器"
+                 "做不到的运算——循环回路确实在算。")
+        L.append("2. 但这**不能**区分「数了个数」与「量了一个点的半径」：固定总面积必然"
+                 "让半径 ∝ 1/√n，所以 B 条件下量半径策略的天花板是 1.000。要彻底排除半径"
+                 "策略，需要一个尺寸与数量解耦的**比较**任务，不在 Phase I 计划内。")
+        L.append("3. 条件 A 上接近 `线索天花板`（ink）说明自然布局里它用亮度；A、B 都高，"
+                 "既符合「真的计数」，也符合「先判别条件、再各用各的线索」这种条件化策略，"
+                 "本阶段的测量无法把两者分开。")
+        L.append("4. `MLP` 参考值本身是**弱基线**（每 item 仅 120 个布局、约 588 行训练"
+                 "样本），它偏低，应当下界读，而不是「前馈能达到的上限」。")
         L.append("")
 
     L.append("## Line B — 长期训练会不会从记忆跃迁到规则\n")
@@ -200,14 +240,16 @@ def main() -> int:
         return 1
     a_rows, b_rows = line_a_table(cells), line_b_verdicts(cells)
 
-    report = write_report(cells, a_rows, b_rows, paths.REPORTS / "phase1_report.md")
+    base = load_baselines()
+    report = write_report(cells, a_rows, b_rows,
+                          paths.REPORTS / "phase1_report.md", base)
     (paths.REPORTS / "phase1_report.md").write_text(report, encoding="utf-8")
 
     payload = {
         "spec_fingerprint": spec.fingerprint(),
         "cells": {k: {kk: vv for kk, vv in v.items() if kk != "history"}
                   for k, v in cells.items()},
-        "line_a": a_rows, "line_b": b_rows,
+        "line_a": a_rows, "line_b": b_rows, "references": base,
     }
     (paths.DATA_PROCESSED / "phase1_summary.json").write_text(
         json.dumps(payload, indent=2, default=str), encoding="utf-8")
