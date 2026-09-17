@@ -1002,3 +1002,157 @@ def plot_propagation(calibration: dict, out: Path):
     ax.legend(fontsize=7)
     ax.grid(alpha=0.15)
     return _save(fig, out)
+
+# --------------------------------------------------------------------------- #
+# Phase I
+# --------------------------------------------------------------------------- #
+def _probe_xy(history: list[dict], key: str) -> tuple[list[int], list[float]]:
+    xs, ys = [], []
+    for r in history:
+        v = r.get(key)
+        x = int(r.get("updates", 0))
+        if isinstance(v, (int, float)) and v == v:
+            xs.append(x)
+            ys.append(float(v))
+    return xs, ys
+
+
+def plot_phase1_line_a(cells: dict[str, dict], out: Path, *, curves: tuple[str, ...] = ()):
+    """Line A: how far up the curriculum each brain got, and how fast.
+
+    Every cell is plotted against optimiser updates on a log axis, because the cells share
+    a budget but not an epoch: the whole point of the line is that capability is compared
+    at equal compute.
+    """
+    _style()
+    n = len(cells)
+    fig, axes = plt.subplots(1, 3, figsize=(13.5, 3.8))
+    order = sorted(cells, key=lambda k: k)
+    for i, name in enumerate(order):
+        hist = cells[name]["history"]
+        c = PALETTE[i % len(PALETTE)]
+        xs, ys = _probe_xy(hist, "seen_acc")
+        axes[0].plot(xs, ys, "o-", ms=3.5, lw=1.4, color=c,
+                     label=f"{name} ({cells[name]['task']})")
+        xa, ya = _probe_xy(hist, "seen_natural_acc")
+        if xa:
+            axes[0].plot(xa, ya, ":", lw=1.1, color=c, alpha=0.85)
+    axes[0].set_xscale("symlog", linthresh=100)
+    axes[0].set_xlabel("optimiser updates")
+    axes[0].set_ylabel("accuracy on taught items")
+    axes[0].set_title("Learning curves (solid: taught condition,\n"
+                      "dotted: the same items in the other condition)")
+    axes[0].legend(fontsize=7, loc="upper left")
+    axes[0].grid(alpha=0.25, lw=0.4)
+
+    finals = [cells[k]["final"].get("seen_acc", float("nan")) for k in order]
+    areas = [cells[k]["final"].get("seen_natural_acc", float("nan")) for k in order]
+    xpos = np.arange(len(order))
+    axes[1].bar(xpos - 0.2, finals, 0.38, color=C_ACCENT, label="taught condition")
+    axes[1].bar(xpos + 0.2, areas, 0.38, color=C_NEUTRAL, label="other condition")
+    axes[1].set_xticks(xpos)
+    axes[1].set_xticklabels(order, rotation=30, ha="right")
+    axes[1].set_ylabel("final accuracy")
+    axes[1].set_title("Final accuracy at the shared budget")
+    axes[1].legend(fontsize=7)
+    axes[1].grid(alpha=0.25, lw=0.4, axis="y")
+
+    for i, name in enumerate(order):
+        c = PALETTE[i % len(PALETTE)]
+        xs, ys = _probe_xy(cells[name]["history"], "train_acc")
+        axes[2].plot(xs, ys, "o-", ms=3.5, lw=1.4, color=c, label=f"{name} train")
+        xh, yh = _probe_xy(cells[name]["history"], "hold_acc")
+        if xh:
+            axes[2].plot(xh, yh, "s--", ms=3.5, lw=1.2, color=c, label=f"{name} held out")
+    axes[2].set_xscale("symlog", linthresh=100)
+    axes[2].set_xlabel("optimiser updates")
+    axes[2].set_ylabel("accuracy")
+    axes[2].set_title("Taught vs withheld (Line B cells)")
+    axes[2].legend(fontsize=7, loc="center left")
+    axes[2].grid(alpha=0.25, lw=0.4)
+    return _save(fig, out)
+
+
+def plot_phase1_emergence(cells: dict[str, dict], out: Path, verdicts: dict[str, dict]):
+    """Line B: the timeline that decides memorisation-then-rule vs no transition.
+
+    The top row is accuracy, the bottom row is the continuous evidence.  They are shown
+    together on purpose: a step in the top row with nothing in the bottom row is the
+    artefact the criteria reject, and the figure should make that visible rather than
+    leaving it to a table.
+    """
+    _style()
+    names = sorted(cells)
+    fig, axes = plt.subplots(2, max(len(names), 1), figsize=(6.4 * len(names), 6.0),
+                             squeeze=False)
+    for j, name in enumerate(names):
+        hist, v = cells[name]["history"], verdicts.get(name, {})
+        ax = axes[0][j]
+        for key, style, lab in (("train_acc", "-", "taught"),
+                                ("hold_acc", "-", "withheld"),
+                                ("unsup_acc", ":", "unsupported")):
+            xs, ys = _probe_xy(hist, key)
+            if xs:
+                ax.plot(xs, ys, style, marker="o", ms=3, lw=1.4, label=lab)
+        for t, lab, col in ((v.get("t_mem"), "T_mem", C_NEUTRAL),
+                            (v.get("t_grok"), "T_grok", C_ACCENT)):
+            if t:
+                ax.axvline(t, color=col, ls="--", lw=1.0)
+                ax.annotate(lab, (t, 0.04), fontsize=7, color=col, rotation=90)
+        ax.set_xscale("symlog", linthresh=100)
+        ax.set_ylim(-0.03, 1.03)
+        ax.set_title(f"{name} - {v.get('verdict', 'n/a')}")
+        ax.set_xlabel("optimiser updates")
+        ax.set_ylabel("accuracy")
+        ax.legend(fontsize=7, loc="center left")
+        ax.grid(alpha=0.25, lw=0.4)
+
+        ax = axes[1][j]
+        for key, lab in (("hold_ce", "held-out CE"), ("hold_p_correct", "P(correct)"),
+                         ("hold_margin", "margin")):
+            xs, ys = _probe_xy(hist, key)
+            if xs:
+                ax.plot(xs, ys, marker="o", ms=3, lw=1.3, label=lab)
+        ax.set_xscale("symlog", linthresh=100)
+        ax.set_xlabel("optimiser updates")
+        ax.set_title("continuous metrics on the withheld pairs")
+        ax.legend(fontsize=7)
+        ax.grid(alpha=0.25, lw=0.4)
+    return _save(fig, out)
+
+
+def plot_phase1_internal(cells: dict[str, dict], out: Path):
+    """Internal quantities: does the state reorganise when behaviour does?"""
+    _style()
+    fig, axes = plt.subplots(1, 3, figsize=(13.5, 3.8))
+    probe_keys = sorted({k for c in cells.values() for k in c["history"][-1]
+                         if k.startswith("probe_")})
+    for i, name in enumerate(sorted(cells)):
+        c = PALETTE[i % len(PALETTE)]
+        hist = cells[name]["history"]
+        for key in ("delta_abs_mean", "bias_abs_mean"):
+            xs, ys = _probe_xy(hist, key)
+            if xs:
+                axes[0].plot(xs, ys, "o-", ms=3, lw=1.3, color=c,
+                             label=f"{name} {key.replace('_abs_mean', '')}")
+        xs, ys = _probe_xy(hist, "activity_dim")
+        if xs:
+            axes[1].plot(xs, ys, "o-", ms=3, lw=1.3, color=c, label=name)
+        for key in probe_keys:
+            xs, ys = _probe_xy(hist, key)
+            if xs:
+                axes[2].plot(xs, ys, "o-", ms=3, lw=1.3, color=c,
+                             label=f"{name} {key[len('probe_'):]}")
+    axes[0].set_yscale("log")
+    axes[0].set_ylabel("mean |parameter|")
+    axes[0].set_title("Learned deviation from the measured wiring")
+    axes[1].set_ylabel("effective dimensionality")
+    axes[1].set_title("State dimensionality")
+    axes[2].set_ylabel("linear-probe accuracy")
+    axes[2].set_title("Decodability of the intermediate quantities")
+    for ax in axes:
+        ax.set_xscale("symlog", linthresh=100)
+        ax.set_xlabel("optimiser updates")
+        ax.legend(fontsize=6.5, ncol=2)
+        ax.grid(alpha=0.25, lw=0.4)
+    return _save(fig, out)

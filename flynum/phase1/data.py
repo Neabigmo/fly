@@ -29,7 +29,7 @@ from pathlib import Path
 import numpy as np
 
 from .. import paths
-from .spec import STIMULUS
+from .spec import EVAL_MODES, MODE_SUFFIX, STIMULUS, TRAIN_MODES
 from .tasks import TaskDef, build_dataset
 
 CACHE = paths.DATA_PROCESSED / "stimuli_phase1"
@@ -112,15 +112,24 @@ def split_of(pool: dict, task: TaskDef, *, n: int = 0, seed: int = 0) -> dict:
 
 def build_pools(task: TaskDef, sc, *, taught: set[tuple[int, ...]],
                 holdout: tuple[tuple[int, ...], ...], reps: int, seed: int,
-                eval_items: int, logger=None, workers: int = 1) -> dict:
+                eval_items: int, logger=None, workers: int = 1,
+                train_modes: tuple[str, ...] | None = None,
+                eval_modes: tuple[str, ...] | None = None) -> dict:
     """Taught / withheld / unsupported sets, with holdout purity asserted on the arrays.
 
-    The training pool covers the whole task item table and training selects rows by
-    membership, so the withheld rows are not merely unused -- they are not *reachable*
-    from the training set.  Each evaluation set gets its own small pool sized so that one
-    probe costs the same whether the task has 7 items or 54, which is what makes 12
-    probes affordable inside a 500,000-update run.
+    The training set is the taught items rendered in *every* taught condition and pooled,
+    and it is built by selecting rows whose item is taught, so the withheld rows are not
+    merely unused -- they are not reachable from the training set.  Each evaluation set
+    gets its own small pool sized so that one probe costs the same whether the task has 7
+    items or 54, which is what makes 12 probes affordable inside a 500,000-update run.
+
+    Every split exists once per evaluated condition.  ``seen`` / ``hold`` / ``unsup`` are
+    the average over the taught conditions -- accuracy on the training distribution -- and
+    the per-condition keys sit beside them, so a solution that works in one condition and
+    not another is visible rather than averaged away.
     """
+    train_modes = tuple(train_modes or TRAIN_MODES)
+    eval_modes = tuple(eval_modes or EVAL_MODES)
     held = set(holdout)
     taught = set(taught)
     if taught & held:
@@ -128,7 +137,8 @@ def build_pools(task: TaskDef, sc, *, taught: set[tuple[int, ...]],
                              f"withheld at the same time")
     unknown = taught - set(task.items)
     if unknown:
-        raise AssertionError(f"{task.name}: taught items not in the task: {sorted(unknown)[:3]}")
+        raise AssertionError(f"{task.name}: taught items not in the task: "
+                             f"{sorted(unknown)[:3]}")
 
     def eval_set(items: set[tuple[int, ...]], mode: str, salt: int) -> dict | None:
         if not items:
@@ -140,32 +150,43 @@ def build_pools(task: TaskDef, sc, *, taught: set[tuple[int, ...]],
         return split_of(pool, task, n=eval_items, seed=seed + salt)
 
     unsupported = set(task.items) - taught - held
-    pool = render_pool(task, sc, task.items, reps=reps, seed=seed, mode="A",
-                       logger=logger, workers=workers)
-    keep = np.array([tuple(it) in taught for it in pool["items"][pool["item_index"]]])
-    rows = np.nonzero(keep)[0]
+
+    # ---- the training set: every taught item in every taught condition ------------ #
+    parts = []
+    for i, mode in enumerate(train_modes):
+        pool = render_pool(task, sc, task.items, reps=reps, seed=seed + i, mode=mode,
+                           logger=logger, workers=workers)
+        keep = np.array([tuple(it) in taught for it in pool["items"][pool["item_index"]]])
+        rows = np.nonzero(keep)[0]
+        parts.append({
+            "images": pool["images"][rows],
+            "item_index": pool["item_index"][rows],
+            "items": pool["items"],
+            "labels": np.array([task.answer(tuple(it))
+                                for it in pool["items"][pool["item_index"][rows]]],
+                               dtype=np.int64),
+            "n": int(len(rows)), "mode": mode,
+        })
+    order = np.random.default_rng(seed + 7).permutation(sum(p["n"] for p in parts))
     train = {
-        "images": pool["images"][rows],
-        "item_index": pool["item_index"][rows],
-        "items": pool["items"],
-        "labels": np.array([task.answer(tuple(it))
-                            for it in pool["items"][pool["item_index"][rows]]], dtype=np.int64),
+        "images": np.concatenate([p["images"] for p in parts])[order],
+        "item_index": np.concatenate([p["item_index"] for p in parts])[order],
+        "items": parts[0]["items"],
+        "labels": np.concatenate([p["labels"] for p in parts])[order],
         "n_classes": task.n_classes,
-        "n": int(len(rows)),
+        "n": int(len(order)),
     }
 
-    splits = {
-        "train": train,
-        "taught": eval_set(taught, "A", 11),
-        "taught_area": eval_set(taught, "B", 12),
-        "holdout": eval_set(held, "A", 13),
-        "holdout_area": eval_set(held, "B", 14),
-        "unsupported": eval_set(unsupported, "A", 15),
-        "unsupported_area": eval_set(unsupported, "B", 16),
-    }
+    splits: dict = {"train": train}
+    for j, mode in enumerate(eval_modes):
+        suffix = MODE_SUFFIX.get(mode, f"_{mode.lower()}")
+        base = 30 + 10 * j
+        splits[f"taught{suffix}"] = eval_set(taught, mode, base + 1)
+        splits[f"holdout{suffix}"] = eval_set(held, mode, base + 2)
+        splits[f"unsupported{suffix}"] = eval_set(unsupported, mode, base + 3)
 
     # ---- purity, checked on the arrays that training will actually consume ------- #
-    train_items = {tuple(it) for it in pool["items"][train["item_index"]]}
+    train_items = {tuple(it) for it in train["items"][train["item_index"]]}
     leak = train_items & held
     if leak:
         raise AssertionError(f"{task.name}: {len(leak)} withheld items are in the "
@@ -174,20 +195,20 @@ def build_pools(task: TaskDef, sc, *, taught: set[tuple[int, ...]],
         raise AssertionError(f"{task.name}: training pool contains untaught items")
     if logger:
         logger.info(
-            "pools: %d taught items -> %d training rows | %d withheld | %d unsupported "
-            "| eval rows taught %d / holdout %d / unsupported %d",
-            len(taught), train["n"], len(held), len(unsupported),
-            splits["taught"]["n"],
-            splits["holdout"]["n"] if splits["holdout"] else 0,
-            splits["unsupported"]["n"] if splits["unsupported"] else 0,
+            "pools: %d taught items -> %d training rows from conditions %s | %d withheld "
+            "| %d unsupported | eval rows per condition %s",
+            len(taught), train["n"], "+".join(train_modes), len(held), len(unsupported),
+            {m or "A": (splits.get(f"taught{MODE_SUFFIX.get(m, '')}") or {}).get("n", 0)
+             for m in eval_modes},
         )
     return {
         "splits": splits,
         "taught_items": sorted(taught),
         "holdout_items": sorted(held),
         "unsupported_items": sorted(unsupported),
-        "pool_key": _pool_key(task, sc, task.items, reps=reps, seed=seed, mode="A"),
+        "train_modes": train_modes, "eval_modes": eval_modes,
+        "pool_key": {m: _pool_key(task, sc, task.items, reps=reps, seed=seed + i, mode=m)
+                     for i, m in enumerate(train_modes)},
         "stimulus_fingerprint": stimulus_fingerprint(sc),
         "n_train_rows": train["n"],
     }
-

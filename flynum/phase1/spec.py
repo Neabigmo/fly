@@ -63,13 +63,55 @@ STIMULUS: dict = {
     "ring_radius": 9.5,
 }
 
-#: Sequence timing.  Every phase length is shared by every task so that the number of
-#: recurrent steps per update is comparable across the curriculum.
+#: Sequence timing.  Phase lengths are shared by every task so that the number of
+#: recurrent steps per update is comparable across the curriculum.  The one exception is
+#: counting, which has a single group and no arithmetic to perform on it: it gets the
+#: 8-step window the earlier stages used for this task, because integrating seven blobs
+#: needs more than the 5 steps an operand window allows.  The cue window and the blank
+#: window are equal, so addition, cyclic addition and rule selection differ only in what
+#: is drawn in the middle window and never in how long anything lasts.
 TIME: dict = {
     "steps_operand": 5,   # each dot group is held for this many steps
     "steps_cue": 4,       # an operator glyph occupies the gap
     "steps_gap": 4,       # a blank delay when there is no glyph
+    "steps_count": 8,     # counting: one group, held longer
 }
+
+#: Which stimulus conditions are *taught*, and which are read out for reporting.
+#:
+#: This is a mixture, and it is a measurement rather than a preference.  Every counting
+#: condition leaks some scalar statistic, and which one it leaks is measurable:
+#:
+#: ============  ======  ======  ======  ======
+#: condition     ink     spread  radius  chance
+#: ============  ======  ======  ======  ======
+#: natural "A"   0.421   0.391   0.167   0.143
+#: area "B"      0.144   0.361   1.000   0.143
+#: envelope "C"  0.177   0.331   1.000   0.143
+#: ============  ======  ======  ======  ======
+#:
+#: (nearest-centroid accuracy from that single scalar, measured by
+#: ``scripts/30_condition_cues.py``).  The radius column is not an accident of the
+#: generator: holding the total area constant forces r proportional to 1/sqrt(n), so a
+#: constant-area condition always hands over a perfect size cue, while a condition with
+#: natural radii always hands over the brightness cue.  No single condition is cue-free.
+#:
+#: A first run taught the natural condition alone, and the network took the cue: 0.442 on
+#: the taught distribution with 0.139 on area-controlled stimuli against chance 0.1429.
+#: Teaching the mixture raises the bar for any single-scalar strategy, because each cue is
+#: live in only half the data -- and the pre-flight prints the best single-scalar accuracy
+#: on the mixture, so a result can be compared against that ceiling instead of being
+#: asserted to beat it.  Reporting still happens per condition, so a solution that works
+#: in one condition and not another is visible rather than averaged away.
+TRAIN_MODES: tuple[str, ...] = ("A", "B")
+
+#: Conditions evaluated at every probe.  "C" controls the envelope as well as the area and
+#: is never taught: it is the strongest transfer test available, and the condition in which
+#: the earlier study measured its largest connectome-specific effect.
+EVAL_MODES: tuple[str, ...] = ("A", "B", "C")
+
+#: Suffix used in metric keys for each evaluated condition ("A" is the unsuffixed primary).
+MODE_SUFFIX: dict[str, str] = {"A": "", "B": "_area", "C": "_env"}
 
 #: The optimizer, frozen here for the same reason the tasks are.
 #:
@@ -251,8 +293,13 @@ def probes_for(budget: int) -> tuple[int, ...]:
 
 #: The foundation both lines start from.
 FOUNDATION: list[TaskSpec] = [
-    TaskSpec(run="C0", line="F", task="count", brain="scratch", budget=50_000,
-             question="a unified counting brain over 1-7 dots; also the pretrain source"),
+    TaskSpec(run="C0", line="F", task="count", brain="scratch", budget=100_000,
+             question="a unified counting brain over 1-7 dots; also the pretrain source. "
+                      "Given twice the budget of a comparison cell because it is a "
+                      "prerequisite, not a condition: with the brightness cue removed, "
+                      "counting 1-7 has to be learned rather than read off, and a "
+                      "foundation that cannot count would make every curriculum cell a "
+                      "test of a brain that has nothing to transfer."),
 ]
 
 #: Line A -- capability ceiling under systematic teaching.  No holdouts anywhere.

@@ -39,8 +39,8 @@
     "legibility": {
       "acc_operator": 1.0,
       "acc_operator_vs_blank": 1.0,
-      "acc_count": 0.3125,
-      "count_over_chance": 2.1875,
+      "acc_count": 0.2916666567325592,
+      "count_over_chance": 2.0416665971279144,
       "ink_plus": 72.5,
       "ink_minus": 40.75,
       "ink_three_dots": 64.87492996454239,
@@ -48,9 +48,9 @@
     },
     "dynamics bounded": {
       "horizon": 32,
-      "peak_first": 0.10998741537332535,
-      "peak_last": 4.459757328033447,
-      "growth": 40.54788734598311,
+      "peak_first": 0.10999508947134018,
+      "peak_last": 4.466333389282227,
+      "growth": 40.60484345936147,
       "ok": true
     },
     "plan alignment": {
@@ -135,10 +135,34 @@
       ]
     },
     "task discriminability": {
-      "count": {
-        "chance": 0.1429,
-        "ink_baseline": 0.4483,
-        "spread_baseline": 0.3825
+      "cue_table": {
+        "A": {
+          "chance": 0.14285714285714285,
+          "ink": 0.42142857142857143,
+          "spread": 0.3914285714285714,
+          "radius_mean": 0.16714285714285715
+        },
+        "B": {
+          "chance": 0.14285714285714285,
+          "ink": 0.15285714285714286,
+          "spread": 0.37714285714285717,
+          "radius_mean": 1.0
+        },
+        "C": {
+          "chance": 0.14285714285714285,
+          "ink": 0.14857142857142858,
+          "spread": 0.3271428571428571,
+          "radius_mean": 1.0
+        }
+      },
+      "mixture_ceiling": {
+        "cue": "radius_mean",
+        "accuracy": 0.5835714285714286,
+        "per_condition": {
+          "A": 0.16714285714285715,
+          "B": 1.0
+        },
+        "chance": 0.14285714285714285
       },
       "cyc7": {
         "n_pairs": 49,

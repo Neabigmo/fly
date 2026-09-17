@@ -384,8 +384,10 @@ def run_cell(cell: Cell, *, logger=None, cfg: ExperimentConfig | None = None,
     n_train = train["n"]
     y_all = torch.as_tensor(train["labels"], dtype=torch.long)
     bs = cfg.train.batch_size
-    log.info("  training on %d rows (%d taught items); %d withheld; %d unsupported",
-             n_train, len(taught), len(held), len(pools["unsupported_items"]))
+    log.info("  training on %d rows in conditions %s (%d taught items); %d withheld; "
+             "%d unsupported; conditions %s are read out for reporting",
+             n_train, "+".join(pools["train_modes"]), len(taught), len(held),
+             len(pools["unsupported_items"]), "+".join(pools["eval_modes"]))
     log.info("  optimizer %s, constant lr %.0e, batch %d, %d updates = %.1f epochs",
              spec.OPTIM["optimizer"], cfg.train.lr_gain, bs, cell.budget,
              cell.budget * bs / max(n_train, 1))
@@ -397,37 +399,56 @@ def run_cell(cell: Cell, *, logger=None, cfg: ExperimentConfig | None = None,
         rec: dict = {"updates": int(step), "tag": tag,
                      "elapsed": round(time.time() - t0, 1),
                      "epochs": round(step * bs / max(n_train, 1), 3)}
-        for key, split in (("train", train), ("seen", splits["taught"]),
-                           ("area", splits["taught_area"]),
-                           ("hold", splits["holdout"]),
-                           ("hold_area", splits["holdout_area"]),
-                           ("unsup", splits["unsupported"]),
-                           ("unsup_area", splits["unsupported_area"])):
-            m = evaluate_split(model, retina, split, plan, device=device)
-            for k, v in m.items():
-                if k != "n":
-                    rec[f"{key}_{k}"] = v
+        # every split is evaluated in each condition; ``seen``/``hold``/``unsup`` are then
+        # the average over the taught conditions, which is accuracy on the training
+        # distribution, and the per-condition values are kept beside them
+        by_mode: dict[str, list[float]] = {}
+        for split_name in ("taught", "holdout", "unsupported"):
+            for mode in pools["eval_modes"]:
+                suffix = spec.MODE_SUFFIX.get(mode, f"_{mode.lower()}")
+                m = evaluate_split(model, retina, splits[f"{split_name}{suffix}"], plan,
+                                   device=device)
+                if not m:
+                    continue
+                for k, v in m.items():
+                    if k != "n":
+                        rec[f"{split_name}{suffix}_{k}"] = v
+                if mode in pools["train_modes"]:
+                    by_mode.setdefault(split_name, []).append(m["acc"])
+        for split_name in ("taught", "holdout", "unsupported"):
+            if by_mode.get(split_name):
+                short = {"taught": "seen", "holdout": "hold",
+                         "unsupported": "unsup"}[split_name]
+                rec[f"{short}_acc"] = float(np.mean(by_mode[split_name]))
+        m = evaluate_split(model, retina, train, plan, device=device)
+        for k, v in m.items():
+            if k != "n":
+                rec[f"train_{k}"] = v
+        # the internal probes read the state in the primary taught condition
         rec.update(internal_metrics(model, retina, splits["taught"], plan,
                                     probe_steps=cell.probe_steps, device=device))
         ctx.metric(**rec)
         history.append(rec)
         if show_progress:
-            log.info("  [%7d upd | %5.1f ep] train %s | seen-a %.4f%s | hold %s%s | "
-                     "probe a %.3f%s",
-                     step, rec["epochs"],
-                     _fmt(rec.get("train_acc")), rec.get("seen_acc", float("nan")),
-                     _fmt_extra(rec, "seen_area_acc"),
-                     _fmt(rec.get("hold_acc")),
-                     _fmt_extra(rec, "hold_area_acc"),
-                     rec.get("probe_a", float("nan")),
-                     _fmt_extra(rec, "probe_partial"))
+            probes = " ".join(f"{k[len('probe_'):]}={v:.3f}"
+                              for k, v in rec.items()
+                              if k.startswith("probe_") and v == v)
+            taught = " ".join(
+                "{}={:.3f}".format(mode, rec.get(
+                    "taught{}_acc".format(spec.MODE_SUFFIX.get(mode, "")), float("nan")))
+                for mode in pools["eval_modes"])
+            held = " ".join(
+                "{}={:.3f}".format(mode, rec.get(
+                    "holdout{}_acc".format(spec.MODE_SUFFIX.get(mode, "")), float("nan")))
+                for mode in pools["eval_modes"])
+            log.info("  [%7d upd | %5.1f ep] train %s | seen %s [%s] | hold %s [%s] | %s",
+                     step, rec["epochs"], _fmt(rec.get("train_acc")),
+                     _fmt(rec.get("seen_acc")), taught, _fmt(rec.get("hold_acc")),
+                     held, probes)
 
     def _fmt(v):
         return "  --  " if v is None else f"{v:.4f}"
 
-    def _fmt_extra(rec, key, label=""):
-        v = rec.get(key)
-        return "" if v is None else f" ({label}area {v:.4f})"
 
     record(0, "initial")
     todo = [p for p in sorted(set(cell.probes)) if p > 0]
@@ -472,6 +493,7 @@ def run_cell(cell: Cell, *, logger=None, cfg: ExperimentConfig | None = None,
         "recurrent_steps_per_update": plan.n_steps(),
         "probes": list(cell.probes), "warm_start": warm or None,
         "pool_key": pools["pool_key"],
+        "train_modes": pools["train_modes"], "eval_modes": pools["eval_modes"],
         "stimulus_fingerprint": pools["stimulus_fingerprint"],
         "spec_fingerprint": spec.fingerprint(),
         "optim": spec.OPTIM, "dynamics": spec.DYNAMICS,

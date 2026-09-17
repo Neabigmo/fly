@@ -64,6 +64,9 @@ class TaskDef:
     #: full phase template including blanks, in order
     template: tuple[str, ...]
     items: tuple[tuple[int, ...], ...]
+    #: overrides ``TIME["steps_operand"]`` for this task's dot windows.  Counting uses it:
+    #: one group, no arithmetic on it, and seven blobs to integrate
+    operand_steps: int | None = None
 
     @property
     def label(self) -> str:
@@ -157,6 +160,7 @@ def _build() -> dict[str, TaskDef]:
         name="count", n_classes=7, label_offset=OPERAND_MIN,
         content=("dot",), template=("dot",),
         items=tuple((n,) for n in range(OPERAND_MIN, OPERAND_MAX + 1)),
+        operand_steps=TIME["steps_count"],
     )
 
     # addition and cyclic addition share a template exactly: operand, delay, operand
@@ -299,6 +303,10 @@ class SequencePlan:
     steps_operand: int = field(default_factory=lambda: TIME["steps_operand"])
     steps_cue: int = field(default_factory=lambda: TIME["steps_cue"])
     steps_gap: int = field(default_factory=lambda: TIME["steps_gap"])
+
+    def __post_init__(self) -> None:
+        if self.task.operand_steps is not None:
+            self.steps_operand = int(self.task.operand_steps)
 
     def phase_images(self, row: np.ndarray) -> list[tuple[str, np.ndarray]]:
         """The ``(kind, image)`` pairs of one row, in template order."""

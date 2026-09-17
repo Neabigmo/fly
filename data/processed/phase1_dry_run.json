@@ -1,0 +1,708 @@
+{
+  "C0": {
+    "run_id": "dry_C0_s0",
+    "cell": "C0",
+    "line": "F",
+    "task": "count",
+    "brain": "scratch",
+    "model": "M1",
+    "circuit": "core",
+    "graph": "real",
+    "model_seed": 0,
+    "budget": 40,
+    "updates_run": 40,
+    "n_train_rows": 42,
+    "n_taught_items": 7,
+    "n_holdout_items": 0,
+    "n_unsupported_items": 0,
+    "recurrent_steps_per_update": 8,
+    "probes": [
+      0,
+      10,
+      20,
+      40
+    ],
+    "warm_start": null,
+    "pool_key": {
+      "A": "dot_4769f297a2_rep3_A_169d05eca67f_seed1234",
+      "B": "dot_4769f297a2_rep3_B_169d05eca67f_seed1235"
+    },
+    "train_modes": [
+      "A",
+      "B"
+    ],
+    "eval_modes": [
+      "A",
+      "B",
+      "C"
+    ],
+    "stimulus_fingerprint": "169d05eca67f",
+    "spec_fingerprint": "fd0c71ca2f0b9046",
+    "optim": {
+      "optimizer": "AdamW",
+      "schedule": "constant",
+      "lr_gain": 0.003,
+      "lr_readout": 0.003,
+      "wd_readout": 0.0001,
+      "grad_clip": 1.0,
+      "lambda_gain": 0.001,
+      "batch_size": 64
+    },
+    "dynamics": {
+      "circuit": "core",
+      "signed_synapses": true,
+      "w_scale": 0.5,
+      "alpha": 0.1,
+      "learn": [
+        "delta",
+        "bias"
+      ],
+      "readout_standardize": false,
+      "readout": "vpn"
+    },
+    "taught_items": [
+      [
+        1
+      ],
+      [
+        2
+      ],
+      [
+        3
+      ],
+      [
+        4
+      ],
+      [
+        5
+      ],
+      [
+        6
+      ],
+      [
+        7
+      ]
+    ],
+    "holdout_items": [],
+    "unsupported_items": [],
+    "final": {
+      "updates": 40,
+      "tag": "updates=40",
+      "elapsed": 33.8,
+      "epochs": 60.952,
+      "taught_acc": 0.125,
+      "taught_ce": 1.9455609321594238,
+      "taught_p_correct": 0.14341694116592407,
+      "taught_margin": -0.12302643805742264,
+      "taught_entropy": 1.9421669244766235,
+      "taught_chance": 0.14285714285714285,
+      "taught_area_acc": 0.1458333283662796,
+      "taught_area_ce": 1.9532724618911743,
+      "taught_area_p_correct": 0.14235936105251312,
+      "taught_area_margin": -0.13399909436702728,
+      "taught_area_entropy": 1.9420217275619507,
+      "taught_area_chance": 0.14285714285714285,
+      "taught_env_acc": 0.125,
+      "taught_env_ce": 1.954349160194397,
+      "taught_env_p_correct": 0.1421615183353424,
+      "taught_env_margin": -0.13657693564891815,
+      "taught_env_entropy": 1.942095398902893,
+      "taught_env_chance": 0.14285714285714285,
+      "seen_acc": 0.1354166641831398,
+      "train_acc": 0.2142857164144516,
+      "train_ce": 1.9378176927566528,
+      "train_p_correct": 0.14458972215652466,
+      "train_margin": -0.11414748430252075,
+      "train_entropy": 1.9420865774154663,
+      "train_chance": 0.14285714285714285,
+      "delta_abs_mean": 0.03390311077237129,
+      "delta_abs_max": 0.13491204380989075,
+      "bias_abs_mean": 0.07730504870414734,
+      "h_peak": 0.6757745742797852,
+      "h_mean": 0.05651846155524254,
+      "activity_dim": 17.65784454345703,
+      "probe_n": 0.1666666716337204
+    },
+    "wall_seconds": 46.0
+  },
+  "A2-S": {
+    "run_id": "dry_A2-S_s0",
+    "cell": "A2-S",
+    "line": "A",
+    "task": "addsub",
+    "brain": "scratch",
+    "model": "M1",
+    "circuit": "core",
+    "graph": "real",
+    "model_seed": 0,
+    "budget": 40,
+    "updates_run": 40,
+    "n_train_rows": 156,
+    "n_taught_items": 26,
+    "n_holdout_items": 0,
+    "n_unsupported_items": 0,
+    "recurrent_steps_per_update": 14,
+    "probes": [
+      0,
+      10,
+      20,
+      40
+    ],
+    "warm_start": null,
+    "pool_key": {
+      "A": "dot-op-dot_c89a845ef0_rep3_A_169d05eca67f_seed1234",
+      "B": "dot-op-dot_c89a845ef0_rep3_B_169d05eca67f_seed1235"
+    },
+    "train_modes": [
+      "A",
+      "B"
+    ],
+    "eval_modes": [
+      "A",
+      "B",
+      "C"
+    ],
+    "stimulus_fingerprint": "169d05eca67f",
+    "spec_fingerprint": "fd0c71ca2f0b9046",
+    "optim": {
+      "optimizer": "AdamW",
+      "schedule": "constant",
+      "lr_gain": 0.003,
+      "lr_readout": 0.003,
+      "wd_readout": 0.0001,
+      "grad_clip": 1.0,
+      "lambda_gain": 0.001,
+      "batch_size": 64
+    },
+    "dynamics": {
+      "circuit": "core",
+      "signed_synapses": true,
+      "w_scale": 0.5,
+      "alpha": 0.1,
+      "learn": [
+        "delta",
+        "bias"
+      ],
+      "readout_standardize": false,
+      "readout": "vpn"
+    },
+    "taught_items": [
+      [
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        2
+      ],
+      [
+        1,
+        0,
+        3
+      ],
+      [
+        1,
+        0,
+        4
+      ],
+      [
+        1,
+        1,
+        1
+      ],
+      [
+        2,
+        0,
+        1
+      ],
+      [
+        2,
+        0,
+        2
+      ],
+      [
+        2,
+        0,
+        3
+      ],
+      [
+        2,
+        0,
+        4
+      ],
+      [
+        2,
+        1,
+        1
+      ],
+      [
+        2,
+        1,
+        2
+      ],
+      [
+        3,
+        0,
+        1
+      ],
+      [
+        3,
+        0,
+        2
+      ],
+      [
+        3,
+        0,
+        3
+      ],
+      [
+        3,
+        0,
+        4
+      ],
+      [
+        3,
+        1,
+        1
+      ],
+      [
+        3,
+        1,
+        2
+      ],
+      [
+        3,
+        1,
+        3
+      ],
+      [
+        4,
+        0,
+        1
+      ],
+      [
+        4,
+        0,
+        2
+      ],
+      [
+        4,
+        0,
+        3
+      ],
+      [
+        4,
+        0,
+        4
+      ],
+      [
+        4,
+        1,
+        1
+      ],
+      [
+        4,
+        1,
+        2
+      ],
+      [
+        4,
+        1,
+        3
+      ],
+      [
+        4,
+        1,
+        4
+      ]
+    ],
+    "holdout_items": [],
+    "unsupported_items": [],
+    "final": {
+      "updates": 40,
+      "tag": "updates=40",
+      "elapsed": 91.7,
+      "epochs": 16.41,
+      "taught_acc": 0.1666666716337204,
+      "taught_ce": 2.1417782306671143,
+      "taught_p_correct": 0.12244731187820435,
+      "taught_margin": -0.4128737449645996,
+      "taught_entropy": 2.147902250289917,
+      "taught_chance": 0.1111111111111111,
+      "taught_area_acc": 0.1666666716337204,
+      "taught_area_ce": 2.1476855278015137,
+      "taught_area_p_correct": 0.12188532948493958,
+      "taught_area_margin": -0.417054682970047,
+      "taught_area_entropy": 2.1479220390319824,
+      "taught_area_chance": 0.1111111111111111,
+      "taught_env_acc": 0.1666666716337204,
+      "taught_env_ce": 2.1549437046051025,
+      "taught_env_p_correct": 0.12092164158821106,
+      "taught_env_margin": -0.42355576157569885,
+      "taught_env_entropy": 2.1479485034942627,
+      "taught_env_chance": 0.1111111111111111,
+      "seen_acc": 0.1666666716337204,
+      "train_acc": 0.1538461595773697,
+      "train_ce": 2.1538281440734863,
+      "train_p_correct": 0.12087094783782959,
+      "train_margin": -0.4275933802127838,
+      "train_entropy": 2.1478986740112305,
+      "train_chance": 0.1111111111111111,
+      "delta_abs_mean": 0.04458728805184364,
+      "delta_abs_max": 0.11651933938264847,
+      "bias_abs_mean": 0.07300791889429092,
+      "h_peak": 0.9287571310997009,
+      "h_mean": 0.06542498618364334,
+      "activity_dim": 15.954954147338867,
+      "probe_a": 0.125,
+      "probe_b": 0.0833333358168602,
+      "probe_answer": 0.125
+    },
+    "wall_seconds": 112.5
+  },
+  "B1-S": {
+    "run_id": "dry_B1-S_s0",
+    "cell": "B1-S",
+    "line": "B",
+    "task": "add",
+    "brain": "scratch",
+    "model": "M1",
+    "circuit": "core",
+    "graph": "real",
+    "model_seed": 0,
+    "budget": 40,
+    "updates_run": 40,
+    "n_train_rows": 90,
+    "n_taught_items": 15,
+    "n_holdout_items": 2,
+    "n_unsupported_items": 32,
+    "recurrent_steps_per_update": 14,
+    "probes": [
+      0,
+      10,
+      20,
+      40
+    ],
+    "warm_start": null,
+    "pool_key": {
+      "A": "dot-blank-dot_cd316fc6b6_rep3_A_169d05eca67f_seed1234",
+      "B": "dot-blank-dot_cd316fc6b6_rep3_B_169d05eca67f_seed1235"
+    },
+    "train_modes": [
+      "A",
+      "B"
+    ],
+    "eval_modes": [
+      "A",
+      "B",
+      "C"
+    ],
+    "stimulus_fingerprint": "169d05eca67f",
+    "spec_fingerprint": "fd0c71ca2f0b9046",
+    "optim": {
+      "optimizer": "AdamW",
+      "schedule": "constant",
+      "lr_gain": 0.003,
+      "lr_readout": 0.003,
+      "wd_readout": 0.0001,
+      "grad_clip": 1.0,
+      "lambda_gain": 0.001,
+      "batch_size": 64
+    },
+    "dynamics": {
+      "circuit": "core",
+      "signed_synapses": true,
+      "w_scale": 0.5,
+      "alpha": 0.1,
+      "learn": [
+        "delta",
+        "bias"
+      ],
+      "readout_standardize": false,
+      "readout": "vpn"
+    },
+    "taught_items": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        7
+      ]
+    ],
+    "holdout_items": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "unsupported_items": [
+      [
+        2,
+        4
+      ],
+      [
+        2,
+        5
+      ],
+      [
+        2,
+        6
+      ],
+      [
+        3,
+        1
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        4
+      ],
+      [
+        3,
+        5
+      ],
+      [
+        3,
+        6
+      ],
+      [
+        4,
+        1
+      ],
+      [
+        4,
+        2
+      ],
+      [
+        4,
+        3
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        4,
+        5
+      ],
+      [
+        4,
+        6
+      ],
+      [
+        5,
+        1
+      ],
+      [
+        5,
+        2
+      ],
+      [
+        5,
+        3
+      ],
+      [
+        5,
+        4
+      ],
+      [
+        5,
+        5
+      ],
+      [
+        5,
+        6
+      ],
+      [
+        6,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        6,
+        3
+      ],
+      [
+        6,
+        4
+      ],
+      [
+        6,
+        5
+      ],
+      [
+        6,
+        6
+      ],
+      [
+        7,
+        1
+      ],
+      [
+        7,
+        2
+      ],
+      [
+        7,
+        3
+      ],
+      [
+        7,
+        4
+      ],
+      [
+        7,
+        5
+      ],
+      [
+        7,
+        6
+      ]
+    ],
+    "final": {
+      "updates": 40,
+      "tag": "updates=40",
+      "elapsed": 94.7,
+      "epochs": 28.444,
+      "taught_acc": 0.1041666641831398,
+      "taught_ce": 2.608743667602539,
+      "taught_p_correct": 0.08257319778203964,
+      "taught_margin": -0.7693198323249817,
+      "taught_entropy": 2.4654462337493896,
+      "taught_chance": 0.07692307692307693,
+      "taught_area_acc": 0.125,
+      "taught_area_ce": 2.5501413345336914,
+      "taught_area_p_correct": 0.08698270469903946,
+      "taught_area_margin": -0.7087827324867249,
+      "taught_area_entropy": 2.4652464389801025,
+      "taught_area_chance": 0.07692307692307693,
+      "taught_env_acc": 0.1666666716337204,
+      "taught_env_ce": 2.5557913780212402,
+      "taught_env_p_correct": 0.08747781068086624,
+      "taught_env_margin": -0.7119331955909729,
+      "taught_env_entropy": 2.4655072689056396,
+      "taught_env_chance": 0.07692307692307693,
+      "holdout_acc": 0.0,
+      "holdout_ce": 2.6547372341156006,
+      "holdout_p_correct": 0.07031763345003128,
+      "holdout_margin": -0.822258710861206,
+      "holdout_entropy": 2.465318441390991,
+      "holdout_chance": 0.07692307692307693,
+      "holdout_area_acc": 0.0,
+      "holdout_area_ce": 2.6529462337493896,
+      "holdout_area_p_correct": 0.07044360041618347,
+      "holdout_area_margin": -0.8203133940696716,
+      "holdout_area_entropy": 2.465252637863159,
+      "holdout_area_chance": 0.07692307692307693,
+      "holdout_env_acc": 0.0,
+      "holdout_env_ce": 2.653640031814575,
+      "holdout_env_p_correct": 0.07039450109004974,
+      "holdout_env_margin": -0.8219838738441467,
+      "holdout_env_entropy": 2.4653966426849365,
+      "holdout_env_chance": 0.07692307692307693,
+      "unsupported_acc": 0.0416666679084301,
+      "unsupported_ce": 2.7613589763641357,
+      "unsupported_p_correct": 0.0677618756890297,
+      "unsupported_margin": -0.9276838302612305,
+      "unsupported_entropy": 2.4654481410980225,
+      "unsupported_chance": 0.07692307692307693,
+      "unsupported_area_acc": 0.0416666679084301,
+      "unsupported_area_ce": 2.7333762645721436,
+      "unsupported_area_p_correct": 0.06913024187088013,
+      "unsupported_area_margin": -0.8979189991950989,
+      "unsupported_area_entropy": 2.465238571166992,
+      "unsupported_area_chance": 0.07692307692307693,
+      "unsupported_env_acc": 0.0416666679084301,
+      "unsupported_env_ce": 2.743170976638794,
+      "unsupported_env_p_correct": 0.068651482462883,
+      "unsupported_env_margin": -0.9076687693595886,
+      "unsupported_env_entropy": 2.46537184715271,
+      "unsupported_env_chance": 0.07692307692307693,
+      "seen_acc": 0.1145833320915699,
+      "hold_acc": 0.0,
+      "unsup_acc": 0.0416666679084301,
+      "train_acc": 0.13333334028720856,
+      "train_ce": 2.548676013946533,
+      "train_p_correct": 0.08762404322624207,
+      "train_margin": -0.7071555256843567,
+      "train_entropy": 2.465304136276245,
+      "train_chance": 0.07692307692307693,
+      "delta_abs_mean": 0.04388749599456787,
+      "delta_abs_max": 0.1083974838256836,
+      "bias_abs_mean": 0.07274456322193146,
+      "h_peak": 0.7255796194076538,
+      "h_mean": 0.06619352847337723,
+      "activity_dim": 17.23404884338379,
+      "probe_a": 0.625,
+      "probe_b": 0.125,
+      "probe_sum": 0.1666666716337204
+    },
+    "wall_seconds": 110.6
+  }
+}
