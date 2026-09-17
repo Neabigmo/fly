@@ -40,6 +40,12 @@ run_id,stage,task,model,circuit,graph,n_train,model_seed,shuffle_seed,n_params,b
 7d_spec_1.4106_shuffled_s0,7d,count,M1,core,shuffled,20000,0,0,1249509.0,0.7032,0.705,0.4652,0.4866,0.4198,,,,1797.3,0,8,0.2,1.4106,False,False,60.0,18780.0,64
 7d_spec_1.4106_shuffled_s1,7d,count,M1,core,shuffled,20000,1,1,1249509.0,0.702,0.6998,0.462,0.5224,0.4212,,,,1832.7,0,8,0.2,1.4106,False,False,60.0,18780.0,64
 7d_spec_1.4106_shuffled_s2,7d,count,M1,core,shuffled,20000,2,2,1249509.0,0.7016,0.7,0.4716,0.477,0.4378,,,,1834.2,0,8,0.2,1.4106,False,False,60.0,18780.0,64
+8_curr_pretrained_real_h23-32_s0,,add_curriculum,M1,core,real,20000,0,0,,,,,,,,,,,0,8,0.1,1.0,False,False,40.0,,64
+8_curr_pretrained_real_h23-32_s1,,add_curriculum,M1,core,real,20000,1,0,,,,,,,,,,,0,8,0.1,1.0,False,False,56.0,,64
+8_curr_pretrained_real_h23-32_s2,,add_curriculum,M1,core,real,20000,2,0,,,,,,,,,,,0,8,0.1,1.0,False,False,69.0,,64
+8_curr_pretrained_shuffled_h23-32_s0,,add_curriculum,M1,core,shuffled,20000,0,0,,,,,,,,,,,0,8,0.1,1.0,False,False,31.0,,64
+8_curr_pretrained_shuffled_h23-32_s1,,add_curriculum,M1,core,shuffled,20000,1,1,,,,,,,,,,,0,8,0.1,1.0,False,False,70.0,,64
+8_curr_pretrained_shuffled_h23-32_s2,,add_curriculum,M1,core,shuffled,20000,2,2,,,,,,,,,,,0,8,0.1,1.0,False,False,51.0,,64
 8_curr_scratch_real_h23-32_s0,,add_curriculum,M1,core,real,20000,0,0,,,,,,,,,,,0,8,0.1,1.0,False,False,31.0,,64
 8_curr_scratch_real_h23-32_s1,,add_curriculum,M1,core,real,20000,1,0,,,,,,,,,,,0,8,0.1,1.0,False,False,70.0,,64
 8_curr_scratch_real_h23-32_s2,,add_curriculum,M1,core,real,20000,2,0,,,,,,,,,,,0,8,0.1,1.0,False,False,26.0,,64

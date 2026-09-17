@@ -1,0 +1,30 @@
+08:03:51 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | run 8_curr_pretrained_real_h23-32_s2 started -> /root/autodl-tmp/fly/runs/8_curr_pretrained_real_h23-32_s2
+08:03:51 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | CURRICULUM | graph=real circuit=core pretrain=s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46 scratch=False | operand_epochs=15  w=(1.00,1.00,1.00)
+08:03:51 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | ------------------------------------------------------------------------------
+08:03:51 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | circuit core loaded from cache: 33480 neurons / 1170024 edges
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | readout: visual_projection (VPN) -> 9200 neurons
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | addition data loaded from cache (8400 train pairs items)
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | lesson 1 (warm start): transferred 2 recurrent tensors from s2_count_M1_core_real_N20000_m0_sh0_7ab4bc3c46 (2 readout tensors left fresh)
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   source was trained at alpha=0.2 steps=8 w_scale=1.0 signed=False; this run uses alpha=0.1 steps=14 -- warm start crosses the integration rate
+08:03:52 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | readout standardisation: {'standardised': False}
+08:04:05 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch   0 | operands | loss 2.3054 | a 0.328 b 0.001 | sum 0.836
+08:05:08 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch   5 | operands | loss 1.9488 | a 0.403 b 0.140 | sum 0.784
+08:06:12 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  10 | operands | loss 1.7764 | a 0.608 b 0.009 | sum 0.812
+08:07:16 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  15 | a+b | loss 3.4104 | a 0.607 b 0.026 | sum 0.001
+08:08:19 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  20 | a+b | loss 3.0737 | a 0.588 b 0.013 | sum 0.065
+08:09:23 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  25 | a+b | loss 2.9176 | a 0.591 b 0.023 | sum 0.093
+08:10:28 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  30 | a+b | loss 2.8241 | a 0.592 b 0.038 | sum 0.167
+08:11:32 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  35 | a+b | loss 2.7767 | a 0.650 b 0.110 | sum 0.029
+08:12:36 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  40 | a+b | loss 2.7140 | a 0.697 b 0.032 | sum 0.069
+08:13:40 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  45 | a+b | loss 2.6321 | a 0.677 b 0.044 | sum 0.026
+08:14:43 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  50 | a+b | loss 2.6184 | a 0.548 b 0.102 | sum 0.088
+08:15:47 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  55 | a+b | loss 2.5665 | a 0.624 b 0.079 | sum 0.065
+08:16:51 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  60 | a+b | loss 2.5287 | a 0.687 b 0.203 | sum 0.033
+08:17:55 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   epoch  65 | a+b | loss 2.5382 | a 0.782 b 0.058 | sum 0.111
+08:18:33 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 |   early stop at epoch 68 (best 48)
+08:18:34 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | ------------------------------------------------------------------------------
+08:18:34 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | a: train 0.8485 test 0.7758 | b: train 0.5480 test 0.1950 | sum: train 0.4989 test 0.0408
+08:18:34 | INFO    | flynum.run.8_curr_pretrained_real_h23-32_s2 | run 8_curr_pretrained_real_h23-32_s2 finished: ok (882.9s)

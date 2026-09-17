@@ -1,0 +1,221 @@
+[
+  {
+    "run_id": "8_curr_pretrained_shuffled_h23-32_s0",
+    "task": "add_curriculum",
+    "graph": "shuffled",
+    "circuit": "core",
+    "model_seed": 0,
+    "scratch": false,
+    "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+    "curriculum": {
+      "operand_epochs": 15,
+      "w_a": 1.0,
+      "w_b": 1.0,
+      "w_sum": 1.0,
+      "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "scratch": false
+    },
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "acc_a_test": 0.4325,
+    "acc_b_test": 0.2825,
+    "sum_test": 0.0,
+    "acc_a_train": 0.626547619047619,
+    "acc_b_train": 0.5563095238095238,
+    "sum_train": 0.15071428571428572,
+    "chance_a": 0.25,
+    "chance_sum": 0.14285714285714285,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ],
+      "source": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "source_training": {
+        "alpha": 0.2,
+        "steps": 8,
+        "w_scale": 1.0,
+        "signed": false,
+        "n_train": 20000,
+        "max_steps": 0
+      }
+    },
+    "train_info": {
+      "best_val_acc": 0.3575,
+      "best_epoch": 10,
+      "epochs_run": 31,
+      "wall_seconds": 410.3
+    },
+    "sign_report": null,
+    "wall_seconds": 415.8,
+    "label": "shuffled/pretrained/lpo23/s0",
+    "holdout": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ]
+  },
+  {
+    "run_id": "8_curr_pretrained_shuffled_h23-32_s1",
+    "task": "add_curriculum",
+    "graph": "shuffled",
+    "circuit": "core",
+    "model_seed": 1,
+    "scratch": false,
+    "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+    "curriculum": {
+      "operand_epochs": 15,
+      "w_a": 1.0,
+      "w_b": 1.0,
+      "w_sum": 1.0,
+      "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "scratch": false
+    },
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "acc_a_test": 0.41333333333333333,
+    "acc_b_test": 0.32916666666666666,
+    "sum_test": 0.015,
+    "acc_a_train": 0.6575,
+    "acc_b_train": 0.5753571428571429,
+    "sum_train": 0.4655952380952381,
+    "chance_a": 0.25,
+    "chance_sum": 0.14285714285714285,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ],
+      "source": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "source_training": {
+        "alpha": 0.2,
+        "steps": 8,
+        "w_scale": 1.0,
+        "signed": false,
+        "n_train": 20000,
+        "max_steps": 0
+      }
+    },
+    "train_info": {
+      "best_val_acc": 0.37124999999999997,
+      "best_epoch": 59,
+      "epochs_run": 70,
+      "wall_seconds": 926.6
+    },
+    "sign_report": null,
+    "wall_seconds": 929.9,
+    "label": "shuffled/pretrained/lpo23/s1",
+    "holdout": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ]
+  },
+  {
+    "run_id": "8_curr_pretrained_shuffled_h23-32_s2",
+    "task": "add_curriculum",
+    "graph": "shuffled",
+    "circuit": "core",
+    "model_seed": 2,
+    "scratch": false,
+    "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+    "curriculum": {
+      "operand_epochs": 15,
+      "w_a": 1.0,
+      "w_b": 1.0,
+      "w_sum": 1.0,
+      "pretrain_from": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "scratch": false
+    },
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "acc_a_test": 0.45416666666666666,
+    "acc_b_test": 0.24666666666666667,
+    "sum_test": 0.09166666666666666,
+    "acc_a_train": 0.6027380952380952,
+    "acc_b_train": 0.6020238095238095,
+    "sum_train": 0.44892857142857145,
+    "chance_a": 0.25,
+    "chance_sum": 0.14285714285714285,
+    "transferred": {
+      "transferred": [
+        "delta",
+        "bias"
+      ],
+      "skipped": [
+        "readout.weight",
+        "readout.bias"
+      ],
+      "source": "s2_count_M1_core_shuffled_N20000_m0_sh0_22058eb561",
+      "source_training": {
+        "alpha": 0.2,
+        "steps": 8,
+        "w_scale": 1.0,
+        "signed": false,
+        "n_train": 20000,
+        "max_steps": 0
+      }
+    },
+    "train_info": {
+      "best_val_acc": 0.35041666666666665,
+      "best_epoch": 30,
+      "epochs_run": 51,
+      "wall_seconds": 674.9
+    },
+    "sign_report": null,
+    "wall_seconds": 678.4,
+    "label": "shuffled/pretrained/lpo23/s2",
+    "holdout": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ]
+  }
+]

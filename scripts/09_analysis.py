@@ -397,6 +397,49 @@ def _section_curriculum(lines: list, summaries: list[dict]) -> None:
         A("")
         lines.extend(_table([s for v in others.values() for s in v], with_holdout=True))
         A("")
+    # ---------------------------------------------------------------- #
+    # The pre-registered pass line for the curriculum.
+    cells: dict[tuple[str, str], list[dict]] = {}
+    for s in by_holdout[primary]:
+        cells.setdefault(
+            (s.get("graph", "?"), "scratch" if s.get("scratch") else "pretrained"), []
+        ).append(s)
+    if len(cells) >= 2:
+        chance = 1.0 / 7
+        A("**按 §6.2 预先锁定的合格线判读**（合格线：`real/pretrained` 的 unseen 高于 chance "
+          "0.10 **且**高于 `real/scratch`，否则「计数预训练迁移」这句话没有证据）：")
+        A("")
+        rows = []
+        for key in sorted(cells):
+            g = cells[key]
+            unseen = float(np.mean([x["sum_test"] for x in g]))
+            seen = float(np.mean([x["sum_train"] for x in g]))
+            rows.append([f"{key[0]}/{key[1]}", str(len(g)), f"{seen:.4f}", f"{unseen:.4f}",
+                         f"{unseen - chance:+.4f}"])
+        lines.extend(_md_table(["条件", "runs", "seen", "unseen", "unseen − chance"], rows))
+        A("")
+        rp, rs = cells.get(("real", "pretrained")), cells.get(("real", "scratch"))
+        if rp and rs:
+            u_pre = float(np.mean([x["sum_test"] for x in rp]))
+            u_scr = float(np.mean([x["sum_test"] for x in rs]))
+            a_pre = float(np.mean([x["acc_a_test"] for x in rp]))
+            a_scr = float(np.mean([x["acc_a_test"] for x in rs]))
+            A(f"`real/pretrained` 的 unseen 是 **{u_pre:.4f}**（chance 0.143，差 "
+              f"{u_pre - chance:+.4f}），而 `real/scratch` 是 **{u_scr:.4f}** —— 温热启动"
+              "**没有**帮助未见组合，它甚至更低。"
+              + ("**因此「计数预训练能迁移到加法」这句话没有证据**，按预先锁定的规则不能写。"
+                 if (u_pre - chance < 0.10) or (u_pre <= u_scr)
+                 else "两条合格线都满足，迁移成立。"))
+            A("")
+            A(f"但温热启动有一个**清楚的正效应**：它把**操作数**读得更准（`a` 从 {a_scr:.4f} "
+              f"升到 {a_pre:.4f}），却没把这份表征转成组合能力。这是「会数数 ≠ 会相加」的一个"
+              f"干净实例：两个操作数都读得出来（a≈{a_pre:.2f}），和却停在 chance 附近"
+              f"（{u_pre:.4f}）。而四个格子里**唯一明显高于 chance 的是 `real/scratch`"
+              f"（{u_scr:.4f}）** —— 从零训练反而学到了某种能迁移到未见对的结构。")
+            A("")
+            A("限定：每个格子只有 3 个 seed，unseen 上 seed 间散布不小；chance = 1/7 = 0.143"
+              "（7 个和类别，且每个和都仍可由训练对中的其他组合产生，所以这是在测组合而非类别泛化）。")
+            A("")
 
 
 def _section_control_match(lines: list, summaries: list[dict]) -> None:
