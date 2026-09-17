@@ -274,6 +274,11 @@ def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None
                  f"延迟要求 T_grok > {spec.CRITERIA.delay_factor:g}×T_mem，"
                  "并且连续指标必须同步移动（否则记为阈值假象）。")
         L.append("")
+        L.append("**B1 的两个留出对太粗（15 类里只有 2 个 item，准确率只能取 0 / 0.5 / 1），"
+                 "所以另有一个更细的规则学习指示器**：`unsupported` 那一列是既没教也没"
+                 "留出的 32 个有序对（chance 0.077）。它衡量的是「学会加法规则」而不是"
+                 "「那一个事实」，粒度是 1/32；预先注册的判定仍然用 2+3 那一对，两个都报。")
+        L.append("")
 
     L.append("## 内部记录（行为变化是否伴随内部重组）\n")
     L.append("| cell | δ mean | activity dim | 探针 |")

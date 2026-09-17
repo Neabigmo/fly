@@ -529,7 +529,7 @@
           }
         }
       },
-      "finished": false,
+      "finished": true,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -645,6 +645,193 @@
         }
       },
       "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "B1-S": {
+      "dir": "10_B1-S_s0",
+      "phase1": {
+        "cell": "B1-S",
+        "task": "add",
+        "line": "B",
+        "brain": "scratch",
+        "budget": 200000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000,
+          100000,
+          200000
+        ],
+        "holdout": [
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            2
+          ]
+        ],
+        "teach": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            7,
+            7
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ]
+        ],
+        "question": "does 2+3 ever appear if it is never taught and never selected on?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": false,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -961,31 +1148,63 @@
     },
     "A3-C": {
       "line": "A",
-      "final_train_acc": 0.33416667580604553,
-      "final_seen_acc": 0.31299999356269836,
-      "auc_seen_acc": 0.28636249601840974,
+      "final_train_acc": 0.3584413528442383,
+      "final_seen_acc": 0.32600000500679016,
+      "auc_seen_acc": 0.3062449979782105,
       "updates_to_50": null,
       "updates_to_80": null,
       "updates_to_95": null,
       "task": "two_step",
       "brain": "curriculum",
       "budget": 50000,
-      "finished": false,
-      "seen_acc": 0.31299999356269836,
-      "taught_area_acc": 0.28333333134651184,
-      "taught_env_acc": 0.25,
-      "train_acc": 0.33416667580604553,
+      "finished": true,
+      "seen_acc": 0.32600000500679016,
+      "taught_area_acc": 0.2800000011920929,
+      "taught_env_acc": 0.2746666669845581,
+      "train_acc": 0.3584413528442383,
       "probe_n": null,
-      "probe_a": 0.5173333287239075,
-      "probe_b": 0.36399999260902405,
+      "probe_a": 0.5066666603088379,
+      "probe_b": 0.35600000619888306,
       "probe_sum": null,
-      "probe_answer": 0.2226666659116745,
-      "probe_partial": 0.26133331656455994,
-      "delta_abs_mean": 0.49338507652282715,
-      "activity_dim": 22.429161071777344
+      "probe_answer": 0.24133333563804626,
+      "probe_partial": 0.2773333191871643,
+      "delta_abs_mean": 0.48467329144477844,
+      "activity_dim": 24.822053909301758
     }
   },
-  "line_b": {},
+  "line_b": {
+    "B1-S": {
+      "t_mem": null,
+      "t_grok": null,
+      "delay_factor": null,
+      "delayed": false,
+      "continuous_confirms": null,
+      "continuous_moves": {},
+      "max_hold_acc": 0.0,
+      "final_hold_acc": 0.0,
+      "final_train_acc": 0.24227885901927948,
+      "largest_jump_at": 500,
+      "largest_jump": 0.0,
+      "verdict": "never_memorised",
+      "notes": [
+        "training accuracy never held above 0.95, so there is no memorisation phase to be late relative to"
+      ],
+      "task": "add",
+      "brain": "scratch",
+      "budget": 200000,
+      "finished": false,
+      "n_taught": 15,
+      "n_holdout": 2,
+      "hold_acc": 0.0,
+      "holdout_area_acc": 0.0,
+      "holdout_env_acc": 0.0,
+      "unsup_acc": 0.054999999701976776,
+      "train_acc": 0.24227885901927948,
+      "hold_ce": null,
+      "hold_p_correct": null,
+      "hold_margin": null
+    }
+  },
   "references": {
     "count": {
       "A": {
@@ -1255,10 +1474,11 @@
         2000,
         5000,
         10000,
-        20000
+        20000,
+        50000
       ],
-      "n_shared": 7,
-      "finished": false,
+      "n_shared": 8,
+      "finished": true,
       "delta": {
         "taught_area_acc": {
           "per_probe": [
@@ -1268,11 +1488,12 @@
             0.042,
             0.0567,
             0.0413,
-            0.0487
+            0.0487,
+            -0.002
           ],
-          "mean": 0.0266,
-          "final": 0.0487,
-          "n": 7
+          "mean": 0.023,
+          "final": -0.002,
+          "n": 8
         },
         "seen_acc": {
           "per_probe": [
@@ -1282,11 +1503,12 @@
             0.037,
             0.0343,
             0.051,
-            0.0593
+            0.0593,
+            0.028
           ],
-          "mean": 0.0258,
-          "final": 0.0593,
-          "n": 7
+          "mean": 0.026,
+          "final": 0.028,
+          "n": 8
         }
       }
     }
