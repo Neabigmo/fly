@@ -1,0 +1,38 @@
+{
+  "device": "cuda",
+  "batch": 64,
+  "tasks": {
+    "count": {
+      "steps": 5,
+      "seconds_per_update": 0.03258732954661051,
+      "updates_per_second": 30.68677347647262,
+      "seconds_per_probe": 0.7626893520355225
+    },
+    "add": {
+      "steps": 14,
+      "seconds_per_update": 0.08243346214294434,
+      "updates_per_second": 12.130996005796078,
+      "seconds_per_probe": 1.6717967987060547
+    },
+    "cyc7": {
+      "steps": 14,
+      "seconds_per_update": 0.08257917563120525,
+      "updates_per_second": 12.109590491263239,
+      "seconds_per_probe": 1.6161830425262451
+    },
+    "addsub": {
+      "steps": 14,
+      "seconds_per_update": 0.08256977796554565,
+      "updates_per_second": 12.110968742307573,
+      "seconds_per_probe": 1.7900233268737793
+    },
+    "two_step": {
+      "steps": 23,
+      "seconds_per_update": 0.13507415850957236,
+      "updates_per_second": 7.4033405873791365,
+      "seconds_per_probe": 2.97993540763855
+    }
+  },
+  "A (line A)": 4.636353324254354,
+  "B (line B)": 16.05899789130246
+}

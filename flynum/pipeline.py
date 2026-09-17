@@ -264,8 +264,17 @@ def prepare(
     logger=None,
     force: bool = False,
     strict_circuit: bool = True,
+    n_classes: int | None = None,
+    label_offset: int | None = None,
 ) -> Prepared:
-    """Wire up everything for one experiment configuration."""
+    """Wire up everything for one experiment configuration.
+
+    ``n_classes`` and ``label_offset`` override the task head.  The Phase I tasks
+    (rule selection, two-step arithmetic, cyclic addition) each have their own answer
+    space, and a task name is not enough to derive it -- ``addsub`` shares a 0-8 space
+    between a sum and a difference, so the caller that owns the task table states the
+    head explicitly instead of this function guessing from a string.
+    """
     if cfg.retina.image_size != cfg.stimulus.image_size:
         raise ValueError(
             "retina.image_size and stimulus.image_size must match "
@@ -358,14 +367,18 @@ def prepare(
         logger.info("readout: %s -> %d neurons", readout_name, len(readout_idx))
 
     # ---- task head ---------------------------------------------------- #
-    if cfg.task == "count":
-        n_classes = cfg.stimulus.n_max - cfg.stimulus.n_min + 1
-        label_offset = cfg.stimulus.n_min
-    elif cfg.task == "add":
-        n_classes = 2 * cfg.stimulus.a_max - 2 * cfg.stimulus.a_min + 1
-        label_offset = 2 * cfg.stimulus.a_min
-    else:
-        raise ValueError(f"unknown task {cfg.task!r}")
+    # An explicit head always wins: Phase I's addition task uses operands 1-7 (13 sum
+    # classes) while the legacy ``add`` task derives 7 classes from ``a_max = 4``, so
+    # the name alone does not determine the head.
+    if n_classes is None or label_offset is None:
+        if cfg.task == "count":
+            n_classes = cfg.stimulus.n_max - cfg.stimulus.n_min + 1
+            label_offset = cfg.stimulus.n_min
+        elif cfg.task == "add":
+            n_classes = 2 * cfg.stimulus.a_max - 2 * cfg.stimulus.a_min + 1
+            label_offset = 2 * cfg.stimulus.a_min
+        else:
+            raise ValueError(f"unknown task {cfg.task!r}")
 
     info = {
         "circuit": sg.name,

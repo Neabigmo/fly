@@ -36,11 +36,21 @@
       "retry_max": 1,
       "ok": true
     },
+    "legibility": {
+      "acc_operator": 1.0,
+      "acc_operator_vs_blank": 1.0,
+      "acc_count": 0.3125,
+      "count_over_chance": 2.1875,
+      "ink_plus": 72.5,
+      "ink_minus": 40.75,
+      "ink_three_dots": 64.87492996454239,
+      "ok": true
+    },
     "dynamics bounded": {
       "horizon": 32,
-      "peak_first": 0.10999422520399094,
-      "peak_last": 4.469191551208496,
-      "growth": 40.631147161772454,
+      "peak_first": 0.10998741537332535,
+      "peak_last": 4.459757328033447,
+      "growth": 40.54788734598311,
       "ok": true
     },
     "plan alignment": {

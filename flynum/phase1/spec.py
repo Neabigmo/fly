@@ -71,6 +71,40 @@ TIME: dict = {
     "steps_gap": 4,       # a blank delay when there is no glyph
 }
 
+#: The optimizer, frozen here for the same reason the tasks are.
+#:
+#: The one deliberate departure from the earlier stages is ``schedule: constant``.
+#: Every previous run annealed the learning rate to zero across its budget, which is
+#: harmless when the metric is a final accuracy but not here: Line B asks whether
+#: held-out performance *jumps* during training, and a schedule that forces the effective
+#: step size down over time can produce that jump on its own.  It would also make runs
+#: with different budgets incomparable, since a 50,000-update cell and a 500,000-update
+#: cell would spend their first 50,000 updates at completely different learning rates.
+#: Nothing else about the optimizer is tuned for the phenomenon under study: this is the
+#: same AdamW, batch size, learning rate, readout weight decay and gain penalty that
+#: produced every earlier result in the project, rather than a grokking-specific recipe.
+OPTIM: dict = {
+    "optimizer": "AdamW",
+    "schedule": "constant",
+    "lr_gain": 3e-3,
+    "lr_readout": 3e-3,
+    "wd_readout": 1e-4,
+    "grad_clip": 1.0,
+    "lambda_gain": 1e-3,
+    "batch_size": 64,
+}
+
+#: Which run supplies the recurrent warm start for each brain.  The curriculum is a
+#: chain -- C0 -> A1-C -> A2-C -> A3-C -- so the "-C" cells form a nested sequence and
+#: the "-S" cells answer the same tasks from scratch.  The readout is always fresh: it is
+#: task specific, and reusing it would compare an initialized readout against a trained
+#: one.
+WARM_START: dict[str, str] = {
+    "count": "C0",
+    "add": "A1-C",
+    "curriculum": "A2-C",
+}
+
 
 # --------------------------------------------------------------------------- #
 # What is taught and what is withheld.
@@ -316,3 +350,28 @@ INTERNAL_METRICS: tuple[str, ...] = (
     "activity_dim",                          # effective dimensionality of the state
     "probe_acc_a", "probe_acc_b", "probe_acc_sum",   # decodability of intermediates
 )
+
+
+def fingerprint() -> str:
+    """A short hash of everything that defines Phase I.
+
+    Written into every run so that a result can be traced to the exact plan that produced
+    it, and so that Phase I rows are never pooled with the pilot study by accident.
+    """
+    import hashlib
+    import json
+
+    payload = {
+        "dynamics": DYNAMICS, "stimulus": STIMULUS, "time": TIME, "optim": OPTIM,
+        "warm_start": WARM_START,
+        "foundation": [t.run for t in FOUNDATION],
+        "line_a": [t.run for t in LINE_A],
+        "line_b": [t.run for t in LINE_B],
+        "b1_taught": [list(p) for p in B1_TAUGHT],
+        "b1_holdout": [list(p) for p in B1_HOLDOUT],
+        "cyc7_taught": [list(p) for p in CYC7_TAUGHT],
+        "cyc7_holdout": [list(p) for p in CYC7_HOLDOUT],
+    }
+    blob = json.dumps(payload, sort_keys=True, default=str)
+    return hashlib.sha1(blob.encode("utf-8")).hexdigest()[:16]
+

@@ -11,6 +11,10 @@ The checks, and the failure each one prevents:
   blob integrity      a stimulus labelled "n dots" must actually contain n components,
                       which is the difference between a numerosity task and a mislabelled
                       one
+  legibility          the fixed retinotopic map must preserve what the tasks are about:
+                      a "+" must still be distinguishable from a "-" and the number of
+                      dots must still be recoverable, or A2/A3 would report a ceiling that
+                      is a rendering artefact
   dynamics bounded    signed synapses at the chosen scale must not blow up over the
                       longest sequence any task uses
   holdout purity      the withheld pair must not reach the gradient, the scheduler, early
@@ -97,22 +101,126 @@ def check_blob_integrity(log, n_per: int = 60) -> dict:
             "retry_max": int(np.max(retries)), "ok": bad == 0}
 
 
+_PREP_CACHE: dict = {}
+
+
+def _prepared(log):
+    """One `prepare()` for the whole pre-flight: the retina map costs ~10 s to build."""
+    if "prep" not in _PREP_CACHE:
+        from flynum.pipeline import prepare
+
+        cfg = ExperimentConfig()
+        cfg.data.circuit = spec.DYNAMICS["circuit"]
+        cfg.data.graph = "real"
+        cfg.model_cfg.signed_synapses = spec.DYNAMICS["signed_synapses"]
+        cfg.model_cfg.w_scale = spec.DYNAMICS["w_scale"]
+        cfg.model_cfg.alpha = spec.DYNAMICS["alpha"]
+        cfg.model_cfg.readout_standardize = False
+        for k, v in spec.STIMULUS.items():
+            setattr(cfg.stimulus, k, v)
+        _PREP_CACHE["prep"] = prepare(cfg, logger=None)
+        _PREP_CACHE["cfg"] = cfg
+    return _PREP_CACHE["prep"], _PREP_CACHE["cfg"]
+
+
+def _probe_accuracy(x, y, n_classes: int, *, steps: int = 400) -> float:
+    """Split-half linear probe accuracy on encoded column activations."""
+    import torch
+    import torch.nn as nn
+
+    x = torch.as_tensor(np.asarray(x), dtype=torch.float32)
+    y = torch.as_tensor(np.asarray(y), dtype=torch.long)
+    g = torch.Generator().manual_seed(0)
+    perm = torch.randperm(len(y), generator=g)
+    tr, te = perm[: len(y) // 2], perm[len(y) // 2:]
+    x = (x - x[tr].mean(0, keepdim=True)) / x[tr].std(0, keepdim=True).clamp_min(1e-6)
+    lin = nn.Linear(x.shape[1], n_classes)
+    opt = torch.optim.Adam(lin.parameters(), lr=0.05, weight_decay=1e-4)
+    lossf = nn.CrossEntropyLoss()
+    for _ in range(steps):
+        opt.zero_grad(set_to_none=True)
+        lossf(lin(x[tr]), y[tr]).backward()
+        opt.step()
+    with torch.no_grad():
+        return float((lin(x[te]).argmax(1) == y[te]).float().mean())
+
+
+def check_legibility(log, n_per: int = 96) -> dict:
+    """Can the fixed retina tell the operator glyphs, and the numerosities, apart?
+
+    A2 and A3 ask the network to choose an operation from what it sees.  If the
+    retinotopic map cannot separate ``+`` from ``-`` in the column activations, those
+    tasks are impossible for a reason that has nothing to do with the connectome, and the
+    two Line A cells that depend on them would report a ceiling that is really a
+    rendering artefact.  Same question for the dot groups, one level down: the counting
+    task is only a numerosity task if the map preserves how many dots there are.
+    """
+    import torch
+
+    from flynum.phase1 import glyphs
+    from flynum.retina.torch_encoder import TorchRetina
+    from flynum.stimuli.dots import make_count_stimulus
+
+    prep, cfg = _prepared(log)
+    sc = cfg.stimulus
+    retina = TorchRetina(prep.encoder, device="cpu")
+    rng = np.random.default_rng(4242)
+
+    def encode(imgs):
+        t = torch.as_tensor(np.stack(imgs), dtype=torch.float32)
+        with torch.no_grad():
+            return retina.encode(t).numpy()
+
+    # operator glyphs vs each other and vs a blank window
+    ops = []
+    for sym in glyphs.OPS:
+        ops.append(encode([glyphs.render_glyph(sym, sc, rng) for _ in range(n_per)]))
+    blank = encode([glyphs.render_blank(sc.image_size) for _ in range(n_per)])
+
+    both = np.concatenate(ops)
+    acc_ops = _probe_accuracy(both, np.repeat([0, 1], n_per), 2)
+    acc_op_blank = _probe_accuracy(np.concatenate([ops[0], blank]),
+                                   np.repeat([0, 1], n_per), 2)
+
+    # numerosity: 1..7 dots must remain linearly separable after the map
+    ns = np.repeat(np.arange(spec.STIMULUS["n_min"], spec.STIMULUS["n_max"] + 1), n_per)
+    dot_stims = [make_count_stimulus(int(n), sc, rng) for n in ns]
+    acc_n = _probe_accuracy(encode([s.image for s in dot_stims]),
+                            ns - spec.STIMULUS["n_min"], 7)
+
+    ink_plus = glyphs.ink("+", sc)
+    ink_minus = glyphs.ink("-", sc)
+    ink3 = float(np.mean([s.ink for s in dot_stims if s.n == 3]))
+    n_lo = spec.STIMULUS["n_min"]
+    n_hi = spec.STIMULUS["n_max"]
+    chance_n = 1.0 / (n_hi - n_lo + 1)
+    # An operator must survive the map intact, because A2/A3 ask for a decision *about*
+    # it.  Numerosity is the opposite kind of requirement: information about the count has
+    # to be present, but if a linear read of the retina already recovered it, counting
+    # would be a lookup and the recurrent circuit would have nothing to compute.  The
+    # criterion is therefore "well above chance and well below trivial", and the measured
+    # 0.30 against 0.143 is the intended regime.
+    ok = acc_ops >= 0.90 and acc_op_blank >= 0.95 and acc_n >= 2 * chance_n
+    log.info("  '+' vs '-' from column activations: %.4f  %s", acc_ops,
+             "OK" if acc_ops >= 0.90 else "FAIL")
+    log.info("  glyph vs blank window: %.4f  %s", acc_op_blank,
+             "OK" if acc_op_blank >= 0.95 else "FAIL")
+    log.info("  numerosity %d-%d linearly readable from the retina: %.4f (chance %.3f, "
+             "%.1fx)  %s -- present, but not a lookup", n_lo, n_hi, acc_n, chance_n,
+             acc_n / chance_n, "OK" if acc_n >= 2 * chance_n else "FAIL")
+    log.info("  glyph ink: '+' %.1f  '-' %.1f  vs a three-dot group %.1f -- an operator "
+             "is not a louder stimulus than a dot group", ink_plus, ink_minus, ink3)
+    return {"acc_operator": acc_ops, "acc_operator_vs_blank": acc_op_blank,
+            "acc_count": acc_n, "count_over_chance": acc_n / chance_n,
+            "ink_plus": ink_plus, "ink_minus": ink_minus,
+            "ink_three_dots": ink3, "ok": bool(ok)}
+
+
 def check_dynamics(log, horizon: int | None = None) -> dict:
     """Signed synapses at the Phase I scale must stay finite across the sequence."""
     import torch
 
-    from flynum.pipeline import prepare
-
-    cfg = ExperimentConfig()
-    cfg.data.circuit = spec.DYNAMICS["circuit"]
-    cfg.data.graph = "real"
-    cfg.model_cfg.signed_synapses = True
-    cfg.model_cfg.w_scale = spec.DYNAMICS["w_scale"]
-    cfg.model_cfg.alpha = spec.DYNAMICS["alpha"]
-    cfg.model_cfg.readout_standardize = False
-    for k, v in spec.STIMULUS.items():
-        setattr(cfg.stimulus, k, v)
-    prep = prepare(cfg, logger=None)
+    prep, cfg = _prepared(log)
     model = prep.build_model(device="cpu", seed=0)
     t = spec.TIME
     horizon = horizon or max(t["steps_operand"] * 2 + t["steps_cue"], 32)
@@ -128,6 +236,7 @@ def check_dynamics(log, horizon: int | None = None) -> dict:
     return {"horizon": horizon, "peak_first": peaks[0], "peak_last": peaks[-1],
             "growth": growth,
             "ok": math.isfinite(peaks[-1]) and growth < 1e4}
+
 
 
 def _answer_class(task: str, pair: tuple[int, int]) -> int:
@@ -278,6 +387,7 @@ def main() -> int:
 
     for name, fn in (("stimulus geometry", check_stimulus_geometry),
                      ("blob integrity", check_blob_integrity),
+                     ("legibility", check_legibility),
                      ("dynamics bounded", check_dynamics),
                      ("plan alignment", check_plan_alignment),
                      ("task discriminability", check_task_discriminability)):

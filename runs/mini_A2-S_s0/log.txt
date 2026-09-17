@@ -1,0 +1,4 @@
+12:41:35 | INFO    | flynum.run.mini_A2-S_s0 | run mini_A2-S_s0 started -> I:\2026.9.14\9.15果蝇识字\runs\mini_A2-S_s0
+12:41:35 | INFO    | flynum.run.mini_A2-S_s0 | ========================================================================================
+12:41:35 | INFO    | flynum.run.mini_A2-S_s0 | PHASE I A2-S | addsub(9 classes, offset 0) | brain=scratch | 300 updates | 14 recurrent steps/update
+12:41:35 | INFO    | flynum.run.mini_A2-S_s0 |   question: can the +/- rule be selected from a visual cue, from scratch?

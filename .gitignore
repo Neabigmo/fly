@@ -8,6 +8,10 @@ data/raw/
 data/processed/edges.npz
 data/processed/circuits/*.npz
 data/processed/stimuli/
+# Phase I renders 20k layouts per task (~1 GB total) from the frozen spec; the
+# composition of each pool is recorded in the run's config, so the pools rebuild
+# from scripts/25 + scripts/26 and are never committed.
+data/processed/stimuli_phase1/
 
 # ---------------------------------------------------------------------------
 # Per-run checkpoints and caches.  Run *metadata* (config, env, metrics.jsonl,

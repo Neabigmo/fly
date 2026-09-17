@@ -1,0 +1,12 @@
+{
+  "run_id": "mini_C0_s0",
+  "status": "ok",
+  "wall_seconds": 143.3,
+  "finished_at": "2026-09-17T04:34:54+00:00",
+  "stage": "mini",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0
+}
