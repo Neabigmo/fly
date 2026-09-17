@@ -1,0 +1,146 @@
+{
+  "dynamics": {
+    "circuit": "core",
+    "signed_synapses": true,
+    "w_scale": 0.5,
+    "alpha": 0.1,
+    "learn": [
+      "delta",
+      "bias"
+    ],
+    "readout_standardize": false,
+    "readout": "vpn"
+  },
+  "stimulus": {
+    "image_size": 32,
+    "n_min": 1,
+    "n_max": 7,
+    "radius_min": 1.13,
+    "radius_max": 3.7,
+    "area_target": 35.6,
+    "min_gap": 1.5,
+    "ring_radius": 9.5
+  },
+  "checks": {
+    "stimulus geometry": {
+      "span": 3.2743362831858414,
+      "span_needed": 3.1058819738584327,
+      "pack_limit": 3.7889008252291694,
+      "outside_fraction": 0.0,
+      "ok": true
+    },
+    "blob integrity": {
+      "n": 1680,
+      "bad": 0,
+      "retry_mean": 1.0,
+      "retry_max": 1,
+      "ok": true
+    },
+    "dynamics bounded": {
+      "horizon": 32,
+      "peak_first": 0.10999422520399094,
+      "peak_last": 4.469191551208496,
+      "growth": 40.631147161772454,
+      "ok": true
+    },
+    "plan alignment": {
+      "problems": [],
+      "ok": true,
+      "b1_taught": 15,
+      "b1_holdout": [
+        [
+          2,
+          3
+        ],
+        [
+          3,
+          2
+        ]
+      ],
+      "b1_unsupported": 32,
+      "b2_taught": 34,
+      "b2_holdout": 15,
+      "b2_holdout_fraction": 0.30612244897959184,
+      "b2_holdout_pairs": [
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          3
+        ],
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          4
+        ],
+        [
+          2,
+          7
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          6
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          6,
+          4
+        ],
+        [
+          7,
+          2
+        ],
+        [
+          7,
+          5
+        ]
+      ]
+    },
+    "task discriminability": {
+      "count": {
+        "chance": 0.1429,
+        "ink_baseline": 0.4483,
+        "spread_baseline": 0.3825
+      },
+      "cyc7": {
+        "n_pairs": 49,
+        "n_classes": 7
+      },
+      "two_step": {
+        "n_items": 54,
+        "min": 1,
+        "max": 7,
+        "n_distinct": 7
+      },
+      "ok": true
+    }
+  }
+}
