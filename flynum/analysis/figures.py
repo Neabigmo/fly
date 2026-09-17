@@ -604,6 +604,87 @@ def plot_step_matched(step_matched: dict, out: Path):
 
 
 # --------------------------------------------------------------------------- #
+def plot_addition_pilot(cells: dict[str, dict], out: Path, *, chance_sum: float = 0.0):
+    """The 2x2 pilot: (scratch | count-pretrained) x (teach all | withhold 2+3).
+
+    Panel A (required) -- accuracy on the 15 pairs every cell was taught, against
+    optimiser updates.  The comparison is A1 against A2: a count-pretrained brain that
+    rises faster is a brain that found addition easier to learn.
+
+    Panel B (required) -- P(y=5 | 2+3) against updates, only for the two cells that were
+    never shown 2+3.  The answer 5 remains reachable through 1+4, 3+2 and 4+1, all of
+    which are taught, so anything above chance here is composition rather than recall.
+
+    A third panel carries the operand probes, which is where the earlier curriculum
+    located the bottleneck: it sharpened ``a`` while leaving ``a+b`` at chance.
+    """
+    _style()
+    order = [c for c in ("A1", "A2", "B1", "B2") if c in cells]
+    labels = {"A1": "A1 scratch + teach all", "A2": "A2 count-pretrained + teach all",
+              "B1": "B1 scratch + withhold 2+3", "B2": "B2 count-pretrained + withhold 2+3"}
+    colours = {"A1": C_NEUTRAL, "A2": C_REAL, "B1": C_WARN, "B2": C_ACCENT}
+
+    fig, axes = plt.subplots(1, 3, figsize=(14.2, 3.9))
+
+    ax = axes[0]
+    for c in order:
+        h = cells[c].get("history") or []
+        if not h:
+            continue
+        x = [r["updates"] for r in h]
+        y = [r["acc_seen"] for r in h]
+        ax.plot(x, y, "-o", ms=4, color=colours.get(c, C_NEUTRAL), label=labels.get(c, c))
+    ax.set_xlabel("addition training updates")
+    ax.set_ylabel("accuracy on the 15 taught pairs")
+    ax.set_title("A  Was the taught addition learned?")
+    ax.set_ylim(0, 1.02)
+    ax.grid(alpha=0.15)
+    ax.legend(fontsize=7.5, loc="upper left")
+
+    ax = axes[1]
+    for c in ("B1", "B2"):
+        if c not in cells:
+            continue
+        h = cells[c].get("history") or []
+        if not h:
+            continue
+        x = [r["updates"] for r in h]
+        ax.plot(x, [r["p_y5_given_2p3"] for r in h], "-o", ms=4,
+                color=colours[c], label=labels[c])
+        ax.plot(x, [r["acc_2p3"] for r in h], "--", lw=1.1, color=colours[c],
+                alpha=0.75, label=f"{c} argmax accuracy")
+    ax.set_xlabel("addition training updates")
+    ax.set_ylabel("P(y = 5 | 2+3)")
+    ax.set_title("B  The pair that was never taught")
+    ax.set_ylim(0, 1.02)
+    ax.grid(alpha=0.15)
+    ax.legend(fontsize=7.5, loc="upper left")
+
+    ax = axes[2]
+    for c in order:
+        h = cells[c].get("history") or []
+        if not h:
+            continue
+        x = [r["updates"] for r in h]
+        ax.plot(x, [r["acc_a_2p3"] for r in h], "-", color=colours.get(c, C_NEUTRAL),
+                lw=1.5, label=f"{c} operand a")
+        ax.plot(x, [r["acc_b_2p3"] for r in h], ":", color=colours.get(c, C_NEUTRAL),
+                lw=1.5, label=f"{c} operand b")
+    ax.axhline(0.25, color=C_NEUTRAL, ls="--", lw=1, label="chance (4 classes)")
+    ax.set_xlabel("addition training updates")
+    ax.set_ylabel("operand accuracy on the 2+3 probe")
+    ax.set_title("C  Where is the bottleneck?")
+    ax.set_ylim(0, 1.02)
+    ax.grid(alpha=0.15)
+    ax.legend(fontsize=7, loc="upper left")
+
+    fig.suptitle("Can a brain that learned to count be taught addition more easily? "
+                 "(1 seed, equal updates everywhere)", fontsize=10.5)
+    fig.subplots_adjust(top=0.80, wspace=0.26)
+    return _save(fig, out)
+
+
+# --------------------------------------------------------------------------- #
 def plot_condition_bars(
     agg: dict[str, dict[str, dict]],
     out: Path,

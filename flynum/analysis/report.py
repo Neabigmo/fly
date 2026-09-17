@@ -20,6 +20,7 @@ from .. import paths
 from ..train.metrics import bootstrap_ci, paired_gap
 from .figures import (
     plot_addition_matrix,
+    plot_addition_pilot,
     plot_condition_bars,
     plot_confusion,
     plot_curriculum,
@@ -516,6 +517,25 @@ def make_all_figures(
             )
         if cells:
             made["curriculum"] = plot_curriculum(cells, figdir / "fig8_curriculum.png")
+
+    # ---- Figure 12: the 2x2 addition-teaching pilot --------------------- #
+    pilots = {}
+    for s in summaries:
+        if s.get("task") == "add_pilot" and s.get("history"):
+            pilots[s.get("console") or s.get("run_id")] = s
+    if not pilots:
+        # the CLI writes them all in one file too, in case the summaries are elsewhere
+        pp = paths.DATA_PROCESSED / "addition_pilot.json"
+        if pp.exists():
+            try:
+                for s in json.loads(pp.read_text(encoding="utf-8")):
+                    if s.get("history"):
+                        pilots[s.get("console") or s.get("run_id", "?")] = s
+            except json.JSONDecodeError:
+                pass
+    if pilots:
+        made["addition_pilot"] = plot_addition_pilot(
+            pilots, figdir / "fig12_addition_pilot.png")
 
     # ---- Figure 9: the lesion panel ----------------------------------- #
     # One panel per source model; average them so the figure reports the same thing as
