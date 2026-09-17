@@ -264,6 +264,82 @@ def check_lesion(log, source: str) -> None:
     log.info("  deltas: %s", {k: v for k, v in list(summary["deltas"].items())[:3]})
 
 
+def check_addition_pilot(log) -> None:
+    """The 2x2 addition pilot: both brain initialisations and both teaching modes.
+
+    Worth a smoke test because it runs on a remote host where interactive debugging is
+    awkward, and because the warm start crosses a head-geometry change: the counting
+    model has one head with 5 classes, the pilot model has three heads of 4/4/7.
+    """
+    from flynum.config import ExperimentConfig
+    from flynum.experiments.addition_pilot import PilotConfig, run_addition_pilot
+    from flynum.experiments.count import run_count_experiment
+
+    def tiny(**over):
+        cfg = _tiny_config()
+        cfg.task = "add"
+        cfg.stimulus.holdout_pairs = ((2, 3),)
+        cfg.stimulus.add_reps_per_pair = 2
+        cfg.data.graph = "real"
+        cfg.model_cfg.alpha = 0.2
+        cfg.model_cfg.w_scale = 1.0
+        cfg.time.steps_a, cfg.time.steps_gap, cfg.time.steps_b = 2, 2, 2
+        cfg.train.batch_size = 16
+        cfg.train.lr_gain = 3e-4
+        cfg.train.lr_readout = 1e-3
+        for k, v in over.items():
+            if hasattr(cfg.train, k):
+                setattr(cfg.train, k, v)
+            elif hasattr(cfg.stimulus, k):
+                setattr(cfg.stimulus, k, v)
+            else:
+                setattr(cfg, k, v)
+        return cfg
+
+    # a scratch counting run to serve as the warm-start source
+    src = run_count_experiment(_tiny_config(max_steps=4, eval_every=2, max_epochs=2),
+                              logger=None)
+    CREATED_RUNS.append(src["run_id"])
+
+    for cell, pretrain, full in (("A1", "", True), ("B2", src["run_id"], False)):
+        pc = PilotConfig(label=cell, pretrain_from=pretrain, teach_holdout=full,
+                         budget_steps=6, probe_steps=(0, 3, 6), eval_items=20)
+        cfg = tiny()
+        s = run_addition_pilot(cfg, pc, logger=None)
+        CREATED_RUNS.append(s["run_id"])
+        ups = [h["updates"] for h in s["history"]]
+        log.info("  %s brain=%s teaching=%s | probes at updates %s | %d taught items",
+                 cell, s["brain"], s["teaching"], ups, s["n_taught_items"])
+        assert ups == [0, 3, 6], f"probes not recorded on the exact steps: {ups}"
+        assert s["optimizer_steps"] == 6, (
+            f"budget not spent exactly: {s['optimizer_steps']} != 6")
+        if pretrain:
+            tr = s.get("transferred") or {}
+            assert len(tr.get("transferred", [])) > 0, "warm start transferred nothing"
+            assert len(tr.get("skipped", [])) > 0, "warm start did not leave readout fresh"
+        # the two teaching modes must differ in how much they are taught
+        if full:
+            assert s["n_taught_items"] > 0 and s["n_probe_items"] > 0
+        for h in s["history"]:
+            for k in ("acc_seen", "acc_2p3", "p_y5_given_2p3", "acc_a_2p3", "acc_b_2p3"):
+                assert np.isfinite(h[k]), f"{k} not finite at {h['updates']} updates"
+    # the two teaching modes must have different training-set sizes, same probe set
+    sizes = {}
+    for cell, pretrain, full in (("A1", "", True), ("B1", "", False)):
+        s = run_addition_pilot(tiny(),
+                               PilotConfig(label=cell, teach_holdout=full,
+                                           budget_steps=3, probe_steps=(0, 3),
+                                           eval_items=20),
+                               logger=None)
+        CREATED_RUNS.append(s["run_id"])
+        sizes[cell] = (s["n_taught_items"], s["n_probe_items"])
+    log.info("  taught/probe item counts: %s", sizes)
+    assert sizes["A1"][0] > sizes["B1"][0], (
+        "the full cell must train on more items than the holdout cell")
+    assert sizes["A1"][1] == sizes["B1"][1], (
+        "the two teaching modes must share a byte-identical 2+3 probe set")
+
+
 # --------------------------------------------------------------------------- #
 def check_config_roundtrip(log) -> None:
     """The lesion CLI rebuilds its config from a run's config.json.
@@ -334,6 +410,7 @@ def main() -> int:
         ("fixed step budget", lambda: check_fixed_steps(log)),
         ("standardisation guard", lambda: check_standardize_guard(log)),
         ("curriculum + warm start", lambda: check_curriculum(log)),
+        ("2x2 addition pilot", lambda: check_addition_pilot(log)),
     ):
         log.info("=" * 78)
         log.info("CHECK %s", name)
