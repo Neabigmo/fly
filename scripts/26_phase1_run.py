@@ -26,7 +26,8 @@ from flynum import paths  # noqa: E402
 from flynum.devices import pick_device  # noqa: E402
 from flynum.logging_utils import get_logger  # noqa: E402
 from flynum.phase1 import spec  # noqa: E402
-from flynum.phase1.run import Cell, cell_from_spec, find_checkpoint, run_cell  # noqa: E402
+from flynum.phase1.run import (Cell, cell_from_spec, find_checkpoint,  # noqa: E402
+                               run_cell, run_id_for)
 
 ALL: dict[str, spec.TaskSpec] = {
     t.run: t for t in (spec.FOUNDATION + spec.LINE_A + spec.LINE_B + spec.LINE_B_CONTROLS)
@@ -106,6 +107,7 @@ def main() -> int:
                      t.brain, t.budget, list(t.holdout) or "none")
 
     summaries = {}
+    skipped: dict[str, str] = {}
     for name in names:
         t = ALL[name]
         kw = dict(seed=args.seed, device=device, tag=args.tag,
@@ -119,16 +121,24 @@ def main() -> int:
         elif args.budget:
             t = replace(t, budget=args.budget, probes=spec.probes_for(args.budget))
         src = spec.WARM_START.get(t.brain, "")
-        if src and find_checkpoint(src) is None:
+        if src and find_checkpoint(src, tag=args.tag, seed=args.seed) is None:
+            resolved = paths.run_dir(run_id_for(src, args.tag, args.seed))
             if args.dry_run:
-                log.warning("  %s: warm start %s has no checkpoint; dry run trains from "
-                            "scratch (this is a wiring check, not a result)", name, src)
+                log.warning("  %s: dry run, no checkpoint at %s/ckpt/final.pt, so it "
+                            "trains from scratch.  A dry run cannot validate a warm "
+                            "start: it writes its own tagged directories.  The resolution "
+                            "itself is covered by tests/test_phase1.py.", name, resolved)
                 kw["tag"] = "dry"
                 summaries[name] = run_cell(replace(cell_from_spec(t, **kw), brain="scratch"))
                 continue
-            raise SystemExit(
-                f"{name} needs the checkpoint of {src}, which does not exist. "
-                f"Run {src} first (cells run in the order C0, A1-C, A2-C, A3-C).")
+            # One missing prerequisite must not cost the whole queue: this aborted at cell
+            # two of twelve and left ten unrun, which is exactly the failure mode a long
+            # unattended queue cannot afford.  Dependent cells are recorded as skipped and
+            # the process still exits non-zero, so a partial run is loud, not silent.
+            reason = (f"needs the checkpoint of {src}, absent at {resolved}/ckpt/")
+            log.error("  SKIPPING %s: %s", name, reason)
+            skipped[name] = reason
+            continue
         t0 = time.time()
         summaries[name] = run_cell(cell_from_spec(t, **kw))
         log.info("  %s finished in %.1f min", name, (time.time() - t0) / 60)
@@ -137,8 +147,14 @@ def main() -> int:
         "phase1_dry_run.json" if args.dry_run else "phase1_runs.json")
     payload = {k: {kk: vv for kk, vv in v.items() if kk != "history"}
                for k, v in summaries.items()}
+    if skipped:
+        payload["_skipped"] = skipped
     out.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
     log.info("wrote %s", out)
+    if skipped:
+        log.error("%d cell(s) skipped for a missing prerequisite: %s",
+                  len(skipped), ", ".join(skipped))
+        return 1
     return 0
 
 

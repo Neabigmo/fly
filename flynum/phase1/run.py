@@ -42,6 +42,7 @@ from ..logging_utils import RunContext, get_logger
 from ..pipeline import prepare
 from ..retina.torch_encoder import TorchRetina
 from ..train.trainer import encode, make_optimizer
+from .. import paths
 from . import data as ph_data
 from . import spec
 from .tasks import TASKS, SequencePlan, TaskDef
@@ -309,13 +310,32 @@ def _rotate(ckpt_dir: Path, keep: int = 3) -> None:
 
 
 
-def find_checkpoint(run_id: str) -> Path | None:
+def run_id_for(cell_name: str, tag: str, seed: int) -> str:
+    """The run directory name a cell will actually be given.
+
+    This exists as a named function because getting it wrong is silent in the worst way:
+    a warm start that looks in ``runs/C0`` while the run wrote ``runs/10_C0_s0`` simply
+    does not find a checkpoint, and the first version of this code aborted the whole queue
+    on the second cell.  :func:`run_cell` and :func:`find_checkpoint` both call it, and a
+    test asserts it agrees with what :class:`RunContext` creates.
+    """
+    return f"{tag}_{cell_name}_s{seed}"
+
+
+def find_checkpoint(cell_name: str, *, tag: str = "10", seed: int = 0) -> Path | None:
+    """Locate a previous cell's weights, tolerating an untagged run directory.
+
+    The untagged name is tried second so that a checkpoint produced outside the Phase I
+    runner (the pilot study's ``countA01_src``, for instance) can still be used as a warm
+    start deliberately.
+    """
     from .. import paths
 
-    for cand in (paths.run_dir(run_id) / "ckpt" / "final.pt",
-                 paths.run_dir(run_id) / "ckpt" / "last.pt"):
-        if cand.exists():
-            return cand
+    for run in (run_id_for(cell_name, tag, seed), cell_name):
+        for cand in (paths.run_dir(run) / "ckpt" / "final.pt",
+                     paths.run_dir(run) / "ckpt" / "last.pt"):
+            if cand.exists():
+                return cand
     return None
 
 
@@ -328,7 +348,7 @@ def run_cell(cell: Cell, *, logger=None, cfg: ExperimentConfig | None = None,
     cfg = cfg or make_config(cell)
     sc = cfg.stimulus
 
-    ctx = RunContext(f"{cell.tag}_{cell.run}_s{cell.seed}", {
+    ctx = RunContext(run_id_for(cell.run, cell.tag, cell.seed), {
         **cfg.to_dict(),
         "phase1": {
             "cell": cell.run, "task": cell.task, "line": cell.line, "brain": cell.brain,
@@ -364,11 +384,12 @@ def run_cell(cell: Cell, *, logger=None, cfg: ExperimentConfig | None = None,
     warm = ""
     if cell.brain != "scratch":
         warm = cell.warm_start
-        ckpt = find_checkpoint(warm)
+        ckpt = find_checkpoint(warm, tag=cell.tag, seed=cell.seed)
         if ckpt is None:
             raise FileNotFoundError(
-                f"{cell.run} needs the recurrent warm start {warm!r} but "
-                f"{ckpt} does not exist; run it first")
+                f"{cell.run} needs the recurrent warm start {warm!r}, but neither "
+                f"{paths.run_dir(run_id_for(warm, cell.tag, cell.seed))}/ckpt/final.pt "
+                f"nor {paths.run_dir(warm)}/ckpt/final.pt exists")
         state = torch.load(ckpt, map_location="cpu", weights_only=False)["model"]
         rep = model.load_recurrent_from(state)
         log.info("  warm start: %d recurrent tensors from %s; readout fresh "

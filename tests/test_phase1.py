@@ -253,3 +253,32 @@ def test_line_a_summary_reports_curve_metrics():
     # consecutive probes, so it is dated to the first of the two
     assert s["updates_to_50"] == 10 and s["updates_to_80"] == 20
     assert 0.5 < s["auc_seen_acc"] < 0.9
+
+
+# --------------------------------------------------------------------------- #
+def test_warm_start_lookup_matches_the_directory_a_run_creates(tmp_path, monkeypatch):
+    """The naming contract between a run's directory and the warm-start lookup.
+
+    The first version of the runner looked for ``runs/C0/ckpt/final.pt`` while the run had
+    written ``runs/10_C0_s0/ckpt/final.pt``.  Nothing failed until the second cell of a
+    twelve-cell queue, which then aborted and left ten cells unrun.  A dry run did not
+    catch it because its missing-prerequisite branch trained from scratch by design.
+    """
+    from flynum import paths
+    from flynum.logging_utils import RunContext
+    from flynum.phase1.run import find_checkpoint, run_id_for
+
+    monkeypatch.setattr(paths, "RUNS", tmp_path)
+    ctx = RunContext(run_id_for("C0", "10", 0), None)
+    assert ctx.run_id == "10_C0_s0"
+    assert find_checkpoint("C0", tag="10", seed=0) is None      # no checkpoint yet
+    (ctx.dir / "ckpt" / "final.pt").write_bytes(b"weights")
+    assert find_checkpoint("C0", tag="10", seed=0) == ctx.dir / "ckpt" / "final.pt"
+    # a different tag or seed is a different run and must not be found
+    assert find_checkpoint("C0", tag="11", seed=0) is None
+    assert find_checkpoint("C0", tag="10", seed=1) is None
+    # an untagged directory is still accepted, for checkpoints made outside the runner
+    plain = tmp_path / "countA01_src" / "ckpt"
+    plain.mkdir(parents=True)
+    (plain / "final.pt").write_bytes(b"older")
+    assert find_checkpoint("countA01_src", tag="10", seed=0) == plain / "final.pt"

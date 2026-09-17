@@ -1,0 +1,429 @@
+{
+  "spec_fingerprint": "fd0c71ca2f0b9046",
+  "cells": {
+    "A1-C": {
+      "dir": "10_A1-C_s0",
+      "phase1": {
+        "cell": "A1-C",
+        "task": "add",
+        "line": "A",
+        "brain": "count",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "does numerosity make addition easier to learn?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": false,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "A1-S": {
+      "dir": "10_A1-S_s0",
+      "phase1": {
+        "cell": "A1-S",
+        "task": "add",
+        "line": "A",
+        "brain": "scratch",
+        "budget": 50000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "can addition be taught from scratch, and how fast?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
+    "C0": {
+      "dir": "10_C0_s0",
+      "phase1": {
+        "cell": "C0",
+        "task": "count",
+        "line": "F",
+        "brain": "scratch",
+        "budget": 100000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000,
+          100000
+        ],
+        "holdout": [],
+        "teach": [],
+        "question": "a unified counting brain over 1-7 dots; also the pretrain source. Given twice the budget of a comparison cell because it is a prerequisite, not a condition: with the brightness cue removed, counting 1-7 has to be learned rather than read off, and a foundation that cannot count would make every curriculum cell a test of a brain that has nothing to transfer.",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": true,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    }
+  },
+  "line_a": {
+    "C0": {
+      "line": "A",
+      "final_train_acc": 0.7757422924041748,
+      "final_seen_acc": 0.7566666603088379,
+      "auc_seen_acc": 0.6449941547587514,
+      "updates_to_50": 20000,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "count",
+      "brain": "scratch",
+      "budget": 100000,
+      "finished": true,
+      "seen_acc": 0.7566666603088379,
+      "taught_area_acc": 0.8106666803359985,
+      "taught_env_acc": 0.79666668176651,
+      "train_acc": 0.7757422924041748,
+      "probe_n": 0.42800000309944153,
+      "probe_a": null,
+      "probe_b": null,
+      "probe_sum": null,
+      "probe_answer": null,
+      "probe_partial": null,
+      "delta_abs_mean": 0.6371168494224548,
+      "activity_dim": 25.34239387512207
+    },
+    "A1-S": {
+      "line": "A",
+      "final_train_acc": 0.2211734652519226,
+      "final_seen_acc": 0.2043333277106285,
+      "auc_seen_acc": 0.17944166296161712,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "add",
+      "brain": "scratch",
+      "budget": 50000,
+      "finished": true,
+      "seen_acc": 0.2043333277106285,
+      "taught_area_acc": 0.16333332657814026,
+      "taught_env_acc": 0.14800000190734863,
+      "train_acc": 0.2211734652519226,
+      "probe_n": null,
+      "probe_a": 0.382666677236557,
+      "probe_b": 0.273333340883255,
+      "probe_sum": 0.20399999618530273,
+      "probe_answer": null,
+      "probe_partial": null,
+      "delta_abs_mean": 0.2444102168083191,
+      "activity_dim": 34.3681755065918
+    },
+    "A1-C": {
+      "line": "A",
+      "final_train_acc": 0.17224489152431488,
+      "final_seen_acc": 0.17400000244379044,
+      "auc_seen_acc": 0.14650000352412462,
+      "updates_to_50": null,
+      "updates_to_80": null,
+      "updates_to_95": null,
+      "task": "add",
+      "brain": "count",
+      "budget": 50000,
+      "finished": false,
+      "seen_acc": 0.17400000244379044,
+      "taught_area_acc": 0.15333333611488342,
+      "taught_env_acc": 0.1379999965429306,
+      "train_acc": 0.17224489152431488,
+      "probe_n": null,
+      "probe_a": 0.37466666102409363,
+      "probe_b": 0.15333333611488342,
+      "probe_sum": 0.1706666648387909,
+      "probe_answer": null,
+      "probe_partial": null,
+      "delta_abs_mean": 0.6273264288902283,
+      "activity_dim": 19.168476104736328
+    }
+  },
+  "line_b": {}
+}
