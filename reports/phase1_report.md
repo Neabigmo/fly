@@ -66,9 +66,13 @@
 
 | cell | task | budget | T_mem | T_grok | 延迟倍数 | train | hold | unsupported | 连续指标同步 | 判定 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| B1-S | add | 200000 | -- | -- |   --   | 0.242 | 0.000 | 0.055 | None | **never_memorised** |
+| B1-S | add | 200000 | -- | -- |   --   | 0.554 | 0.005 | 0.035 | None | **never_memorised** |
+| B1-C | add | 200000 | -- | -- |   --   | 0.549 | 0.004 | 0.033 | None | **never_memorised** |
+| B2-S | cyc7 | 500000 | -- | -- |   --   | 0.264 | 0.068 |   --   | None | **never_memorised** |
 
 - **B1-S**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
+- **B1-C**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
+- **B2-S**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
 
 判定规则在跑之前就冻结在 `flynum/phase1/spec.py`：T_mem = 训练准确率连续 3 个探针 >0.95，T_grok = 留出准确率连续 3 个探针 >0.8，延迟要求 T_grok > 3×T_mem，并且连续指标必须同步移动（否则记为阈值假象）。
 
@@ -84,5 +88,7 @@
 | A2-S | 0.1920 | 29.1 | a=0.529 answer=0.363 b=0.455 |
 | A3-C | 0.4847 | 24.8 | a=0.507 answer=0.241 b=0.356 c=0.301 partial=0.277 |
 | A3-S | 0.1165 | 30.7 | a=0.552 answer=0.275 b=0.401 c=0.357 partial=0.313 |
-| B1-S | 0.1501 | 27.0 | a=0.543 b=0.595 sum=0.291 |
+| B1-C | 0.8006 | 13.5 | a=0.553 b=0.567 sum=0.280 |
+| B1-S | 0.6965 | 17.3 | a=0.561 b=0.581 sum=0.275 |
+| B2-S | 0.0659 | 32.3 | a=0.415 b=0.268 residue=0.229 |
 | C0 | 0.6371 | 25.3 | n=0.428 |
