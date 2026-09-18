@@ -1,0 +1,62 @@
+{
+  "core": {
+    "neurons": 33480,
+    "edges": 1170024,
+    "input_neurons": 7961,
+    "readout_neurons": 9200,
+    "reachable": 33480,
+    "ancestors": 32511,
+    "on_path": 32511,
+    "on_path_fraction": 0.9711,
+    "usable_within_hops": 32511,
+    "hops": 20,
+    "median_hops_to_readout": 1.0,
+    "on_path_by_superclass": [
+      [
+        "ol_intrinsic",
+        22755
+      ],
+      [
+        "visual_projection",
+        9200
+      ],
+      [
+        "visual_centrifugal",
+        556
+      ]
+    ],
+    "extra_vs_core_top": null
+  },
+  "full": {
+    "neurons": 99163,
+    "edges": 12392758,
+    "input_neurons": 7963,
+    "readout_neurons": 9200,
+    "reachable": 99158,
+    "ancestors": 98312,
+    "on_path": 98307,
+    "on_path_fraction": 0.9914,
+    "usable_within_hops": 98307,
+    "hops": 20,
+    "median_hops_to_readout": 1.0,
+    "on_path_by_superclass": [
+      [
+        "ol_intrinsic",
+        88549
+      ],
+      [
+        "visual_projection",
+        9200
+      ],
+      [
+        "visual_centrifugal",
+        556
+      ],
+      [
+        "cb_intrinsic",
+        2
+      ]
+    ],
+    "extra_vs_core_top": null
+  }
+}
