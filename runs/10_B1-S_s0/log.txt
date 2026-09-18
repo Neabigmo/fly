@@ -1,0 +1,37 @@
+00:14:58 | INFO    | flynum.run.10_B1-S_s0  | run 10_B1-S_s0 started -> /root/autodl-tmp/fly/runs/10_B1-S_s0
+00:14:58 | INFO    | flynum.run.10_B1-S_s0  | ========================================================================================
+00:14:58 | INFO    | flynum.run.10_B1-S_s0  | PHASE I B1-S | add(13 classes, offset 2) | brain=scratch | 200000 updates | 14 recurrent steps/update
+00:14:58 | INFO    | flynum.run.10_B1-S_s0  |   question: does 2+3 ever appear if it is never taught and never selected on?
+00:15:21 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_cd316fc6b6_rep1334_A_169d05eca67f_seed1234.npz (65366 rows x 2 phases, 536 MB)
+00:15:41 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_cd316fc6b6_rep1334_B_169d05eca67f_seed1235.npz (65366 rows x 2 phases, 536 MB)
+00:15:43 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_55e8b91627_rep100_A_169d05eca67f_seed1265.npz (1500 rows x 2 phases, 12 MB)
+00:15:44 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_89dc5d4d84_rep750_A_169d05eca67f_seed1266.npz (1500 rows x 2 phases, 12 MB)
+00:15:46 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_7e0d8768a6_rep47_A_169d05eca67f_seed1267.npz (1504 rows x 2 phases, 12 MB)
+00:15:47 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_55e8b91627_rep100_B_169d05eca67f_seed1275.npz (1500 rows x 2 phases, 12 MB)
+00:15:48 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_89dc5d4d84_rep750_B_169d05eca67f_seed1276.npz (1500 rows x 2 phases, 12 MB)
+00:15:49 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_7e0d8768a6_rep47_B_169d05eca67f_seed1277.npz (1504 rows x 2 phases, 12 MB)
+00:15:51 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_55e8b91627_rep100_C_169d05eca67f_seed1285.npz (1500 rows x 2 phases, 12 MB)
+00:15:52 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_89dc5d4d84_rep750_C_169d05eca67f_seed1286.npz (1500 rows x 2 phases, 12 MB)
+00:15:53 | INFO    | flynum.run.10_B1-S_s0  | stimulus pool rendered: dot-blank-dot_7e0d8768a6_rep47_C_169d05eca67f_seed1287.npz (1504 rows x 2 phases, 12 MB)
+00:15:53 | INFO    | flynum.run.10_B1-S_s0  | pools: 15 taught items -> 40020 training rows from conditions A+B | 2 withheld | 32 unsupported | eval rows per condition {'A': 1500, 'B': 1500, 'C': 1500}
+00:15:53 | INFO    | flynum.run.10_B1-S_s0  | ------------------------------------------------------------------------------
+00:15:53 | INFO    | flynum.run.10_B1-S_s0  | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+00:15:54 | INFO    | flynum.run.10_B1-S_s0  | circuit core loaded from cache: 33480 neurons / 1170024 edges
+00:15:54 | INFO    | flynum.run.10_B1-S_s0  | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+00:15:54 | INFO    | flynum.run.10_B1-S_s0  | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+00:15:56 | INFO    | flynum.run.10_B1-S_s0  | signed synapses: 187016/211577 neurons carry a prediction, 151924 excitatory / 59653 inhibitory / 47751 defaulted to +1 (100.0% signed)
+00:15:56 | INFO    | flynum.run.10_B1-S_s0  | readout: visual_projection (VPN) -> 9200 neurons
+00:15:56 | INFO    | flynum.run.10_B1-S_s0  |   scratch: gains g=1, bias 0.1, readout freshly initialised
+00:15:56 | INFO    | flynum.run.10_B1-S_s0  |   training on 40020 rows in conditions A+B (15 taught items); 2 withheld; 32 unsupported; conditions A+B+C are read out for reporting
+00:15:56 | INFO    | flynum.run.10_B1-S_s0  |   optimizer AdamW, constant lr 3e-03, batch 64, 200000 updates = 319.8 epochs
+00:16:05 | INFO    | flynum.run.10_B1-S_s0  |   [      0 upd |   0.0 ep] train 0.1333 | seen 0.1333 [A=0.133 B=0.133 C=0.133] | hold 0.0000 [A=0.000 B=0.000 C=0.000] | a=0.539 b=0.585 sum=0.279
+00:16:56 | INFO    | flynum.run.10_B1-S_s0  |   [    500 upd |   0.8 ep] train 0.1761 | seen 0.1770 [A=0.221 B=0.133 C=0.133] | hold 0.0000 [A=0.000 B=0.000 C=0.000] | a=0.525 b=0.569 sum=0.256
+00:17:47 | INFO    | flynum.run.10_B1-S_s0  |   [   1000 upd |   1.6 ep] train 0.1680 | seen 0.1670 [A=0.201 B=0.133 C=0.133] | hold 0.0000 [A=0.000 B=0.000 C=0.000] | a=0.524 b=0.560 sum=0.277
+00:19:22 | INFO    | flynum.run.10_B1-S_s0  |   [   2000 upd |   3.2 ep] train 0.1878 | seen 0.1857 [A=0.243 B=0.129 C=0.132] | hold 0.0000 [A=0.000 B=0.000 C=0.000] | a=0.545 b=0.577 sum=0.273
+00:23:47 | INFO    | flynum.run.10_B1-S_s0  |   [   5000 upd |   8.0 ep] train 0.2423 | seen 0.2340 [A=0.333 B=0.135 C=0.137] | hold 0.0000 [A=0.000 B=0.000 C=0.000] | a=0.543 b=0.595 sum=0.291
+00:31:04 | INFO    | flynum.run.10_B1-S_s0  |   [  10000 upd |  16.0 ep] train 0.3184 | seen 0.2957 [A=0.374 B=0.217 C=0.235] | hold 0.0043 [A=0.009 B=0.000 C=0.000] | a=0.551 b=0.592 sum=0.283
+00:45:30 | INFO    | flynum.run.10_B1-S_s0  |   [  20000 upd |  32.0 ep] train 0.3768 | seen 0.3477 [A=0.422 B=0.273 C=0.271] | hold 0.0123 [A=0.023 B=0.001 C=0.000] | a=0.591 b=0.588 sum=0.283
+01:28:28 | INFO    | flynum.run.10_B1-S_s0  |   [  50000 upd |  80.0 ep] train 0.4315 | seen 0.3943 [A=0.444 B=0.345 C=0.375] | hold 0.0027 [A=0.005 B=0.000 C=0.000] | a=0.588 b=0.579 sum=0.256
+02:39:59 | INFO    | flynum.run.10_B1-S_s0  |   [ 100000 upd | 159.9 ep] train 0.4818 | seen 0.4147 [A=0.455 B=0.375 C=0.353] | hold 0.0010 [A=0.002 B=0.000 C=0.000] | a=0.589 b=0.587 sum=0.291
+05:02:53 | INFO    | flynum.run.10_B1-S_s0  |   [ 200000 upd | 319.8 ep] train 0.5539 | seen 0.4763 [A=0.511 B=0.442 C=0.425] | hold 0.0050 [A=0.010 B=0.000 C=0.000] | a=0.561 b=0.581 sum=0.275
+05:02:53 | INFO    | flynum.run.10_B1-S_s0  | run 10_B1-S_s0 finished: ok (17275.3s)

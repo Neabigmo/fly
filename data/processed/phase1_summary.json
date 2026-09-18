@@ -1065,6 +1065,323 @@
         }
       }
     },
+    "B2-C": {
+      "dir": "10_B2-C_s0",
+      "phase1": {
+        "cell": "B2-C",
+        "task": "cyc7",
+        "line": "B",
+        "brain": "count",
+        "budget": 500000,
+        "probes": [
+          0,
+          500,
+          1000,
+          2000,
+          5000,
+          10000,
+          20000,
+          50000,
+          100000,
+          200000,
+          350000,
+          500000
+        ],
+        "holdout": [
+          [
+            1,
+            1
+          ],
+          [
+            1,
+            3
+          ],
+          [
+            1,
+            6
+          ],
+          [
+            2,
+            4
+          ],
+          [
+            2,
+            7
+          ],
+          [
+            3,
+            1
+          ],
+          [
+            3,
+            5
+          ],
+          [
+            4,
+            2
+          ],
+          [
+            4,
+            6
+          ],
+          [
+            5,
+            3
+          ],
+          [
+            5,
+            7
+          ],
+          [
+            6,
+            1
+          ],
+          [
+            6,
+            4
+          ],
+          [
+            7,
+            2
+          ],
+          [
+            7,
+            5
+          ]
+        ],
+        "teach": [
+          [
+            1,
+            2
+          ],
+          [
+            1,
+            4
+          ],
+          [
+            1,
+            5
+          ],
+          [
+            1,
+            7
+          ],
+          [
+            2,
+            1
+          ],
+          [
+            2,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            2,
+            5
+          ],
+          [
+            2,
+            6
+          ],
+          [
+            3,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            3,
+            6
+          ],
+          [
+            3,
+            7
+          ],
+          [
+            4,
+            1
+          ],
+          [
+            4,
+            3
+          ],
+          [
+            4,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            4,
+            7
+          ],
+          [
+            5,
+            1
+          ],
+          [
+            5,
+            2
+          ],
+          [
+            5,
+            4
+          ],
+          [
+            5,
+            5
+          ],
+          [
+            5,
+            6
+          ],
+          [
+            6,
+            2
+          ],
+          [
+            6,
+            3
+          ],
+          [
+            6,
+            5
+          ],
+          [
+            6,
+            6
+          ],
+          [
+            6,
+            7
+          ],
+          [
+            7,
+            1
+          ],
+          [
+            7,
+            3
+          ],
+          [
+            7,
+            4
+          ],
+          [
+            7,
+            6
+          ],
+          [
+            7,
+            7
+          ]
+        ],
+        "question": "does a counting foundation make the jump earlier or larger?",
+        "seed": 0,
+        "spec": {
+          "dynamics": {
+            "circuit": "core",
+            "signed_synapses": true,
+            "w_scale": 0.5,
+            "alpha": 0.1,
+            "learn": [
+              "delta",
+              "bias"
+            ],
+            "readout_standardize": false,
+            "readout": "vpn"
+          },
+          "time": {
+            "steps_operand": 5,
+            "steps_cue": 4,
+            "steps_gap": 4,
+            "steps_count": 8
+          },
+          "stimulus": {
+            "image_size": 32,
+            "n_min": 1,
+            "n_max": 7,
+            "radius_min": 1.13,
+            "radius_max": 3.7,
+            "area_target": 35.6,
+            "min_gap": 1.5,
+            "ring_radius": 9.5
+          },
+          "optim": {
+            "optimizer": "AdamW",
+            "schedule": "constant",
+            "lr_gain": 0.003,
+            "lr_readout": 0.003,
+            "wd_readout": 0.0001,
+            "grad_clip": 1.0,
+            "lambda_gain": 0.001,
+            "batch_size": 64
+          },
+          "warm_start": {
+            "count": "C0",
+            "add": "A1-C",
+            "curriculum": "A2-C"
+          }
+        }
+      },
+      "finished": false,
+      "spec_fingerprint": {
+        "dynamics": {
+          "circuit": "core",
+          "signed_synapses": true,
+          "w_scale": 0.5,
+          "alpha": 0.1,
+          "learn": [
+            "delta",
+            "bias"
+          ],
+          "readout_standardize": false,
+          "readout": "vpn"
+        },
+        "time": {
+          "steps_operand": 5,
+          "steps_cue": 4,
+          "steps_gap": 4,
+          "steps_count": 8
+        },
+        "stimulus": {
+          "image_size": 32,
+          "n_min": 1,
+          "n_max": 7,
+          "radius_min": 1.13,
+          "radius_max": 3.7,
+          "area_target": 35.6,
+          "min_gap": 1.5,
+          "ring_radius": 9.5
+        },
+        "optim": {
+          "optimizer": "AdamW",
+          "schedule": "constant",
+          "lr_gain": 0.003,
+          "lr_readout": 0.003,
+          "wd_readout": 0.0001,
+          "grad_clip": 1.0,
+          "lambda_gain": 0.001,
+          "batch_size": 64
+        },
+        "warm_start": {
+          "count": "C0",
+          "add": "A1-C",
+          "curriculum": "A2-C"
+        }
+      }
+    },
     "B2-S": {
       "dir": "10_B2-S_s0",
       "phase1": {
@@ -1335,7 +1652,7 @@
           }
         }
       },
-      "finished": false,
+      "finished": true,
       "spec_fingerprint": {
         "dynamics": {
           "circuit": "core",
@@ -1747,8 +2064,8 @@
       "continuous_confirms": null,
       "continuous_moves": {},
       "max_hold_acc": 0.13333334028720856,
-      "final_hold_acc": 0.0676666684448719,
-      "final_train_acc": 0.2643382251262665,
+      "final_hold_acc": 0.07100000232458115,
+      "final_train_acc": 0.2904411852359772,
       "largest_jump_at": 5000,
       "largest_jump": 0.011666659265756607,
       "verdict": "never_memorised",
@@ -1758,14 +2075,45 @@
       "task": "cyc7",
       "brain": "scratch",
       "budget": 500000,
+      "finished": true,
+      "n_taught": 34,
+      "n_holdout": 15,
+      "hold_acc": 0.07100000232458115,
+      "holdout_area_acc": 0.052000001072883606,
+      "holdout_env_acc": 0.02800000086426735,
+      "unsup_acc": null,
+      "train_acc": 0.2904411852359772,
+      "hold_ce": null,
+      "hold_p_correct": null,
+      "hold_margin": null
+    },
+    "B2-C": {
+      "t_mem": null,
+      "t_grok": null,
+      "delay_factor": null,
+      "delayed": false,
+      "continuous_confirms": null,
+      "continuous_moves": {},
+      "max_hold_acc": 0.159000001847744,
+      "final_hold_acc": 0.06599999964237213,
+      "final_train_acc": 0.22274509072303772,
+      "largest_jump_at": 5000,
+      "largest_jump": 0.013000000268220901,
+      "verdict": "never_memorised",
+      "notes": [
+        "training accuracy never held above 0.95, so there is no memorisation phase to be late relative to"
+      ],
+      "task": "cyc7",
+      "brain": "count",
+      "budget": 500000,
       "finished": false,
       "n_taught": 34,
       "n_holdout": 15,
-      "hold_acc": 0.0676666684448719,
-      "holdout_area_acc": 0.04933333396911621,
-      "holdout_env_acc": 0.020666666328907013,
+      "hold_acc": 0.06599999964237213,
+      "holdout_area_acc": 0.06933332979679108,
+      "holdout_env_acc": 0.03999999910593033,
       "unsup_acc": null,
-      "train_acc": 0.2643382251262665,
+      "train_acc": 0.22274509072303772,
       "hold_ce": null,
       "hold_p_correct": null,
       "hold_margin": null

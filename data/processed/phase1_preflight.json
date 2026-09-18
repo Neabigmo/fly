@@ -38,9 +38,17 @@
     },
     "legibility": {
       "acc_operator": 1.0,
+      "acc_operator_range": [
+        1.0,
+        1.0
+      ],
       "acc_operator_vs_blank": 1.0,
-      "acc_count": 0.2916666567325592,
-      "count_over_chance": 2.0416665971279144,
+      "acc_count": 0.2876984079678853,
+      "acc_count_range": [
+        0.2767857015132904,
+        0.300595223903656
+      ],
+      "count_over_chance": 2.0138888557751975,
       "ink_plus": 72.5,
       "ink_minus": 40.75,
       "ink_three_dots": 64.87492996454239,
@@ -48,9 +56,9 @@
     },
     "dynamics bounded": {
       "horizon": 32,
-      "peak_first": 0.10999508947134018,
-      "peak_last": 4.466333389282227,
-      "growth": 40.60484345936147,
+      "peak_first": 0.10999973863363266,
+      "peak_last": 4.460021495819092,
+      "growth": 40.54574630103194,
       "ok": true
     },
     "plan alignment": {

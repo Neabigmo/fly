@@ -1,0 +1,29 @@
+16:35:02 | INFO    | flynum.run.10_A1-C_s0  | run 10_A1-C_s0 started -> /root/autodl-tmp/fly/runs/10_A1-C_s0
+16:35:02 | INFO    | flynum.run.10_A1-C_s0  | ========================================================================================
+16:35:02 | INFO    | flynum.run.10_A1-C_s0  | PHASE I A1-C | add(13 classes, offset 2) | brain=count | 50000 updates | 14 recurrent steps/update
+16:35:02 | INFO    | flynum.run.10_A1-C_s0  |   question: does numerosity make addition easier to learn?
+16:35:03 | INFO    | flynum.run.10_A1-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep600_A_169d05eca67f_seed1234.npz (29400 rows x 2 phases)
+16:35:03 | INFO    | flynum.run.10_A1-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep600_B_169d05eca67f_seed1235.npz (29400 rows x 2 phases)
+16:35:03 | INFO    | flynum.run.10_A1-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep31_A_169d05eca67f_seed1265.npz (1519 rows x 2 phases)
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep31_B_169d05eca67f_seed1275.npz (1519 rows x 2 phases)
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep31_C_169d05eca67f_seed1285.npz (1519 rows x 2 phases)
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | pools: 49 taught items -> 58800 training rows from conditions A+B | 0 withheld | 0 unsupported | eval rows per condition {'A': 1500, 'B': 1500, 'C': 1500}
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | ------------------------------------------------------------------------------
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | circuit core loaded from cache: 33480 neurons / 1170024 edges
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+16:35:04 | INFO    | flynum.run.10_A1-C_s0  | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+16:35:07 | INFO    | flynum.run.10_A1-C_s0  | signed synapses: 187016/211577 neurons carry a prediction, 151924 excitatory / 59653 inhibitory / 47751 defaulted to +1 (100.0% signed)
+16:35:07 | INFO    | flynum.run.10_A1-C_s0  | readout: visual_projection (VPN) -> 9200 neurons
+16:35:08 | INFO    | flynum.run.10_A1-C_s0  |   warm start: 2 recurrent tensors from C0; readout fresh (2 tensors skipped)
+16:35:08 | INFO    | flynum.run.10_A1-C_s0  |   training on 58800 rows in conditions A+B (49 taught items); 0 withheld; 0 unsupported; conditions A+B+C are read out for reporting
+16:35:08 | INFO    | flynum.run.10_A1-C_s0  |   optimizer AdamW, constant lr 3e-03, batch 64, 50000 updates = 54.4 epochs
+16:35:18 | INFO    | flynum.run.10_A1-C_s0  |   [      0 upd |   0.0 ep] train 0.0588 | seen 0.0600 [A=0.052 B=0.068 C=0.061] | hold   --   [A=nan B=nan C=nan] | a=0.397 b=0.135 sum=0.156
+16:36:11 | INFO    | flynum.run.10_A1-C_s0  |   [    500 upd |   0.5 ep] train 0.1529 | seen 0.1550 [A=0.165 B=0.145 C=0.146] | hold   --   [A=nan B=nan C=nan] | a=0.379 b=0.135 sum=0.159
+16:37:04 | INFO    | flynum.run.10_A1-C_s0  |   [   1000 upd |   1.1 ep] train 0.1587 | seen 0.1513 [A=0.158 B=0.145 C=0.138] | hold   --   [A=nan B=nan C=nan] | a=0.389 b=0.125 sum=0.163
+16:38:40 | INFO    | flynum.run.10_A1-C_s0  |   [   2000 upd |   2.2 ep] train 0.1722 | seen 0.1740 [A=0.195 B=0.153 C=0.138] | hold   --   [A=nan B=nan C=nan] | a=0.375 b=0.153 sum=0.171
+16:43:09 | INFO    | flynum.run.10_A1-C_s0  |   [   5000 upd |   5.4 ep] train 0.1892 | seen 0.1847 [A=0.215 B=0.154 C=0.131] | hold   --   [A=nan B=nan C=nan] | a=0.359 b=0.161 sum=0.156
+16:50:31 | INFO    | flynum.run.10_A1-C_s0  |   [  10000 upd |  10.9 ep] train 0.2001 | seen 0.1887 [A=0.223 B=0.154 C=0.137] | hold   --   [A=nan B=nan C=nan] | a=0.343 b=0.168 sum=0.155
+17:05:03 | INFO    | flynum.run.10_A1-C_s0  |   [  20000 upd |  21.8 ep] train 0.2143 | seen 0.1863 [A=0.225 B=0.148 C=0.131] | hold   --   [A=nan B=nan C=nan] | a=0.352 b=0.155 sum=0.168
+17:48:25 | INFO    | flynum.run.10_A1-C_s0  |   [  50000 upd |  54.4 ep] train 0.2373 | seen 0.1987 [A=0.251 B=0.146 C=0.127] | hold   --   [A=nan B=nan C=nan] | a=0.385 b=0.169 sum=0.172
+17:48:25 | INFO    | flynum.run.10_A1-C_s0  | run 10_A1-C_s0 finished: ok (4403.9s)

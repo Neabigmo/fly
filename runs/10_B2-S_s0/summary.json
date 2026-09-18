@@ -1,0 +1,12 @@
+{
+  "run_id": "10_B2-S_s0",
+  "status": "ok",
+  "wall_seconds": 42985.5,
+  "finished_at": "2026-09-18T13:46:28+00:00",
+  "stage": "10",
+  "task": "cyc7",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0
+}

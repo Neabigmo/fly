@@ -64,15 +64,17 @@
 
 ## Line B — 长期训练会不会从记忆跃迁到规则
 
-| cell | task | budget | T_mem | T_grok | 延迟倍数 | train | hold | unsupported | 连续指标同步 | 判定 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| B1-S | add | 200000 | -- | -- |   --   | 0.554 | 0.005 | 0.035 | None | **never_memorised** |
-| B1-C | add | 200000 | -- | -- |   --   | 0.549 | 0.004 | 0.033 | None | **never_memorised** |
-| B2-S | cyc7 | 500000 | -- | -- |   --   | 0.264 | 0.068 |   --   | None | **never_memorised** |
+| cell | task | budget | 跑完 | T_mem | T_grok | 延迟倍数 | train | hold | unsupported | 连续指标同步 | 判定 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| B1-S | add | 200000 | 是 | -- | -- |   --   | 0.554 | 0.005 | 0.035 | None | **never_memorised** |
+| B1-C | add | 200000 | 是 | -- | -- |   --   | 0.549 | 0.004 | 0.033 | None | **never_memorised** |
+| B2-S | cyc7 | 500000 | 是 | -- | -- |   --   | 0.290 | 0.071 |   --   | None | **never_memorised** |
+| B2-C | cyc7 | 500000 | **进行中** | -- | -- |   --   | 0.223 | 0.066 |   --   | None | **never_memorised** |
 
 - **B1-S**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
 - **B1-C**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
 - **B2-S**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
+- **B2-C**: training accuracy never held above 0.95, so there is no memorisation phase to be late relative to
 
 判定规则在跑之前就冻结在 `flynum/phase1/spec.py`：T_mem = 训练准确率连续 3 个探针 >0.95，T_grok = 留出准确率连续 3 个探针 >0.8，延迟要求 T_grok > 3×T_mem，并且连续指标必须同步移动（否则记为阈值假象）。
 
@@ -90,5 +92,6 @@
 | A3-S | 0.1165 | 30.7 | a=0.552 answer=0.275 b=0.401 c=0.357 partial=0.313 |
 | B1-C | 0.8006 | 13.5 | a=0.553 b=0.567 sum=0.280 |
 | B1-S | 0.6965 | 17.3 | a=0.561 b=0.581 sum=0.275 |
-| B2-S | 0.0659 | 32.3 | a=0.415 b=0.268 residue=0.229 |
+| B2-C | 0.5440 | 23.8 | a=0.353 b=0.148 residue=0.175 |
+| B2-S | 0.1074 | 33.6 | a=0.388 b=0.273 residue=0.224 |
 | C0 | 0.6371 | 25.3 | n=0.428 |

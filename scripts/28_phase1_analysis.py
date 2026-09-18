@@ -253,12 +253,13 @@ def write_report(cells, a_rows, b_rows, out_path: Path, base: dict | None = None
     if not b_rows:
         L.append("_尚未有完成的 Line B cell。_\n")
     else:
-        L.append("| cell | task | budget | T_mem | T_grok | 延迟倍数 | train | hold | "
+        L.append("| cell | task | budget | 跑完 | T_mem | T_grok | 延迟倍数 | train | hold | "
                  "unsupported | 连续指标同步 | 判定 |")
-        L.append("|---|---|---|---|---|---|---|---|---|---|---|")
+        L.append("|---|---|---|---|---|---|---|---|---|---|---|---|")
         for name, v in b_rows.items():
-            L.append("| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | **{}** |".format(
-                name, v["task"], v["budget"], v["t_mem"] or "--", v["t_grok"] or "--",
+            L.append("| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | **{}** |".format(
+                name, v["task"], v["budget"], "是" if v.get("finished") else "**进行中**",
+                v["t_mem"] or "--", v["t_grok"] or "--",
                 _num(v["delay_factor"], 2), _num(v["final_train_acc"], 3),
                 _num(v["final_hold_acc"], 3), _num(v.get("unsup_acc"), 3),
                 v["continuous_confirms"], v["verdict"]))

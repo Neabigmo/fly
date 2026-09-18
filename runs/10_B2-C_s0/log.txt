@@ -1,0 +1,29 @@
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  | run 10_B2-C_s0 started -> /root/autodl-tmp/fly/runs/10_B2-C_s0
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  | ========================================================================================
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  | PHASE I B2-C | cyc7(7 classes, offset 0) | brain=count | 500000 updates | 14 recurrent steps/update
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  |   question: does a counting foundation make the jump earlier or larger?
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep600_A_169d05eca67f_seed1234.npz (29400 rows x 2 phases)
+21:46:28 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_cd316fc6b6_rep600_B_169d05eca67f_seed1235.npz (29400 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_5a4d68e727_rep45_A_169d05eca67f_seed1265.npz (1530 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_7e0b278b52_rep100_A_169d05eca67f_seed1266.npz (1500 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_5a4d68e727_rep45_B_169d05eca67f_seed1275.npz (1530 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_7e0b278b52_rep100_B_169d05eca67f_seed1276.npz (1500 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_5a4d68e727_rep45_C_169d05eca67f_seed1285.npz (1530 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | stimulus pool from cache: dot-blank-dot_7e0b278b52_rep100_C_169d05eca67f_seed1286.npz (1500 rows x 2 phases)
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | pools: 34 taught items -> 40800 training rows from conditions A+B | 15 withheld | 0 unsupported | eval rows per condition {'A': 1500, 'B': 1500, 'C': 1500}
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | ------------------------------------------------------------------------------
+21:46:29 | INFO    | flynum.run.10_B2-C_s0  | preparing: circuit=core graph=real retina=isotropic/lamina/both readout=vpn
+21:46:30 | INFO    | flynum.run.10_B2-C_s0  | circuit core loaded from cache: 33480 neurons / 1170024 edges
+21:46:30 | INFO    | flynum.run.10_B2-C_s0  | hex field: 1771 columns | bounds x[4.5,53.5] y[0.9,33.8] | NN=1.0000 | density=1.193 (ideal 1.155)
+21:46:30 | INFO    | flynum.run.10_B2-C_s0  | retina map: 1769/1771 columns carry input neurons; 1356 of them fall inside the image window (76.6%) | 7961 input neurons
+21:46:33 | INFO    | flynum.run.10_B2-C_s0  | signed synapses: 187016/211577 neurons carry a prediction, 151924 excitatory / 59653 inhibitory / 47751 defaulted to +1 (100.0% signed)
+21:46:33 | INFO    | flynum.run.10_B2-C_s0  | readout: visual_projection (VPN) -> 9200 neurons
+21:46:33 | INFO    | flynum.run.10_B2-C_s0  |   warm start: 2 recurrent tensors from C0; readout fresh (2 tensors skipped)
+21:46:33 | INFO    | flynum.run.10_B2-C_s0  |   training on 40800 rows in conditions A+B (34 taught items); 15 withheld; 0 unsupported; conditions A+B+C are read out for reporting
+21:46:33 | INFO    | flynum.run.10_B2-C_s0  |   optimizer AdamW, constant lr 3e-03, batch 64, 500000 updates = 784.3 epochs
+21:46:41 | INFO    | flynum.run.10_B2-C_s0  |   [      0 upd |   0.0 ep] train 0.1366 | seen 0.1307 [A=0.131 B=0.131 C=0.163] | hold 0.1590 [A=0.171 B=0.147 C=0.087] | a=0.407 b=0.133 residue=0.129
+21:47:32 | INFO    | flynum.run.10_B2-C_s0  |   [    500 upd |   0.8 ep] train 0.1738 | seen 0.1703 [A=0.196 B=0.145 C=0.143] | hold 0.0967 [A=0.051 B=0.142 C=0.124] | a=0.371 b=0.121 residue=0.173
+21:48:23 | INFO    | flynum.run.10_B2-C_s0  |   [   1000 upd |   1.6 ep] train 0.1863 | seen 0.1750 [A=0.197 B=0.153 C=0.175] | hold 0.0687 [A=0.037 B=0.100 C=0.081] | a=0.363 b=0.132 residue=0.185
+21:49:57 | INFO    | flynum.run.10_B2-C_s0  |   [   2000 upd |   3.1 ep] train 0.2009 | seen 0.1780 [A=0.192 B=0.164 C=0.197] | hold 0.0610 [A=0.053 B=0.069 C=0.024] | a=0.389 b=0.144 residue=0.180
+21:54:22 | INFO    | flynum.run.10_B2-C_s0  |   [   5000 upd |   7.8 ep] train 0.2163 | seen 0.1873 [A=0.204 B=0.171 C=0.197] | hold 0.0740 [A=0.068 B=0.080 C=0.039] | a=0.375 b=0.145 residue=0.171
+22:01:38 | INFO    | flynum.run.10_B2-C_s0  |   [  10000 upd |  15.7 ep] train 0.2227 | seen 0.1837 [A=0.196 B=0.171 C=0.187] | hold 0.0660 [A=0.063 B=0.069 C=0.040] | a=0.353 b=0.148 residue=0.175

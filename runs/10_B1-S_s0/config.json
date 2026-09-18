@@ -1,0 +1,225 @@
+{
+  "stage": "1",
+  "task": "add",
+  "model": "M1",
+  "run_name": "",
+  "data": {
+    "circuit": "core",
+    "graph": "real",
+    "shuffle_rounds_per_edge": 20.0,
+    "min_weight": 1
+  },
+  "retina": {
+    "map_mode": "isotropic",
+    "input_types": "lamina",
+    "input_eye": "both",
+    "image_size": 32
+  },
+  "stimulus": {
+    "image_size": 32,
+    "n_min": 1,
+    "n_max": 7,
+    "radius_min": 1.13,
+    "radius_max": 3.7,
+    "margin": 1.0,
+    "min_gap": 1.5,
+    "noise_sigma": 0.02,
+    "supersample": 4,
+    "area_target": 35.6,
+    "ring_radius": 9.5,
+    "a_min": 1,
+    "a_max": 4,
+    "holdout_pairs": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "add_reps_per_pair": 600
+  },
+  "model_cfg": {
+    "alpha": 0.1,
+    "nonlinearity": "relu",
+    "w_scale": 0.5,
+    "learn_gains": true,
+    "lambda_gain": 0.001,
+    "readout": "vpn",
+    "readout_window": 2,
+    "readout_standardize": false,
+    "readout_stats_samples": 2000,
+    "weight_normalization": "global",
+    "signed_synapses": true,
+    "unknown_nt_sign": 1
+  },
+  "time": {
+    "steps": 8,
+    "steps_a": 5,
+    "steps_gap": 4,
+    "steps_b": 5
+  },
+  "train": {
+    "n_train": 20000,
+    "n_val": 2500,
+    "n_test": 5000,
+    "batch_size": 64,
+    "max_epochs": 60,
+    "max_steps": 0,
+    "eval_every": 0,
+    "patience": 10,
+    "lr_gain": 0.003,
+    "lr_readout": 0.003,
+    "wd_readout": 0.0001,
+    "grad_clip": 1.0,
+    "cosine": false
+  },
+  "seeds": {
+    "data_seed": 1234,
+    "split_seed": 1235,
+    "model_seed": 0,
+    "shuffle_seed": 0
+  },
+  "phase1": {
+    "cell": "B1-S",
+    "task": "add",
+    "line": "B",
+    "brain": "scratch",
+    "budget": 200000,
+    "probes": [
+      0,
+      500,
+      1000,
+      2000,
+      5000,
+      10000,
+      20000,
+      50000,
+      100000,
+      200000
+    ],
+    "holdout": [
+      [
+        2,
+        3
+      ],
+      [
+        3,
+        2
+      ]
+    ],
+    "teach": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        2
+      ],
+      [
+        1,
+        3
+      ],
+      [
+        1,
+        4
+      ],
+      [
+        1,
+        5
+      ],
+      [
+        1,
+        6
+      ],
+      [
+        1,
+        7
+      ],
+      [
+        2,
+        7
+      ],
+      [
+        3,
+        7
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        5,
+        7
+      ],
+      [
+        6,
+        7
+      ],
+      [
+        7,
+        7
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        2,
+        2
+      ]
+    ],
+    "question": "does 2+3 ever appear if it is never taught and never selected on?",
+    "seed": 0,
+    "spec": {
+      "dynamics": {
+        "circuit": "core",
+        "signed_synapses": true,
+        "w_scale": 0.5,
+        "alpha": 0.1,
+        "learn": [
+          "delta",
+          "bias"
+        ],
+        "readout_standardize": false,
+        "readout": "vpn"
+      },
+      "time": {
+        "steps_operand": 5,
+        "steps_cue": 4,
+        "steps_gap": 4,
+        "steps_count": 8
+      },
+      "stimulus": {
+        "image_size": 32,
+        "n_min": 1,
+        "n_max": 7,
+        "radius_min": 1.13,
+        "radius_max": 3.7,
+        "area_target": 35.6,
+        "min_gap": 1.5,
+        "ring_radius": 9.5
+      },
+      "optim": {
+        "optimizer": "AdamW",
+        "schedule": "constant",
+        "lr_gain": 0.003,
+        "lr_readout": 0.003,
+        "wd_readout": 0.0001,
+        "grad_clip": 1.0,
+        "lambda_gain": 0.001,
+        "batch_size": 64
+      },
+      "warm_start": {
+        "count": "C0",
+        "add": "A1-C",
+        "curriculum": "A2-C"
+      }
+    }
+  },
+  "_run_id": "10_B1-S_s0",
+  "_attempt": 1
+}

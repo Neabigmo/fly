@@ -1,0 +1,12 @@
+{
+  "run_id": "10_C0_s0",
+  "status": "ok",
+  "wall_seconds": 5066.2,
+  "finished_at": "2026-09-17T06:44:39+00:00",
+  "stage": "10",
+  "task": "count",
+  "model": "M1",
+  "circuit": "core",
+  "graph": "real",
+  "model_seed": 0
+}
